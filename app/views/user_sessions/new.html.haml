@@ -1,0 +1,4 @@
+%h1 Login
+
+- User.available_providers.each do |provider|
+  %a.btn.btn-default{href: authenticate_url(provider)}= provider.to_s.titleize
