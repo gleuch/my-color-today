@@ -14,6 +14,7 @@ class WebSitePageColor < ActiveRecord::Base
   # ASSOCIATIONS --------------------------------------------------------------
 
   belongs_to :page, class_name: 'WebSitePage', counter_cache: :colors_count, foreign_key: :web_site_page_id
+  belongs_to :user
 
 
   # VALIDATIONS ---------------------------------------------------------------
@@ -27,10 +28,9 @@ class WebSitePageColor < ActiveRecord::Base
   # CLASS METHODS -------------------------------------------------------------
 
   # Find first or create new web site page
-  def self.add(url,colors)
+  def self.add(url,colors,user=nil)
     page = WebSitePage.add(url)
-    puts page.colors
-    page.colors.create(color_red: colors[:red], color_green: colors[:green], color_blue: colors[:blue])
+    page.colors.create(color_red: colors[:red], color_green: colors[:green], color_blue: colors[:blue], user_id: (user.present? ? user.id : nil))
   end
 
 
@@ -76,7 +76,7 @@ private
     self.page.reload # ensure we get updated record
 
     WebsocketRails[:all_users].trigger(:new_color, self.to_api)
-    # LATER, TRIGGER FOR USER PAGE
+    WebsocketRails["user-#{self.user.uuid}"].trigger(:new_color, self.to_api) if self.user.present?
 
     # If this color is only color, then average will be same as self
     unless self.page.colors_count > 1

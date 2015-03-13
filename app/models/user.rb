@@ -27,6 +27,7 @@ class User < ActiveRecord::Base
 
   has_one :api_token
 
+  has_many :page_colors, class: 'WebSitePageColor'
   has_many :authentications, class: 'UserAuthentication'
 
 

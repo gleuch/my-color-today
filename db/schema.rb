@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 20150210033221) do
   create_table "web_site_page_colors", force: true do |t|
     t.integer  "web_site_page_id"
     t.string   "uuid"
-    t.string   "user_key_id"
+    t.integer  "user_id"
     t.integer  "color_red"
     t.integer  "color_green"
     t.integer  "color_blue"
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(version: 20150210033221) do
     t.datetime "created_at"
   end
 
+  add_index "web_site_page_colors", ["user_id"], name: "index_web_site_page_colors_on_user_id"
   add_index "web_site_page_colors", ["uuid"], name: "index_web_site_page_colors_on_uuid", unique: true
 
   create_table "web_site_pages", force: true do |t|
