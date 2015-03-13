@@ -4,6 +4,8 @@ secrets = YAML.load(File.open("#{Rails.root}/config/secrets.yml"))[Rails.env] re
 if secrets.present?
   Rails.application.config.middleware.use OmniAuth::Builder do
 
+    provider :developer if Rails.env.development?
+
     # Twitter
     provider :twitter, secrets['twitter']['token'], secrets['twitter']['secret']
 

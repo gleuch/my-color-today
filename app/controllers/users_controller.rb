@@ -5,7 +5,10 @@ class UsersController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html { render :show }
+      format.html {
+        @latest_colors = @user.colors.order('created_at desc').limit(100)
+        render :show
+      }
     end
   end
 
@@ -14,7 +17,7 @@ private
 
   def get_user
     @user = User.find(params[:id])
-    raise ActvieRecord::RecordNotFound
+    raise ActiveRecord::RecordNotFound if @user.blank?
   end
 
 end

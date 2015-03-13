@@ -1,10 +1,10 @@
 
 $ ->
 
-  window.colorWebSocket = new WebSocketRails( window.location.hostname + ':3001/websocket')
+  window.colorWebSocket = new WebSocketRails( window.location.hostname + ':3001/websocket' )
 
-  if $('#web-site-page-colors').size() > 0
-    channel = window.colorWebSocket.subscribe('all_users')
+  if $('#web-site-page-colors[data-channel]').size() > 0
+    channel = window.colorWebSocket.subscribe( $('#web-site-page-colors[data-channel]').attr('data-channel') )
     channel.bind 'new_color', (data)->
       return unless data.id
 

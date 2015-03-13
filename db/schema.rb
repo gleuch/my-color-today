@@ -26,25 +26,44 @@ ActiveRecord::Schema.define(version: 20150210033221) do
   add_index "api_tokens", ["token_key"], name: "index_api_tokens_on_token_key", unique: true
 
   create_table "user_authentications", force: true do |t|
-    t.string   "uuid",                    null: false
     t.integer  "user_id"
-    t.integer  "provider",    default: 0, null: false
-    t.string   "auth_token"
-    t.string   "auth_secret"
-    t.integer  "status",      default: 0, null: false
+    t.string   "uuid"
+    t.string   "uid"
+    t.string   "provider"
+    t.string   "name"
+    t.string   "email"
+    t.string   "username"
+    t.string   "token"
+    t.string   "secret"
+    t.string   "refresh_token"
+    t.datetime "token_expires_at"
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size",    default: 0
+    t.datetime "avatar_updated_at"
+    t.string   "profile_url"
+    t.string   "profile_image_url"
+    t.date     "birthday"
+    t.string   "locale"
+    t.string   "gender"
+    t.integer  "status",              default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "user_authentications", ["user_id"], name: "index_user_authentications_on_user_id"
+  add_index "user_authentications", ["uid", "provider"], name: "index_user_authentications_on_uid_and_provider"
   add_index "user_authentications", ["uuid"], name: "index_user_authentications_on_uuid", unique: true
 
   create_table "users", force: true do |t|
     t.string   "uuid",                            null: false
-    t.string   "first_name",                      null: false
-    t.string   "last_name",                       null: false
+    t.string   "slug"
+    t.string   "name",                            null: false
     t.string   "email"
     t.string   "login",                           null: false
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size",    default: 0
+    t.datetime "avatar_updated_at"
     t.string   "crypted_password"
     t.string   "password_salt"
     t.string   "persistence_token",               null: false
@@ -57,15 +76,19 @@ ActiveRecord::Schema.define(version: 20150210033221) do
     t.datetime "last_login_at"
     t.string   "current_login_ip"
     t.string   "last_login_ip"
+    t.string   "signup_method"
     t.integer  "roles_mask"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["last_request_at"], name: "index_users_on_last_request_at"
+  add_index "users", ["login"], name: "index_users_on_login", unique: true
   add_index "users", ["perishable_token"], name: "index_users_on_perishable_token"
   add_index "users", ["persistence_token"], name: "index_users_on_persistence_token"
   add_index "users", ["single_access_token"], name: "index_users_on_single_access_token"
+  add_index "users", ["slug"], name: "index_users_on_slug", unique: true
   add_index "users", ["uuid"], name: "index_users_on_uuid", unique: true
 
   create_table "web_site_page_colors", force: true do |t|

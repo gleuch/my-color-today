@@ -9,11 +9,23 @@ class User < ActiveRecord::Base
   acts_as_authentic do |c|
     c.transition_from_crypto_providers = Authlogic::CryptoProviders::Sha512
     c.crypto_provider = Authlogic::CryptoProviders::SCrypt
+    c.merge_validates_length_of_email_field_options({unless: Proc.new { |u| u.is_oauth_signup }})
+    c.merge_validates_format_of_email_field_options({unless: Proc.new { |u| u.is_oauth_signup }})
+    c.merge_validates_uniqueness_of_email_field_options({unless: Proc.new { |u| u.is_oauth_signup }})
   end
 
   # FriendlyId
   extend FriendlyId
-  friendly_id :login, use: [:slugged, :finders]
+  friendly_id :login, use: [:finders]
+
+  # Paperclip
+  has_attached_file :avatar, 
+      styles: { large: ["500x500#",:jpg], medium: ["200x200#",:jpg], small: ["64x64#",:jpg] }, 
+      processors: [:thumbnail, :compression],
+      default_style: :medium, default_url: "/images/:class/:attachment/:style.png"
+
+
+  # ENUM ----------------------------------------------------------------------
 
   enum language: {
     'en' =>     0,
@@ -22,18 +34,22 @@ class User < ActiveRecord::Base
   }
 
 
-
   # ASSOCIATIONS --------------------------------------------------------------
 
   has_one :api_token
 
-  has_many :page_colors, class: 'WebSitePageColor'
-  has_many :authentications, class: 'UserAuthentication'
+  has_many :page_colors, class_name: 'WebSitePageColor'
+  has_many :authentications, class_name: 'UserAuthentication'
 
 
   # VALIDATIONS ---------------------------------------------------------------
 
-  validates :first_name, :last_name, :login, presence: true, length: {maximum: 250}
+  attr_accessor :is_oauth_signup
+
+  validates :name, :login, presence: true, length: {maximum: 250}
+  validates_attachment :avatar, 
+    content_type: { content_type: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'] },
+    size: { less_than: 5.megabytes }
 
 
   # CLASS METHODS -------------------------------------------------------------
@@ -43,10 +59,12 @@ class User < ActiveRecord::Base
 
   # Create user from ominiauth data
   def self.create_from_omniauth_data(auth)
+    puts auth.to_yaml
     user = User.joins(:authentications).where(user_authentications: {provider: auth[:provider], uid: auth[:uid]}).first_or_initialize.tap do |u|
-      # u.login = auth[:nickname]
+      u.login = auth[:username]
       u.email = auth[:email]
-      u.name = auth[:name] || auth[:nickname]
+      u.name = auth[:name] || auth[:username]
+      u.is_oauth_signup = true
       u.password = u.password_confirmation = "".random(32)
       u.save!
     end

@@ -8,9 +8,9 @@ class UserAuthentication < ActiveRecord::Base
 
   # ENUMS ---------------------------------------------------------------------
 
-  enum :status, [:active, :inactive]
+  enum status: [:active, :inactive]
 
-  enum :provider, {
+  enum provider: {
     developer:    0,
     twitter:      1,
     # facebook:     2,
@@ -31,9 +31,6 @@ class UserAuthentication < ActiveRecord::Base
 
 
   # VALIDATIONS ---------------------------------------------------------------
-
-  validates :first_name, :last_name, :login, presence: true
-  validates :first_name, :last_name, :login, length: {maximum: 250}
   
 
 
