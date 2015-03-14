@@ -59,7 +59,6 @@ class User < ActiveRecord::Base
 
   # Create user from ominiauth data
   def self.create_from_omniauth_data(auth)
-    puts auth.to_yaml
     user = User.joins(:authentications).where(user_authentications: {provider: auth[:provider], uid: auth[:uid]}).first_or_initialize.tap do |u|
       u.login = auth[:username]
       u.email = auth[:email]

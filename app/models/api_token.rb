@@ -28,19 +28,20 @@ class ApiToken < ActiveRecord::Base
   # METHODS -------------------------------------------------------------------
 
   def to_api
-    {token_key: self.token_key, token_secret: self.token_secret, user: self.user ? self.user.to_api : nil}
+    {id: self.id, token_key: self.token_key, token_secret: self.token_secret, user: self.user ? self.user.to_api : nil}
   end
 
-  def reset_token_and_key
+  def reset_token_and_key(s=false)
     generate_token_and_key(true)
+    self.save if s
   end
 
 
 private
 
   def generate_token_and_key(force=false)
-    generate_token_key
-    generate_token_secret
+    generate_token_key(force)
+    generate_token_secret(force)
   end
 
   def generate_token_key(force=false)
