@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(version: 20150210033221) do
     t.integer  "color_red"
     t.integer  "color_green"
     t.integer  "color_blue"
-    t.integer  "color_hex"
+    t.string   "color_hex"
     t.datetime "created_at"
   end
 

@@ -8,7 +8,7 @@ class CreateWebSitePageColors < ActiveRecord::Migration
       t.integer     :color_red
       t.integer     :color_green
       t.integer     :color_blue
-      t.integer     :color_hex
+      t.string      :color_hex,               length: 6
       t.datetime    :created_at
     end
 

@@ -9,7 +9,7 @@ $ ->
       return unless data.id
 
       unless $('.color[data-uuid="' + data.id + '"]').size() > 0
-        el = $('<div></div>').addClass('color').attr('data-rgb-color', data.color.rgb).attr('data-uuid', data.id).attr('data-url', data.page.url).html(data.page.domain_tld)
+        el = $('<div></div>').addClass('color').attr('data-rgb-color', data.color.rgb).attr('data-uuid', data.id).attr('data-url', data.page.url).attr('title', data.page.url).html(data.page.domain_tld + ' -  #' + data.color.hex)
         $('#web-site-page-colors').prepend(el)
 
         $(window).trigger 'color:update'
