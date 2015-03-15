@@ -1,10 +1,31 @@
 !!!
-%html
-  %head
-    %title InternetColorApp
+%html{lang: 'en', 'xmlns:fb' => 'http://www.facebook.com/2008/fbml', 'xmlns:og' => 'http://opengraphprotocol.org/schema/', 'xmlns' => 'http://www.w3.org/1999/xhtml'}
+  %head{prefix: 'og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#'}
+    %meta{charset: 'UTF-8'}
+
+    %title= page_title
+
+    %meta{name: :viewport, content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"}
+
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
 
-  %body
-    = yield
+    = render 'layouts/static/meta_tags'
+
+    = # render 'layouts/header'
+
+
+  %body{class: @body_classes}
+    = # render 'layouts/body_header'
+
+    = # render 'layouts/static/header'
+
+    #wrapper
+      #container
+        #content.container-fluid
+          = yield
+          .clearfix
+
+    = # render 'layouts/static/footer'
+    = # render 'layouts/footer'

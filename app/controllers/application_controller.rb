@@ -15,6 +15,9 @@ class ApplicationController < ActionController::Base
 
     # Set the locale if available but different to EN
     I18n.locale = params[:locale] if User.is_valid_language(params[:locale])
+
+
+    @page_title = t(:name)
   end
 
   # Enable force_ssl where required

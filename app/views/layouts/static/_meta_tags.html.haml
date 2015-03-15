@@ -1,0 +1,116 @@
+- images = []
+- images += @page_meta_images unless @page_meta_images.blank?
+- if false
+  - if @post.present?
+    - if @post.promo_image_file_name.present?
+      - images << @post.promo_image.url(:original)
+    - @post.post_items.each do |i|
+      - next unless ['Video','Image'].include?(i.style)
+      - images << i.image.url(:original) unless i.image_file_name.blank?
+  - elsif @author.present? && @author.avatar_file_name.present?
+    - images << @author.avatar.url(:large)
+- else
+  - images << image_url('share/logo.png')
+
+
+- # Basic SEO
+%meta{name: :description, content: page_meta_description}
+%meta{name: :keywords, content: page_meta_keywords}
+- # %meta{name: :subject, content: t('meta.subject')}
+%meta{name: :language, content: 'US'}
+%meta{itemprop: 'inLanguage', content: 'en-us'}
+%meta{name: :url, content: page_canonical_url}
+%link{rel: :canonical, href: page_canonical_url}
+- unless @page_short_url.blank?
+  %link{rel: 'shorturl', href: @page_short_url}
+%link{rel: :help, href: static_page_url(:about)}
+%link{rel: :Start, href: root_url}
+
+%meta{name: :copyright, content: t('meta.copyright', year: Date.today.year)}
+%meta{name: :author, content: t('meta.author', url: root_url)}
+%meta{name: :owner, content: t('me.name')}
+%meta{name: :robots, content: page_meta_robots}
+%meta{name: :googlebot, content: page_meta_robots}
+%meta{name: 'revisit-after', content: '3 days'}
+%meta{name: :rating, content: 'General'}
+%meta{name: :distribution, content: :global}
+%meta{name: :coverage, content: :worldwide}
+%meta{name: :generator, content: t('meta.generator')}
+- unless page_category.blank?
+  %meta{name: :category, content: page_category}
+
+%link{'crossOrigin' => '', href: '/favicon.png', rel: 'icon', type: 'image/png'}
+%link{'crossOrigin' => '', href: '/favicon.png', rel: 'shortcut icon', type: 'image/png'}
+- images.first(1).each do |img|
+  %link{rel: :image_src, href: img}
+
+- # OpenGraph tags
+%meta{property: 'og:site_name', content: t('meta.name')}
+%meta{property: 'og:url', content: page_canonical_url}
+%meta{property: 'og:title', content: page_share_title}
+%meta{property: 'og:description', content: page_share_description}
+- images.each do |img|
+  %meta{property: 'og:image', content: img}
+
+- if page_type_is?(:article)
+  %meta{property: 'og:type', content: 'article'}
+  %meta{property: 'article:publisher', content: facebook_profile_url}
+  - #%meta{property: 'article:section', content: @post.category.name}
+  - # @post.news_keywords.each do |tag|
+  - #  %meta{property: 'article:tag', content: tag}
+  - # %meta{property: 'article:published_time', content: @post.published_at.iso8601}
+  - # %meta{property: 'article:modified_time', content: @post.updated_at.iso8601}
+  %meta{property: 'article:author', content: facebook_profile_url}
+  %meta{property: 'profile:first_name', content: t('me.first_name')}
+  %meta{property: 'profile:last_name', content: t('me.last_name')}
+  %meta{property: 'profile:username', content: t(:facebook_name)}
+
+- elsif page_type_is?(:profile)
+  %meta{property: 'og:type', content: 'profile'}
+  %meta{property: 'article:author', content: facebook_profile_url}
+  %meta{property: 'profile:first_name', content: t('me.first_name')}
+  %meta{property: 'profile:last_name', content: t('me.last_name')}
+  %meta{property: 'profile:username', content: t(:facebook_name)}
+
+- else
+  %meta{property: 'og:type', content: 'website'}
+
+- if page_is_nsfw?
+  %meta{property: 'og:restrictions:age', content: '18+'}
+
+
+- # --- Facebook ---
+%meta{property: 'fb:app_id', content: Setting.facebook_app_id}
+- Setting.admin_facebook_ids.each do |fbid|
+  %meta{property: 'fb:admins', content: fbid}
+
+
+- # --- Twitter ---
+%meta{name: 'twitter:site', content: t(:twitter_name)}
+%meta{name: 'twitter:creator', content: t(:twitter_name)}
+- unless page_share_title.blank?
+  %meta{name: 'twitter:card', content: 'summary_large_image'}
+  %meta{name: 'twitter:title', content: page_share_title}
+- images.first(1).each do |img|
+  %meta{name: 'twitter:image:src', content: img}
+
+
+- # --- Google ---
+- # %meta{name: 'google-site-verification', content: ''}
+%link{href: google_plus_url, rel: :publisher}
+%meta{itemprop: :description, content: page_share_description}
+- images.first(1).each do |img|
+  %meta{itemprop: :image, content: img}
+
+
+- # --- Pinterest ---
+- # We do not have any data-rich pins currently. TODO: explore as later options
+%meta{name: 'pinterest-rich-pin', content: 'false'}
+
+
+- # --- Etc. ---
+
+
+- # Include any additional meta tags defined in the page
+- if content_for?(:meta_tags)
+  = yield(:meta_tags)

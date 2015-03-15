@@ -1,5 +1,6 @@
-#web-site-page-colors{'data-channel' => 'all_users'}
-  - unless @latest_colors.blank?
-    - @latest_colors.each do |color|
-      .color{'data-uuid' => color.uuid, 'data-rgb-color' => color.rgb_color, 'data-url' => color.page.url, title: color.page.url}
-        #{color.page.site.uri_domain_tld} - ##{color.hex_color}
+%article
+  %section#web-site-page-colors{'data-channel' => 'all_users'}
+    - unless @latest_colors.blank?
+      - @latest_colors.each do |color|
+        .color{'data-uuid' => color.uuid, 'data-rgb-color' => color.rgb_color, 'data-url' => color.page.url, title: color.page.url}
+          #{color.page.site.uri_domain_tld} - ##{color.hex_color}
