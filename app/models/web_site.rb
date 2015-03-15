@@ -46,7 +46,7 @@ class WebSite < ActiveRecord::Base
 
   # Parse URL
   def uri
-    @@uri ||= Addressable::URI.parse(self.url)
+    @uri ||= Addressable::URI.parse(self.url)
   end
 
 

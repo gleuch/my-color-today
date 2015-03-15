@@ -4,6 +4,9 @@ module Api
     include ActionController::HttpAuthentication::Token::ControllerMethods
 
 
+    skip_before_filter :verify_authenticity_token
+
+
   private
 
     def authenticate_user_key

@@ -1,7 +1,6 @@
 module Api
   class TokensController < BaseController
 
-    skip_before_filter :verify_authenticity_token, only: [:create]
     before_filter :authenticate_user_key, only: [:show]
     after_filter :set_csrf_header, only: [:create]
 
