@@ -7,7 +7,7 @@ module Api
     # Add new page color into user's history
     def create
       results = ->{
-        color = WebSitePageColor.add(params[:url], params[:color], @api_token.user)
+        color = WebSitePageColor.add(params[:url], params[:average_color], params[:dominant_color], user: @api_token.user)
 
         if color && !color.new_record?
           {success: true, color: color.to_api}

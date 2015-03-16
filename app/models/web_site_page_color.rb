@@ -28,9 +28,13 @@ class WebSitePageColor < ActiveRecord::Base
   # CLASS METHODS -------------------------------------------------------------
 
   # Find first or create new web site page
-  def self.add(url,colors,user=nil)
+  def self.add(url,avg_colors,dom_colors=nil,*args)
+    opts = args.extract_options!
     page = WebSitePage.add(url)
-    page.colors.create(color_red: colors[:red], color_green: colors[:green], color_blue: colors[:blue], user_id: (user.present? ? user.id : nil))
+    page.colors.create(
+      color_red: avg_colors[:red], color_green: avg_colors[:green], color_blue: avg_colors[:blue], 
+      palette_red: dom_colors[:red], palette_green: dom_colors[:green], palette_blue: dom_colors[:blue], 
+      user_id: (opts[:user].present? ? opts[:user].id : nil))
   end
 
 
@@ -46,6 +50,17 @@ class WebSitePageColor < ActiveRecord::Base
     self.color_hex
   end
 
+  # Return RGB as array
+  def palette_rgb_color
+    [self.palette_red, self.palette_green, self.palette_blue]
+  end
+
+  # Return color as hex code
+  def palette_hex_color
+    self.palette_hex
+  end
+
+
   # Site association
   def site
     self.page.site
@@ -59,6 +74,10 @@ class WebSitePageColor < ActiveRecord::Base
         rgb: rgb_color,
         hex: hex_color
       },
+      palette: {
+        rgb: palette_rgb_color,
+        hex: palette_hex_color,
+      },
       page: self.page.to_api,
       created_at: self.created_at
     }
@@ -70,6 +89,7 @@ private
 
   def generate_color_hex
     self.color_hex ||= ("%02x%02x%02x" % rgb_color).upcase
+    self.palette_hex ||= ("%02x%02x%02x" % palette_rgb_color).upcase
   end
 
   def queue_average_color_worker

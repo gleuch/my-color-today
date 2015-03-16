@@ -111,6 +111,10 @@ ActiveRecord::Schema.define(version: 20150315231956) do
     t.integer  "color_blue"
     t.string   "color_hex",        limit: 255
     t.datetime "created_at"
+    t.integer  "palette_red"
+    t.integer  "palette_green"
+    t.integer  "palette_blue"
+    t.string   "palette_hex",      limit: 255
   end
 
   add_index "web_site_page_colors", ["user_id"], name: "index_web_site_page_colors_on_user_id"
