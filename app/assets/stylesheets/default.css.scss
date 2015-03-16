@@ -1,0 +1,47 @@
+// DEFAULT COLORS
+$color-logo:       rgb(39,209,209);  // Logo blue
+$color-white:      rgb(255,255,255);
+$color-black:      rgb(14,15,16);
+$color-grey-bg:    rgb(247,248,249);
+$color-mid-grey-bg:rgb(237,238,239);
+$color-text-black: rgb(58,60,61);
+$color-mid-black:  rgb(110,111,112); // ^60 gleuch-black
+$color-text-grey:  rgb(152,153,154); // ~60 gleuch-text-black
+
+
+// SOCIAL BRAND COLORS
+$social-facebook: #3b5998;
+$social-twitter: #00aced;
+$social-googleplus: #dd4b39;
+$social-youtube: #C4302B; //bb0000;
+$social-podcast: #8c1222;
+$social-pinterest: #cb2027;
+$social-linkedin: #007bb6;
+$social-instagram: #517fa4;
+$social-rss: #fa9b39;
+$social-reddit: #ff5700;
+$social-stumbleupon: #eb4924;
+$social-tumblr: #34526f;
+
+
+// PADDING, WIDTHS, ETC
+$color-menu-width:       220px;
+$color-lg-frame-padding: 75px;
+$color-sm-frame-padding: 30px;
+$color-xs-frame-padding: 15px;
+
+$tablet-width: 992px;
+$mobile-width: 768px;
+//$phone-width:  350px;
+$tablet-max-size: 'max-width: ' + $tablet-width;
+$mobile-max-size: 'max-width: ' + $mobile-width;
+//$phone-max-size:  'max-width: ' + $phone-width;
+
+
+
+// WEB FONTS
+$webfont-social: 'Mono Social Icons Font';
+$webfont-sans:   Adrianna,Helvetica,Arial,sans-serif;
+$webfont-serif:  Georgia,Times,'Times New Roman',serif;
+$webfont-serif-letterspacing: -.02em;
+$webfont-mono:   'Courier New',Courier,monospace;

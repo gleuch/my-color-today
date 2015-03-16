@@ -1,0 +1,10 @@
+// Load up defaults
+@import 'default';
+
+// Load up boostrap template & bourbon mixins
+@import 'bootstrap';
+@import 'bourbon';
+
+// Load the default layout and additional styling
+@import 'scaffold';
+@import 'layout';
