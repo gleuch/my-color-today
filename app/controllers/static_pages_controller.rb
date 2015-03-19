@@ -26,7 +26,7 @@ class StaticPagesController < ApplicationController
   def home
     @latest_colors = WebSitePageColor.order('created_at desc').limit(100)
   end
-
+  alias_method :svg, :home
 
 protected
 
