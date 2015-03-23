@@ -7,19 +7,28 @@ class UserAuthenticationsController < ApplicationController
     omniauth = request.env['omniauth.auth']
     @auth = UserAuthentication.find_from_omniauth_data(omniauth)
 
+    session[:extension_message] = {'action' => 'reload-auth'}
+
     if current_user
-      current_user.authorizations.create(provider: omniauth['provider'], uid: omniauth['uid'])
-      # url = edit_user_path(:current)
+      current_user.authentications.create(provider: omniauth['provider'], uid: omniauth['uid'])
       flash[:notice] = t('.success.new_auth')
+      @user = current_user
 
     elsif @auth
       UserSession.create(@auth.user, true)
       flash[:notice] = t('.success.update_auth')
+      @user = @auth.user
 
     else
       @new_auth = UserAuthentication.create_from_omniauth_data(authentication_params, current_user)
       UserSession.create(@new_auth.user, true)
+      @user = @new_auth.user
       flash[:notice] = t('.success.new_user')
+    end
+
+    if session[:auth_api_app].present?
+      ApiToken.where(token_key: session.delete(:auth_api_app)).first.update(user: @user)
+      session[:extension_message]['closeWindow'] = true
     end
 
     redirect_to after_sign_in_url

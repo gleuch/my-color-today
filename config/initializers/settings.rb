@@ -6,6 +6,14 @@ begin
   ]
   Setting.facebook_app_id = ''
 
+  case Rails.env
+    when 'development'
+      Setting.chrome_extension_id = 'pipehoklkfhchfckliliaifabhebjoln'
+
+    else
+      Setting.chrome_extension_id = 'pipehoklkfhchfckliliaifabhebjoln'
+  end
+
 rescue => err
   puts "Settings Initializer Error: #{err}"
   nil

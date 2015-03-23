@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
   namespace :api do
-    resources :tokens, only: [:show, :create]
+    resources :tokens, only: [:index, :create]
     resources :history, only: [:create]
   end
 
@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   # User Sessions
   get '/login' => 'user_sessions#new', as: :login
+  get '/signup' => 'user_sessions#new', as: :signup, welcome: true
   match '/logout' => 'user_sessions#destroy', as: :logout, via: [:get, :post]
 
   # Static pages routing, use StaticPage to check if exists as constraint

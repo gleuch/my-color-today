@@ -1,14 +1,16 @@
 module Api
   class TokensController < BaseController
 
-    before_filter :authenticate_user_key, only: [:show]
+    before_filter :authenticate_user_key, only: [:index]
     after_filter :set_csrf_header, only: [:create]
 
 
     # Get user info from token
-    def show
+    def index
+      # This should possibly get the latest user's token if has user and user has many tokens.
+      
       respond_to do |format|
-        format.json { render json: @api_token.to_api, callback: params[:callback] }
+        format.json { render json: {success: true, authentication: @api_token.to_api}, callback: params[:callback] }
       end
     end
 

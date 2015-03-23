@@ -27,5 +27,8 @@
           = yield
           .clearfix
 
+    %script{type: 'text/javascript'}
+      = extension_send_message.html_safe
+
     = # render 'layouts/static/footer'
     = # render 'layouts/footer'

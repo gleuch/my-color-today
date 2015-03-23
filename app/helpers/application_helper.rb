@@ -52,4 +52,11 @@ module ApplicationHelper
     end
   end
 
+  def extension_send_message
+    return '' unless session[:extension_message].present?
+    msg = session.delete(:extension_message)
+
+    "chrome.runtime.sendMessage('#{Setting.chrome_extension_id}', " + msg.to_json.html_safe + ", function() {});"
+  end
+
 end

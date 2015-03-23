@@ -94,6 +94,14 @@ class User < ActiveRecord::Base
 
   # METHODS -------------------------------------------------------------------
 
+  def to_api
+    {
+      id: self.uuid,
+      name: self.name,
+      login: self.login
+    }
+  end
+
   # def deliver_password_reset_instructions!
   #   reset_perishable_token!
   #   UserMailer.password_reset_instructions(self).deliver
