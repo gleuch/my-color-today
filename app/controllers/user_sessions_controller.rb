@@ -1,7 +1,7 @@
 class UserSessionsController < ApplicationController
 
-  before_filter :authenticate_user!, only: [:destroy]
   before_filter :get_app_token, only: [:new]
+  before_filter :authenticate_user!, only: [:destroy]
 
 
   def new
@@ -22,7 +22,16 @@ private
     session.delete(:auth_api_app) # clear session
     token = request.authorization.gsub(/^Token token\=/, '')
     return if token.blank?
-    session[:auth_api_app] = token if ApiToken.where(token_key: token).count > 0
+
+    @api_token = ApiToken.where(token_key: token).first rescue nil
+    unless @api_token.blank?
+      if current_user && @api_token.user.present?
+        raise ActiveRecord::RecordNotFound unless @api_token.user.id == current_user.id
+      end
+
+      session[:auth_api_app] = token
+      session[:extension_message]['closeWindow'] = true
+    end
   rescue
     nil
   end

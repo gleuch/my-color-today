@@ -28,7 +28,6 @@ class UserAuthenticationsController < ApplicationController
 
     if session[:auth_api_app].present?
       ApiToken.where(token_key: session.delete(:auth_api_app)).first.update(user: @user)
-      session[:extension_message]['closeWindow'] = true
     end
 
     redirect_to after_sign_in_url
