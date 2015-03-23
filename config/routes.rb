@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :tokens, only: [:index, :create]
-    resources :history, only: [:create]
+    resources :history, only: [:index, :create]
   end
 
   resources :user_authentications, path: '/account/authentications'

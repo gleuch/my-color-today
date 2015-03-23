@@ -14,6 +14,8 @@ class ApiToken < ActiveRecord::Base
 
   # ASSOCIATIONS --------------------------------------------------------------
 
+  has_many :page_colors, class_name: 'WebSitePageColor'
+
   belongs_to :user
 
 

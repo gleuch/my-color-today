@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 20150315231956) do
     t.integer  "web_site_page_id"
     t.string   "uuid"
     t.integer  "user_id"
+    t.integer  "api_token_id"
     t.integer  "color_red"
     t.integer  "color_green"
     t.integer  "color_blue"
@@ -117,6 +118,7 @@ ActiveRecord::Schema.define(version: 20150315231956) do
     t.string   "palette_hex"
   end
 
+  add_index "web_site_page_colors", ["api_token_id"], name: "index_web_site_page_colors_on_api_token_id"
   add_index "web_site_page_colors", ["user_id"], name: "index_web_site_page_colors_on_user_id"
   add_index "web_site_page_colors", ["uuid"], name: "index_web_site_page_colors_on_uuid", unique: true
 

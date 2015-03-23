@@ -5,6 +5,7 @@ class CreateWebSitePageColors < ActiveRecord::Migration
       t.integer     :web_site_page_id
       t.string      :uuid
       t.integer     :user_id
+      t.integer     :api_token_id
       t.integer     :color_red
       t.integer     :color_green
       t.integer     :color_blue
@@ -14,6 +15,7 @@ class CreateWebSitePageColors < ActiveRecord::Migration
 
     add_index :web_site_page_colors, [:uuid], unique: true
     add_index :web_site_page_colors, [:user_id]
+    add_index :web_site_page_colors, [:api_token_id]
   end
 
 end

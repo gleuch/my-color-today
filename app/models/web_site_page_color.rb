@@ -34,6 +34,7 @@ class WebSitePageColor < ActiveRecord::Base
     page.colors.create(
       color_red: avg_colors[:red], color_green: avg_colors[:green], color_blue: avg_colors[:blue], 
       palette_red: dom_colors[:red], palette_green: dom_colors[:green], palette_blue: dom_colors[:blue], 
+      api_token_id: (opts[:api_token].present? ? opts[:api_token].id : nil),
       user_id: (opts[:user].present? ? opts[:user].id : nil))
   end
 
