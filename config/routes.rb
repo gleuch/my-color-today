@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   resources :user_authentications, path: '/account/authentications'
 
   # User profile
-  match '/u/:id' => 'users#show', via: [:get]
+  match '/u/:id' => 'users#show', via: [:get], as: :user_profile
 
   # Omniauth
   match '/auth/:provider/callback' => 'user_authentications#create', via: [:get, :post]

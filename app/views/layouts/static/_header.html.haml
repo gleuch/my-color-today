@@ -1,0 +1,10 @@
+%header#header
+  %ul
+    - if current_user
+      %li
+        = link_to t('.your_profile'), user_profile_url(current_user)
+    - else
+      %li
+        = link_to t('.signup'), signup_url
+      %li
+        = link_to t('.login'), login_url

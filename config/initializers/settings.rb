@@ -8,10 +8,10 @@ begin
 
   case Rails.env
     when 'development'
-      Setting.chrome_extension_id = 'pipehoklkfhchfckliliaifabhebjoln'
+      Setting.chrome_extension_id = 'mlelncoamdohkknhfdkjfoghlifglkcn'
 
     else
-      Setting.chrome_extension_id = 'pipehoklkfhchfckliliaifabhebjoln'
+      Setting.chrome_extension_id = 'mlelncoamdohkknhfdkjfoghlifglkcn'
   end
 
 rescue => err
