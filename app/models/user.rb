@@ -7,8 +7,7 @@ class User < ActiveRecord::Base
 
   # Authlogic
   acts_as_authentic do |c|
-    c.transition_from_crypto_providers = Authlogic::CryptoProviders::Sha512
-    c.crypto_provider = Authlogic::CryptoProviders::SCrypt
+    c.crypto_provider = Authlogic::CryptoProviders::BCrypt
     c.merge_validates_length_of_email_field_options({unless: Proc.new { |u| u.is_oauth_signup }})
     c.merge_validates_format_of_email_field_options({unless: Proc.new { |u| u.is_oauth_signup }})
     c.merge_validates_uniqueness_of_email_field_options({unless: Proc.new { |u| u.is_oauth_signup }})
