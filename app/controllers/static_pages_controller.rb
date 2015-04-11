@@ -28,6 +28,7 @@ class StaticPagesController < ApplicationController
   end
   alias_method :svg, :home
 
+
 protected
 
   def load_resource
