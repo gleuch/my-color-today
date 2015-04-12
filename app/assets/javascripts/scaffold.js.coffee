@@ -42,3 +42,14 @@ $ ->
       $('.color[data-rgb-color]').each ->
         $(this).css 'background-color', 'rgb(' + $(this).data('rgb-color') + ')'
   .trigger 'color:update'
+
+  if chrome.app.isInstalled || !navigator.userAgent.match(/Chrome\//)
+    $('.extension-install.chrome').hide()
+  else
+    $('.extension-install.chrome a').on 'click', ->
+      chrome.webstore.install('https://chrome.google.com/webstore/detail/nkghbibhhebkddaeebapfkooljjfhnca', ->
+        console.log('Installed', arguments)
+      , ->
+        console.log('Unable to install', arguments)
+      )
+      return false
