@@ -9,7 +9,7 @@ class UserAuthenticationsController < ApplicationController
 
     session[:extension_message] = {'action' => 'reload-auth'}
 
-    if current_user && @auth
+    if current_user
       if @auth
         @auth.update_from_omniauth_data(authentication_params)
       else
