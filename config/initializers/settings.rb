@@ -11,7 +11,7 @@ begin
       Setting.chrome_extension_id = 'mlelncoamdohkknhfdkjfoghlifglkcn'
 
     else
-      Setting.chrome_extension_id = 'mlelncoamdohkknhfdkjfoghlifglkcn'
+      Setting.chrome_extension_id = 'nkghbibhhebkddaeebapfkooljjfhnca'
   end
 
 rescue => err
