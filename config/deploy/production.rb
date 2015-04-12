@@ -18,3 +18,5 @@ set :deploy_to, '/home/colorcamp/color.camp'
 # set :sidekiq_processes, 2
 
 # WEBSOCKET_RAILS STANDALONE SERVER
+set :websocket_rails_server_role, :app
+set :websocket_rails_args, ''
