@@ -73,7 +73,7 @@ class User < ActiveRecord::Base
     end
 
     provider.update(
-      name: auth[:name], username: auth[:username], 
+      name: auth[:name], username: auth[:username],
       token: auth[:token], secret: auth[:secret], refresh_token: auth[:refresh_token], token_expires_at: auth[:token_expire_at],
       profile_image_url: auth[:profile_image_url], profile_url: auth[:profile_url],
       gender: auth[:gender], birthday: auth[:birthday], locale: auth[:locale]

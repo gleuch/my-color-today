@@ -9,12 +9,17 @@ class UserAuthenticationsController < ApplicationController
 
     session[:extension_message] = {'action' => 'reload-auth'}
 
-    if current_user
-      current_user.authentications.create(provider: omniauth['provider'], uid: omniauth['uid'])
+    if current_user && @auth
+      if @auth
+        @auth.update_from_omniauth_data(authentication_params)
+      else
+        current_user.authentications.create(provider: omniauth['provider'], uid: omniauth['uid'])
+      end
       flash[:notice] = t('.success.new_auth')
       @user = current_user
 
     elsif @auth
+      @auth.update_from_omniauth_data(authentication_params)
       UserSession.create(@auth.user, true)
       flash[:notice] = t('.success.update_auth')
       @user = @auth.user
