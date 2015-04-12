@@ -1,7 +1,10 @@
 
 $ ->
 
-  window.colorWebSocket = new WebSocketRails( window.location.hostname + ':3001/websocket' )
+  if window.location.hostname == 'color.camp'
+    window.colorWebSocket = new WebSocketRails( window.location.hostname + '/websocket' )
+  else
+    window.colorWebSocket = new WebSocketRails( window.location.hostname + ':3001/websocket' )
 
   if $('#page-colors-list[data-channel]').size() > 0
     channel = window.colorWebSocket.subscribe( $('#page-colors-list[data-channel]').attr('data-channel') )
