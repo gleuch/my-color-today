@@ -1,7 +1,7 @@
 ColorCampSubscriber = ->
   this.dispatcher = null
   this.subscribed_channel = null
-  this.svg = false
+  this.channel_svg = false
   this.reconnectIntv = null
 
   if window.location.hostname == 'color.camp'
@@ -39,7 +39,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
         return unless data.id
 
         unless $('.color[data-uuid="' + data.id + '"]').size() > 0
-          if channel_svg
+          if _t.channel_svg
             el = $('<stop/>').attr('stop-color', '#' + data.color.hex)
 
           else
