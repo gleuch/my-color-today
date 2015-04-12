@@ -2,7 +2,7 @@
 $ ->
 
   if window.location.hostname == 'color.camp'
-    window.colorWebSocket = new WebSocketRails( window.location.hostname + '/websocket' )
+    window.colorWebSocket = new WebSocketRails( window.location.hostname + '/websocket/' )
   else
     window.colorWebSocket = new WebSocketRails( window.location.hostname + ':3001/websocket' )
 
