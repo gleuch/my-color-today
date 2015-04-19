@@ -44,8 +44,9 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
           else
             eli = $('<div></div>').addClass('color-info').html(data.page.domain_tld + ' -  #' + data.color.hex)
+            elc = $('<div></div>').addClass('color-area').css('background-color', '#' + data.color.hex)
             el = $('<li></li>')
-            el.append(eli)
+            el.append(elc).append(eli)
 
           el.addClass('color').attr('data-rgb-color', data.color.rgb).attr('data-uuid', data.id).attr('data-url', data.page.url).attr('title', data.page.url)
           if _t.channel_svg

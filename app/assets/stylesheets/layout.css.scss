@@ -6,6 +6,34 @@ body {}
 
 #page-colors-list {
   .color {
-    .color-info {opacity: 0;}
+    .color-info {display: none;}
+  }
+}
+
+
+
+#page-colors-list {
+  padding: 30px;
+
+  .color {
+    display: inline-block;
+    margin: 7.5px;
+    width: 30px;
+    height: 30px;
+
+
+    .color-area {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      @include transition(box-shadow .2s ease-out, margin .2s ease-out, width .2s ease-out, height .2s ease-out);
+
+      &:hover {
+        width: 36px;
+        height: 36px;
+        margin: -3px;
+        box-shadow: 0 1px 2px rgba(0,0,0,.1);
+      }
+    }
   }
 }
