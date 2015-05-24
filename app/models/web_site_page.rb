@@ -90,7 +90,7 @@ private
 
   # Hex color
   def update_color_avg_hex
-    self.color_avg_hex = ("%02x%02x%02x" % rgb_color).upcase rescue nil
+    self.color_avg_hex = rgb_color.rgb_to_hex
   end
 
 end

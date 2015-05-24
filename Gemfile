@@ -35,7 +35,8 @@ gem 'bourbon',                        '4.2.2'
 
 
 # --- REDIS / SIDEKIQ ---
-# gem 'sidekiq',                        '3.3.0'
+gem 'sidekiq',                        '3.3.0'
+gem 'sidekiq-unique-jobs',            '3.0.13'
 gem 'redis',                          '3.2.1'
 gem 'redis-rails',                    '4.0.0'
 

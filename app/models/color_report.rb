@@ -59,11 +59,16 @@ class ColorReport < ActiveRecord::Base
 
   # Return as hex
   def color_hex
-    ("%02x%02x%02x" % color_rgb).upcase
+    color_rgb.rgb_to_hex
   rescue
     nil
   end
 
+  def recalculate!
+    return true if self.created_at > Time.now - 30.seconds
+    self.calculate_color_avg && self.save
+    self
+  end
 
   def calculate_color_avg
     v = WebSitePageColor
@@ -92,7 +97,7 @@ class ColorReport < ActiveRecord::Base
     end
 
     color = self.palette ? v.palette_rgb : v.color_rgb
-    self.assign_attributes(color_red: color[0], color_green: color[1], color_blue: color[2]) unless color.blank?
+    self.assign_attributes(views_count: v.count, color_red: color[0], color_green: color[1], color_blue: color[2]) unless color.blank?
   end
 
 

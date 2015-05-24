@@ -30,4 +30,19 @@ class Array
     self.compact.map{|v| (v || '').to_s.parameterize}.join(s)
   end
 
+  def rgb_to_hex
+    ("%02x%02x%02x" % self).upcase
+  rescue
+    nil
+  end
+
+end
+
+
+class NilClass
+
+  def rgb_to_hex
+    nil
+  end
+
 end

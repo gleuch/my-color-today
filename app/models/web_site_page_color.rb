@@ -34,8 +34,9 @@ class WebSitePageColor < ActiveRecord::Base
     page.colors.create(
       color_red: avg_colors[:red], color_green: avg_colors[:green], color_blue: avg_colors[:blue], 
       palette_red: dom_colors[:red], palette_green: dom_colors[:green], palette_blue: dom_colors[:blue], 
-      api_token_id: (opts[:api_token].present? ? opts[:api_token].id : nil),
-      user_id: (opts[:user].present? ? opts[:user].id : nil))
+      api_token_id: opts[:api_token].try(:id),
+      user_id: opts[:user].try(:id)
+    )
   end
 
   # Return pixel color as RGB
@@ -48,7 +49,7 @@ class WebSitePageColor < ActiveRecord::Base
 
   # Return pixel color as hex
   def self.color_hex
-    ("%02x%02x%02x" % color_rgb).upcase
+    color_rgb.rgb_to_hex
   rescue
     nil
   end
@@ -63,7 +64,7 @@ class WebSitePageColor < ActiveRecord::Base
 
   # Return palette color as hex
   def self.palette_hex
-    ("%02x%02x%02x" % palette_rgb).upcase
+    palette_rgb.rgb_to_hex
   rescue
     nil
   end
@@ -125,25 +126,28 @@ class WebSitePageColor < ActiveRecord::Base
 private
 
   def generate_color_hex
-    self.color_hex ||= ("%02x%02x%02x" % rgb_color).upcase
-    self.palette_hex ||= ("%02x%02x%02x" % palette_rgb_color).upcase
+    self.color_hex ||= rgb_color.rgb_to_hex
+    self.palette_hex ||= palette_rgb_color.rgb_to_hex
   end
 
   def queue_average_color_worker
     self.page.reload # ensure we get updated record
 
+    # Ping all_users websocket with new color
     WebsocketRails[:all_users].trigger(:new_color, self.to_api)
-    WebsocketRails["user-#{self.user.uuid}"].trigger(:new_color, self.to_api) if self.user.present?
 
-    # TODO : UPDATE USER QUEUES
+    # Ping user websocket wth new color and update user's daily color report
+    if self.user.present?
+      WebsocketRails["user-#{self.user.uuid}"].trigger(:new_color, self.to_api)
+      ColorWorker.perform_async(:user_report, self.user.id, on: :daily)
+    end
 
     # If this color is only color, then average will be same as self
     unless self.page.colors_count > 1
       self.page.update(color_avg_red: self.color_red, color_avg_green: self.color_green, color_avg_blue: self.color_blue, color_avg_hex: self.color_hex)
-
     # Otherwise queue job to determine the correct average color
     else
-      # TBD : UPDATE PAGE AVG
+      ColorWorker.perform_asnyc(:web_page_report, self.web_page_id)
     end
   end
 
