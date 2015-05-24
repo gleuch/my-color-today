@@ -139,15 +139,16 @@ private
     # Ping user websocket wth new color and update user's daily color report
     if self.user.present?
       WebsocketRails["user-#{self.user.uuid}"].trigger(:new_color, self.to_api)
-      ColorWorker.perform_async(:user_report, self.user.id, on: :daily)
+      ColorWorker.perform_in(30.seconds, :user_report, self.user.id, on: :daily)
     end
 
     # If this color is only color, then average will be same as self
     unless self.page.colors_count > 1
       self.page.update(color_avg_red: self.color_red, color_avg_green: self.color_green, color_avg_blue: self.color_blue, color_avg_hex: self.color_hex)
+
     # Otherwise queue job to determine the correct average color
     else
-      ColorWorker.perform_asnyc(:web_page_report, self.web_page_id)
+      ColorWorker.perform_in(30.seconds, :web_page_report, self.web_site_page_id)
     end
   end
 

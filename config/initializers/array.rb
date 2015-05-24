@@ -37,12 +37,3 @@ class Array
   end
 
 end
-
-
-class NilClass
-
-  def rgb_to_hex
-    nil
-  end
-
-end

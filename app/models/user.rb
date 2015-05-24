@@ -102,9 +102,10 @@ class User < ActiveRecord::Base
     }
   end
 
-  def color(d, recalculate=false)
+  def color(d, *args)
+    opts = args.extract_options!
     info = reports.on(d || :overall).get
-    info.recalculate! if recalculate
+    info.recalculate! if opts[:recalculate]
     {count: info.views_count, rgb: info.color_rgb, hex: info.color_hex, palette: info.palette}
   end
 

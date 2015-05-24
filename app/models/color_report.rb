@@ -65,9 +65,8 @@ class ColorReport < ActiveRecord::Base
   end
 
   def recalculate!
-    return true if self.created_at > Time.now - 30.seconds
-    self.calculate_color_avg && self.save
-    self
+    calculate_color_avg
+    self.save
   end
 
   def calculate_color_avg

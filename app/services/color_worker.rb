@@ -14,16 +14,18 @@ class ColorWorker
     end
   end
 
-
+  # Generate the color report for user
   def user_report(id,*args)
     user = User.where(id: id).first rescue nil
     return if user.blank?
 
     opts = args.extract_options!
-    user.color(opts[:on] || :daily, true)
+    opts[:on] ||= :daily
+    info = user.color(opts[:on], recalculate: true)
   end
 
 
+  # Set the average color for the web page
   def web_page_report(id,*args)
     page = WebSitePage.where(id: id).first rescue nil
     return if page.blank?
