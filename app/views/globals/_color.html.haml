@@ -1,7 +1,7 @@
 - color ||= nil
 
 - if color.present?
-  %li.color{'data-uuid' => color.uuid, 'data-rgb-color' => color.rgb_color, 'data-url' => color.page.url, title: color.page.url}
+  %li.color{'data-uuid' => color.uuid, 'data-rgb-color' => color.rgb_color}
     .color-area{style: "background-color: ##{color.hex_color}"}
     .color-info
       #{color.page.site.uri_domain_tld} - ##{color.hex_color}

@@ -48,7 +48,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
             el = $('<li></li>')
             el.append(elc).append(eli)
 
-          el.addClass('color').attr('data-rgb-color', data.color.rgb).attr('data-uuid', data.id).attr('data-url', data.page.url).attr('title', data.page.url)
+          el.addClass('color').attr('data-rgb-color', data.color.rgb).attr('data-uuid', data.id)
           if _t.channel_svg
             $('#page-color-gradient').prepend(el)
           else

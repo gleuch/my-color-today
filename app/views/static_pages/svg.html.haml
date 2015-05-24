@@ -9,5 +9,5 @@
           - unless @latest_colors.blank?
             - ct = @latest_colors.count.to_f
             - @latest_colors.each_with_index do |color,i|
-              %stop.color{offset: "#{100 * (i / (ct-1))}%", 'stop-color' => "##{color.hex_color}", 'data-uuid' => color.uuid, 'data-rgb-color' => color.rgb_color, 'data-url' => color.page.url, title: color.page.url}
+              %stop.color{offset: "#{100 * (i / (ct-1))}%", 'stop-color' => "##{color.hex_color}", 'data-uuid' => color.uuid, 'data-rgb-color' => color.rgb_color}
       %rect{x: 0, y: 0, rx: 0, ry: 0, width: '100%', height: '100%', fill: 'url(#page-color-gradient)'}
