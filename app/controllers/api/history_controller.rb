@@ -13,7 +13,7 @@ module Api
         colors = obj.page_colors.limit(100).order('created_at desc')
 
         if colors.count > 0
-          {success: true, colors: colors.map(&:to_api)}
+          {success: true, colors: colors.map(&:to_api), daily: @api_token.user.color(:daily)}
         else
           {error: true}
         end
@@ -31,7 +31,7 @@ module Api
         color = WebSitePageColor.add(params[:url], params[:average_color], params[:dominant_color], api_token: @api_token, user: @api_token.user)
 
         if color && !color.new_record?
-          {success: true, color: color.to_api}
+          {success: true, color: color.to_api, daily: @api_token.user.color(:daily)}
         else
           {error: true}
         end

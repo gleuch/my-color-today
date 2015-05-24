@@ -135,13 +135,15 @@ private
     WebsocketRails[:all_users].trigger(:new_color, self.to_api)
     WebsocketRails["user-#{self.user.uuid}"].trigger(:new_color, self.to_api) if self.user.present?
 
+    # TODO : UPDATE USER QUEUES
+
     # If this color is only color, then average will be same as self
     unless self.page.colors_count > 1
       self.page.update(color_avg_red: self.color_red, color_avg_green: self.color_green, color_avg_blue: self.color_blue, color_avg_hex: self.color_hex)
 
     # Otherwise queue job to determine the correct average color
     else
-      # TODO : QUEUE AVG JOB
+      # TBD : UPDATE PAGE AVG
     end
   end
 

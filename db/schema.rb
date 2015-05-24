@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20150524151345) do
     t.integer  "color_green"
     t.integer  "color_blue"
     t.boolean  "palette",          default: false
+    t.integer  "views_count",      default: 0
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
   end

@@ -102,8 +102,9 @@ class User < ActiveRecord::Base
     }
   end
 
-  def daily_color_avg
-    reports.on(:daily).get
+  def color(d)
+    info = reports.on(d).get
+    {count: info.views_count, rgb: info.color_rgb, hex: info.color_hex, palette: info.palette}
   end
 
   # def deliver_password_reset_instructions!

@@ -12,6 +12,7 @@ class CreateColorReports < ActiveRecord::Migration
       t.integer   :color_green
       t.integer   :color_blue
       t.boolean   :palette,           default: false
+      t.integer   :views_count,       default: 0
       t.timestamps                    null: false
     end
 

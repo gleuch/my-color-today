@@ -11,7 +11,7 @@ class ColorReport < ActiveRecord::Base
 
   enum date_range: {
     overall:    0,
-    day:        1,  # last 24 hours 
+    daily:      1,  # last 24 hours
     today:      2,  # since midnight
     yesterday:  3,  # yesterday (00:00-23:59)
     range:      4,  # time range
@@ -42,8 +42,6 @@ class ColorReport < ActiveRecord::Base
   # CLASS METHODS -------------------------------------------------------------
 
   def self.get
-    puts recent.to_sql,recent.count
-    
     n = recent.first_or_create do |r|
       r.calculate_color_avg
     end
@@ -55,12 +53,15 @@ class ColorReport < ActiveRecord::Base
 
   # Return RGB as array
   def color_rgb
+    return nil if self.color_red.blank? || self.color_green.blank? || self.color_blue.blank?
     [self.color_red, self.color_green, self.color_blue]
   end
 
   # Return as hex
   def color_hex
     ("%02x%02x%02x" % color_rgb).upcase
+  rescue
+    nil
   end
 
 
@@ -77,10 +78,8 @@ class ColorReport < ActiveRecord::Base
         v = v.where(web_site_page_id: self.item_id)
     end
 
-    puts self.date_range,"DATE"
-
     case self.date_range.to_s
-      when 'day'
+      when 'daily'
         v = v.where('created_at > ?', Time.now-1.day)
       when 'today'
         v = v.where('DATE(created_at) = ?', Date.today)
