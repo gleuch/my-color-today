@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150315231956) do
+ActiveRecord::Schema.define(version: 20150524151345) do
 
   create_table "api_tokens", force: :cascade do |t|
     t.integer  "user_id"
@@ -24,6 +24,24 @@ ActiveRecord::Schema.define(version: 20150315231956) do
   end
 
   add_index "api_tokens", ["token_key"], name: "index_api_tokens_on_token_key", unique: true
+
+  create_table "color_reports", force: :cascade do |t|
+    t.string   "uuid"
+    t.integer  "item_id"
+    t.string   "item_type"
+    t.integer  "date_range",       default: 0
+    t.string   "date_range_value"
+    t.string   "query_value"
+    t.integer  "color_red"
+    t.integer  "color_green"
+    t.integer  "color_blue"
+    t.boolean  "palette",          default: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+  end
+
+  add_index "color_reports", ["item_id", "item_type", "date_range"], name: "index_color_reports_on_item_id_and_item_type_and_date_range"
+  add_index "color_reports", ["uuid"], name: "index_color_reports_on_uuid", unique: true
 
   create_table "settings", force: :cascade do |t|
     t.string   "var",                   null: false

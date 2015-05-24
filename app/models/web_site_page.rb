@@ -16,6 +16,7 @@ class WebSitePage < ActiveRecord::Base
   belongs_to :site, class_name: 'WebSite', counter_cache: :pages_count, foreign_key: :web_site_id
 
   has_many :colors, class_name: 'WebSitePageColor', foreign_key: :web_site_page_id
+  has_many :reports, class_name: 'ColorReport', as: :item
 
 
   # VALIDATIONS ---------------------------------------------------------------
@@ -70,6 +71,9 @@ class WebSitePage < ActiveRecord::Base
     }
   end
 
+  def daily_color_avg
+    reports.on(:daily).get
+  end
 
 
 private

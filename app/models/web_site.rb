@@ -20,6 +20,7 @@ class WebSite < ActiveRecord::Base
 
   has_many :pages, class: 'WebSitePage'
   has_many :colors, class: 'WebSitePageColor', through: :pages
+  has_many :reports, class_name: 'ColorReport', as: :item
 
 
   # VALIDATIONS ---------------------------------------------------------------
@@ -47,6 +48,10 @@ class WebSite < ActiveRecord::Base
   # Parse URL
   def uri
     @uri ||= Addressable::URI.parse(self.url)
+  end
+
+  def daily_color_avg
+    reports.on(:daily).get
   end
 
 

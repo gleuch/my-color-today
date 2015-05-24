@@ -41,23 +41,31 @@ class WebSitePageColor < ActiveRecord::Base
   # Return pixel color as RGB
   def self.color_rgb
     color = select("AVG(#{self.table_name}.color_red) AS red, AVG(#{self.table_name}.color_green) AS green, AVG(#{self.table_name}.color_blue) AS blue").where("#{self.table_name}.color_red IS NOT NULL AND #{self.table_name}.color_blue IS NOT NULL AND #{self.table_name}.color_green IS NOT NULL").first
-    [color.red.round, color.blue.round, color.green.round]
+    [color.red.round, color.green.round, color.blue.round]
+  rescue
+    nil
   end
 
   # Return pixel color as hex
   def self.color_hex
     ("%02x%02x%02x" % color_rgb).upcase
+  rescue
+    nil
   end
 
   # Return palette color as RGB
   def self.palette_rgb
     color = select("AVG(#{self.table_name}.palette_red) AS red, AVG(#{self.table_name}.palette_green) AS green, AVG(#{self.table_name}.palette_blue) AS blue").where("#{self.table_name}.palette_red IS NOT NULL AND #{self.table_name}.palette_blue IS NOT NULL AND #{self.table_name}.palette_green IS NOT NULL").first
-    [color.red.round, color.blue.round, color.green.round]
+    [color.red.round, color.green.round, color.blue.round]
+  rescue
+    nil
   end
 
   # Return palette color as hex
   def self.palette_hex
     ("%02x%02x%02x" % palette_rgb).upcase
+  rescue
+    nil
   end
 
   # Calculate average of color column

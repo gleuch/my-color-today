@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
 
   has_many :page_colors, class_name: 'WebSitePageColor'
   has_many :authentications, class_name: 'UserAuthentication'
+  has_many :reports, class_name: 'ColorReport', as: :item
 
 
   # VALIDATIONS ---------------------------------------------------------------
@@ -99,6 +100,10 @@ class User < ActiveRecord::Base
       name: self.name,
       login: self.login
     }
+  end
+
+  def daily_color_avg
+    reports.on(:daily).get
   end
 
   # def deliver_password_reset_instructions!
