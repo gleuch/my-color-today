@@ -87,7 +87,7 @@ group :development do
   gem 'capistrano-rvm',               '0.1.2'
   gem 'capistrano-rails',             '1.1.2'
   gem 'capistrano-bundler',           '1.1.4'
-  # gem 'capistrano-sidekiq',           '0.5.2'
+  gem 'capistrano-sidekiq',           '0.5.2'
   gem 'quiet_assets',                 '1.1.0'
 
   # gem 'sinatra',                      '1.4.5',        require: false

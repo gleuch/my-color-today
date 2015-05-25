@@ -1,0 +1,11 @@
+- daily = @web_site.report(:daily) rescue nil
+
+%article
+  %section
+    %h1= @web_site.name
+    - if daily.present?
+      %h3 Today: #{daily[:count]} pages (##{daily[:hex]})
+    %ul#page-colors-list.list-unstyled{'data-channel' => "site-#{@web_site.uuid}"}
+      - unless @latest_colors.blank?
+        - @latest_colors.each do |color|
+          = render 'globals/color', color: color

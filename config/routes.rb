@@ -24,6 +24,9 @@ Rails.application.routes.draw do
   get '/signup' => 'user_sessions#new', as: :signup, welcome: true
   match '/logout' => 'user_sessions#destroy', as: :logout, via: [:get, :post]
 
+  # Web Sites
+  resources :web_sites, path: '/s', only: [:index, :show], constraints: { id: /[^\/]+/ }
+
   # Static pages routing, use StaticPage to check if exists as constraint
   match '/*page' => 'static_pages#show', as: :static_page, constraints: StaticPage.new, via: [:get]
 

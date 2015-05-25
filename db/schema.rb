@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150524151345) do
+ActiveRecord::Schema.define(version: 20150525184933) do
 
   create_table "api_tokens", force: :cascade do |t|
     t.integer  "user_id"
@@ -85,22 +85,22 @@ ActiveRecord::Schema.define(version: 20150524151345) do
   add_index "user_authentications", ["uuid"], name: "index_user_authentications_on_uuid", unique: true
 
   create_table "users", force: :cascade do |t|
-    t.string   "uuid",                            null: false
+    t.string   "uuid",                                null: false
     t.string   "slug"
-    t.string   "name",                            null: false
+    t.string   "name",                                null: false
     t.string   "email"
-    t.string   "login",                           null: false
+    t.string   "login",                               null: false
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size",    default: 0
     t.datetime "avatar_updated_at"
     t.string   "crypted_password"
     t.string   "password_salt"
-    t.string   "persistence_token",               null: false
-    t.string   "perishable_token",                null: false
-    t.string   "single_access_token",             null: false
-    t.integer  "login_count",         default: 0, null: false
-    t.integer  "failed_login_count",  default: 0, null: false
+    t.string   "persistence_token",                   null: false
+    t.string   "perishable_token",                    null: false
+    t.string   "single_access_token",                 null: false
+    t.integer  "login_count",         default: 0,     null: false
+    t.integer  "failed_login_count",  default: 0,     null: false
     t.datetime "last_request_at"
     t.datetime "current_login_at"
     t.datetime "last_login_at"
@@ -110,6 +110,7 @@ ActiveRecord::Schema.define(version: 20150524151345) do
     t.integer  "roles_mask"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "profile_private",     default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

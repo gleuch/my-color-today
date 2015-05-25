@@ -6,9 +6,12 @@ class WebSite < ActiveRecord::Base
   # UUID
   include Uuidable
 
+  # Reports
+  include ColorReportable
+
   # FriendlyId
   extend FriendlyId
-  friendly_id :uri_domain_tld, use: [:slugged, :finders]
+  friendly_id :uri_domain_tld, use: [:finders]
 
   # Status
   enum status: {
@@ -18,9 +21,8 @@ class WebSite < ActiveRecord::Base
 
   # ASSOCIATIONS --------------------------------------------------------------
 
-  has_many :pages, class: 'WebSitePage'
-  has_many :colors, class: 'WebSitePageColor', through: :pages
-  has_many :reports, class_name: 'ColorReport', as: :item
+  has_many :pages, class_name: 'WebSitePage'
+  has_many :colors, class_name: 'WebSitePageColor', through: :pages
 
 
   # VALIDATIONS ---------------------------------------------------------------
@@ -45,13 +47,12 @@ class WebSite < ActiveRecord::Base
 
   # METHODS -------------------------------------------------------------------
 
+  # Name
+  def name; self.uri_domain_tld; end
+
   # Parse URL
   def uri
     @uri ||= Addressable::URI.parse(self.url)
-  end
-
-  def daily_color_avg
-    reports.on(:daily).get
   end
 
 

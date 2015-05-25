@@ -45,7 +45,7 @@ private
   end
 
   def user_update_params
-    params.require(:user).permit(:name, :email)
+    params.require(:user).permit(:name, :email, :profile_private)
   end
 
 end

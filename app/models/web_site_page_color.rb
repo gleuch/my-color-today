@@ -138,8 +138,11 @@ private
 
     # Ping user websocket wth new color and update user's daily color report
     if self.user.present?
-      WebsocketRails["user-#{self.user.uuid}"].trigger(:new_color, self.to_api)
+      # Update report
       ColorWorker.perform_in(30.seconds, :user_report, self.user.id, on: :daily)
+
+      # Send through websocket unless user profile is private
+      WebsocketRails["user-#{self.user.uuid}"].trigger(:new_color, self.to_api) unless self.user.profile_private
     end
 
     # If this color is only color, then average will be same as self

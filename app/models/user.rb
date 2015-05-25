@@ -5,6 +5,9 @@ class User < ActiveRecord::Base
   # UUID
   include Uuidable
 
+  # Reports
+  include ColorReportable
+
   # Authlogic
   acts_as_authentic do |c|
     c.crypto_provider = Authlogic::CryptoProviders::BCrypt
@@ -39,7 +42,6 @@ class User < ActiveRecord::Base
 
   has_many :page_colors, class_name: 'WebSitePageColor'
   has_many :authentications, class_name: 'UserAuthentication'
-  has_many :reports, class_name: 'ColorReport', as: :item
 
 
   # VALIDATIONS ---------------------------------------------------------------
@@ -102,12 +104,6 @@ class User < ActiveRecord::Base
     }
   end
 
-  def color(d, *args)
-    opts = args.extract_options!
-    info = reports.on(d || :overall).get
-    info.recalculate! if opts[:recalculate]
-    {count: info.views_count, rgb: info.color_rgb, hex: info.color_hex, palette: info.palette}
-  end
 
   # def deliver_password_reset_instructions!
   #   reset_perishable_token!

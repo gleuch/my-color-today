@@ -77,25 +77,26 @@ class ColorReport < ActiveRecord::Base
       when 'User'
         v = v.where(user_id: self.item_id)
       when 'WebSite'
-        v = v.where(web_site_page_id: WebSitePage.where(web_site_id: self.item_id).pluck(:id))
+        v = v.joins(:page).where(web_site_pages: {web_site_id: self.item_id})
       when 'WebPage'
         v = v.where(web_site_page_id: self.item_id)
     end
 
     case self.date_range.to_s
       when 'daily'
-        v = v.where('created_at > ?', Time.now-1.day)
+        v = v.where("#{WebSitePageColor.table_name}.created_at > ?", Time.now-1.day)
       when 'today'
-        v = v.where('DATE(created_at) = ?', Date.today)
+        v = v.where("DATE(#{WebSitePageColor.table_name}.created_at) = ?", Date.today)
       when 'yesterday'
-        v = v.where('DATE(created_at) = ?', Date.today - 1.day)
+        v = v.where("DATE(#{WebSitePageColor.table_name}.created_at) = ?", Date.today - 1.day)
       when 'range'
-        v = v.where('created_at >= ? AND created_at <= ?', self.date_range_value[0], self.date_range_value[1]) if self.date_range_value.length > 1
+        v = v.where("#{WebSitePageColor.table_name}.created_at >= ? AND #{WebSitePageColor.table_name}.created_at <= ?", self.date_range_value[0], self.date_range_value[1]) if self.date_range_value.length > 1
       when 'date'
-        v = v.where('DATE(created_at) = ?', self.date_range_value[0]) if self.date_range_value.length > 0
+        v = v.where("DATE(#{WebSitePageColor.table_name}.created_at) = ?", self.date_range_value[0]) if self.date_range_value.length > 0
     end
 
     color = self.palette ? v.palette_rgb : v.color_rgb
+    
     self.assign_attributes(views_count: v.count, color_red: color[0], color_green: color[1], color_blue: color[2]) unless color.blank?
   end
 
