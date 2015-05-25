@@ -1,6 +1,10 @@
+- daily = @user.color(:daily) rescue nil
+
 %article
   %section
     %h1= @user.name
+    - if daily.present?
+      %h3 Today: #{daily[:count]} pages (##{daily[:hex]})
     %ul#page-colors-list.list-unstyled{'data-channel' => "user-#{@user.uuid}"}
       - unless @latest_colors.blank?
         - @latest_colors.each do |color|
