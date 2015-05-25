@@ -7,6 +7,10 @@ Rails.application.routes.draw do
 
   resources :user_authentications, path: '/account/authentications'
 
+  # User settings
+  match '/settings' => 'users#edit', via: [:get], as: :user_settings
+  match '/settings' => 'users#update', via: [:put]
+
   # User profile
   match '/u/:id' => 'users#show', via: [:get], as: :user_profile
 

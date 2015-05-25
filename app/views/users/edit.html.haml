@@ -1,0 +1,6 @@
+%article
+  %section
+    = simple_form_for current_user, url: user_settings_url, method: :put do |f|
+      = f.input :name
+      = f.input :email
+      = f.button :submit

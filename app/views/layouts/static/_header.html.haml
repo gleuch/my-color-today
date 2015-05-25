@@ -3,6 +3,8 @@
     - if current_user
       %li
         = link_to t('.your_profile'), user_profile_url(current_user)
+      %li
+        = link_to t('.settings'), user_settings_url
     - else
       %li
         = link_to t('.signup'), signup_url
