@@ -1,10 +1,10 @@
 - daily = @web_site.report(:daily) rescue nil
 
-%section#colors-canvas{'data-channel' => "site-#{@web_site.uuid}"}
+%section
   %h1= @web_site.name
   - if daily.present?
     %h3 Today: #{daily[:count]} pages (##{daily[:hex]})
 
 :coffee
-  $ ->
-    @colorCamp.dataLoadColors #{@latest_colors.map(&:to_three_api).to_json}
+  document.colorCamp.channelName = 'site-#{@web_site.uuid}'
+  document.colorCamp.dataLoadColors #{@latest_colors.map(&:to_three_api).to_json}

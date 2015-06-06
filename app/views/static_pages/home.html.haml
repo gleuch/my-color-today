@@ -1,4 +1,5 @@
-%section#colors-canvas{'data-channel' => 'all_users'}
+%section
+  %h1 Everyone
+
 :coffee
-  $ ->
-    @colorCamp.dataLoadColors #{@latest_colors.map(&:to_three_api).to_json}
+  document.colorCamp.dataLoadColors #{@latest_colors.map(&:to_three_api).to_json}

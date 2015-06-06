@@ -13,38 +13,19 @@ a {color: darken($color-logo, 5%); @include transition(color .2s ease-out);
 
 body ::selection {background: rgba($color-mid-black,.24);}
 
-#b4u-canvas {
-  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 100; width: 100%; height: 100%;
+// --- LAYOUT ---
+#header, #wrapper, #footer {position: relative; z-index: 2;}
+
+
+// --- CANVAS ---
+#colorcamp-canvas {position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1; width: 100%; height: 100%;}
+
+
+// --- PROFILE DETAILS ---
+.details-container {
+  position: fixed; bottom: 25px; left: 25px; z-index: 150; padding-left: 60px; min-height: 50px;
+  .avatar {position: absolute; top: 0; left: 0; z-index: 151;
+    img {width: 50px; height: 50px; border: 2px solid #fff; border-radius: 100%; box-shadow: 0 3px 5px rgba(0,0,0,.2); background-color: #eee;}
+  }
+  h3 {padding: 7px 0 0 0; color: #888; text-shadow: 0px 1px 1px rgba(0,0,0,.12);}
 }
-
-
-//form {
-//  .form-control {border-radius: 0; color: $color-text-grey; font-size: 2.0rem; padding: 8px 10px; border-color: rgba($color-black, .25); height: auto;
-//    @include placeholder {color: rgba($color-text-black,.2); text-transform: lowercase;}
-//    &:focus {border-color: rgba($color-black,.5); outline: none; box-shadow: 0 0 5px rgba($color-black,.12);}
-//  }
-//  textarea.form-control {line-height: 1.33em;}
-//  label.checkbox {display: block; font-size: 1.6rem; padding: 0 0 8px 24px;
-//    input[type=checkbox] {margin-left: -24px; margin-right: 0; position: absolute;}
-//  }
-//}
-
-//.btn {
-//  &.btn-lg {padding: 15px; font-size: 2.25rem; line-height: 1.0em;}
-//  &.btn-default {border-radius: 0; border: 1px solid transparent; text-transform: uppercase; color: $color-white; background-color: $color-logo; font-weight: 700; text-shadow: 0 1px 1px rgba($color-black,.05); @include transition(background-color .2s ease-out);
-//    &:hover, &:focus {background-color: lighten($color-logo,10%); color: $color-white; outline: none; box-shadow: none;}
-//    &:focus {box-shadow: 0 0 8px rgba($color-black,.32);}
-//    &:active {background-color: rgba($color-mid-black,.5);}
-//  }
-//  &.btn-more {background-color: $color-mid-grey-bg; border-radius: 0; border: 1px solid transparent; text-transform: lowercase; color: $color-text-grey; font-weight: 700; text-shadow: none; @include transition(background-color .2s ease-out);
-//    &:hover, &:focus {background-color: $color-grey-bg; outline: none; box-shadow: none;}
-//    &:focus {box-shadow: 0 0 8px rgba($color-black,.32);}
-//  }
-//  &.btn-website {display: block; background-color: rgba($color-mid-black,.7); border-radius: 0; border: 1px solid transparent; text-transform: lowercase; color: $color-white; font-weight: 400; text-shadow: none; @include transition(background-color .2s ease-out);
-//    &:hover, &:focus {background-color: $color-mid-black; outline: none; box-shadow: none;}
-//    &:focus {box-shadow: 0 0 8px rgba($color-black,.32);}
-//  }
-//  &[disabled], &.disabled {opacity: .5; @include transition(none); box-shadow: none;
-//    &, &:hover, &:focus, &:active {background-color: rgba($color-mid-black,.5) !important;}
-//  }
-//}

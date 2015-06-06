@@ -32,6 +32,8 @@ class UserAuthentication < ActiveRecord::Base
 
   # VALIDATIONS ---------------------------------------------------------------
   
+  after_save :update_user_avatar
+
 
 
   # CLASS METHODS -------------------------------------------------------------
@@ -58,8 +60,28 @@ class UserAuthentication < ActiveRecord::Base
   end
 
 
-
-
 private
+
+  def update_user_avatar
+    if self.user.avatar_file_name.blank? && self.profile_image_url.present?
+      begin
+        uri = Addressable::URI.parse(self.profile_image_url)
+        Timeout::timeout(30) do # 30 seconds
+          io = open(uri, read_timeout: 30, "User-Agent" => 'color.camp', allow_redirections: :all)
+          io.class_eval { attr_accessor :original_filename }
+          raise "invalid content-type" unless io.content_type.match(/^image\//i)
+          io.original_filename = File.basename(uri.path)
+          self.user.avatar = io
+        end
+      # rescue OpenURI::HTTPError => err
+      #   self.errors.add(:image, "unable to retrieve from URL #{image_remote_url} [e:1]")
+      # rescue Timeout::Error => err
+      #   self.errors.add(:image, "unable to retrieve from URL #{image_remote_url} [e:2]")
+      rescue => err
+        # self.errors.add(:image, "unable to retrieve from URL #{image_remote_url} (#{err})")
+        nil
+      end
+    end
+  end
 
 end

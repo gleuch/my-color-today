@@ -111,7 +111,7 @@ class User < ActiveRecord::Base
   # end
 
 
-
 private
+
 
 end

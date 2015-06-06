@@ -1,5 +1,7 @@
 ColorCampSubscriber = ->
+  this.enabled = true
   this.dispatcher = null
+  this.channel_name = 'all_users'
   this.subscribed_channel = null
   this.channel_svg = false
   this.reconnectIntv = null
@@ -15,8 +17,6 @@ ColorCampSubscriber = ->
   else
     this.url = window.location.hostname + ':3001/websocket/'
 
-  this.initialize()
-
   return this
 
 
@@ -24,8 +24,29 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   initialize : ->
-    this.canvasInitialize()
+    return unless this.enabled
+
     this.websocketInitialize()
+    $(document).ready (->
+      this.canvasInitialize() if this.enabled
+    ).bind(this)
+
+  #
+  uninitialize : ->
+    return if this.enabled
+
+    this.websocketUninitialize()
+    this.canvasUninitialize()
+
+  #
+  enable : ->
+    this.enabled = true
+    this.initialize()
+
+  #
+  disable : ->
+    this.enabled = false
+    this.uninitialize()
 
 
   # --- Websocket ---
@@ -48,13 +69,21 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     ).bind(this)
 
   #
+  websocketUninitialize : ->
+    try
+      this.dispatcher.unsubscribe(k) for k,n of this.dispatcher.channels
+      this.dispatcher.disconnect()
+    catch e
+      #
+
+    this.dispatcher = null
+
+  #
   websocketChannelSubscribe : ->
-    # if $('#colors-canvas[data-channel]').size() > 0
-    #   this.subscribed_channel = this.dispatcher.subscribe $('#colors-canvas[data-channel]').attr('data-channel')
-    #
-    #   this.subscribed_channel.bind 'new_color', (data)->
-    #     #
-    #     $(window).trigger 'color:update'
+    this.subscribed_channel = this.dispatcher.subscribe this.channel_name
+    this.subscribed_channel.bind 'new_color', (data)->
+      console.log(data)
+      $(window).trigger 'color:update'
 
 
   # --- Data ---
@@ -103,6 +132,8 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   canvasInitialize : ->
+    this.canvasUninitialize() # for clarify
+
     this.canvas.element = $('<canvas></canvas>').attr('id', 'colorcamp-canvas')
     $('body').append this.canvas.element
 
@@ -133,7 +164,21 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.canvasAnimate()
 
   #
+  canvasUninitialize : ->
+    try 
+      $(document)
+        .off 'mousemove', this.canvasEventMousemove.bind(this)
+        .off 'keydown', this.canvasEventKeypress.bind(this)
+      $(window).off 'resize', this.canvasResize.bind(this)
+    catch err
+      #
+
+    this.canvas.scene = null
+    $('canvas#colorcamp-canvas').remove()
+
+  #
   canvasAnimate : ->
+    return unless this.canvas.scene
     requestAnimationFrame( this.canvasAnimate.bind(this) )
     this.canvasRender()
 
@@ -170,7 +215,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   canvasDrawColor : (color,i)->
     # Set and load material
     hexColor = parseInt(color.color.hex, 16)
-    material = new THREE.MeshNormalMaterial {color: hexColor, transparent: false}
+    material = new THREE.MeshBasicMaterial {color: hexColor, transparent: false}
     geometry = new THREE.BoxGeometry( 10, 10, .1 )
 
     colorMesh = new THREE.Mesh geometry, material
@@ -219,10 +264,12 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
 
 
+document.colorCamp = new ColorCampSubscriber
 
 $ ->
 
-  @colorCamp = new ColorCampSubscriber
+  # Start
+  document.colorCamp.initialize()
 
 
   # TODO : FIX W/ MESSAGING

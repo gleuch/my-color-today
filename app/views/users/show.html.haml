@@ -1,14 +1,26 @@
 - daily = @user.report(:daily) rescue nil
 
+%section#user-profile.details-container
+  .avatar
+    %img{src: @user.avatar.url(:medium), alt: '', title: @user.name}
+  .info
+    %h3= @user.name
+
+
 - unless @user.profile_private
-  %section#colors-canvas{'data-channel' => "user-#{@user.uuid}"}
+  %section
     - if daily.present?
       %h3 Today: #{daily[:count]} pages (##{daily[:hex]})
+
   :coffee
-    $ ->
-      @colorCamp.dataLoadColors #{@latest_colors.map(&:to_three_api).to_json}
+    document.colorCamp.channelName = 'user-#{@user.uuid}'
+    document.colorCamp.dataLoadColors #{@latest_colors.map(&:to_three_api).to_json}
+
 
 - else
   %section
     .well
       %p.text-center This user has made their account private.
+
+  :coffee
+    document.colorCamp.disable()
