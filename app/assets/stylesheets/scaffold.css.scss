@@ -13,6 +13,11 @@ a {color: darken($color-logo, 5%); @include transition(color .2s ease-out);
 
 body ::selection {background: rgba($color-mid-black,.24);}
 
+#b4u-canvas {
+  position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 100; width: 100%; height: 100%;
+}
+
+
 //form {
 //  .form-control {border-radius: 0; color: $color-text-grey; font-size: 2.0rem; padding: 8px 10px; border-color: rgba($color-black, .25); height: auto;
 //    @include placeholder {color: rgba($color-text-black,.2); text-transform: lowercase;}

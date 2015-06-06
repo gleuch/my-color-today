@@ -121,7 +121,11 @@ class WebSitePageColor < ActiveRecord::Base
     }
   end
 
-
+  def to_three_api
+    n = to_api
+    n.delete(:page)
+    n
+  end
 
 private
 

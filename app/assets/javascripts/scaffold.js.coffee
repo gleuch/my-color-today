@@ -3,64 +3,226 @@ ColorCampSubscriber = ->
   this.subscribed_channel = null
   this.channel_svg = false
   this.reconnectIntv = null
+  this.canvas = {
+    step_z : 1
+    step_index : 0
+  }
+  this.colors = []
 
+  # Handle dev vs production
   if window.location.hostname == 'color.camp'
     this.url = window.location.hostname + '/websocket/'
   else
     this.url = window.location.hostname + ':3001/websocket/'
 
-  this.connect()
+  this.initialize()
 
   return this
 
+
 jQuery.extend true, ColorCampSubscriber.prototype, {
-  connect : ->
-    _t = this
 
-    _t.dispatcher = new WebSocketRails(_t.url);
+  #
+  initialize : ->
+    this.canvasInitialize()
+    this.websocketInitialize()
 
-    _t.dispatcher.bind 'connection_closed', ->
-      clearTimeout _t.reconnectIntv
-      _t.reconnectIntv = setTimeout ->
-        _t.dispatcher.reconnect()
-      , 10000
 
-    _t.dispatcher.on_open = ->
-      _t.channelSubscribe()
+  # --- Websocket ---
 
-  channelSubscribe : ->
-    _t = this
+  #
+  websocketInitialize : ->
+    this.dispatcher = new WebSocketRails(this.url)
 
-    if $('#page-colors-list[data-channel]').size() > 0
-      _t.channel_svg = $('#page-colors-list').get(0).tagName == 'svg'
+    this.dispatcher.bind 'connection_closed', (->
+      clearTimeout this.reconnectIntv
 
-      _t.subscribed_channel = _t.dispatcher.subscribe( $('#page-colors-list[data-channel]').attr('data-channel') )
-      _t.subscribed_channel.bind 'new_color', (data)->
-        return unless data.id
+      this.reconnectIntv = setTimeout (->
+        this.dispatcher.reconnect()
+      ).bind(this), 10000
 
-        unless $('.color[data-uuid="' + data.id + '"]').size() > 0
-          if _t.channel_svg
-            el = $('<stop/>').attr('stop-color', '#' + data.color.hex)
+    ).bind(this)
 
-          else
-            eli = $('<div></div>').addClass('color-info').html(data.page.domain_tld + ' -  #' + data.color.hex)
-            elc = $('<div></div>').addClass('color-area').css('background-color', '#' + data.color.hex)
-            el = $('<li></li>')
-            el.append(elc).append(eli)
+    this.dispatcher.on_open = (->
+      this.websocketChannelSubscribe()
+    ).bind(this)
 
-          el.addClass('color').attr('data-rgb-color', data.color.rgb).attr('data-uuid', data.id)
-          if _t.channel_svg
-            $('#page-color-gradient').prepend(el)
-          else
-            $('#page-colors-list').prepend(el)
+  #
+  websocketChannelSubscribe : ->
+    # if $('#colors-canvas[data-channel]').size() > 0
+    #   this.subscribed_channel = this.dispatcher.subscribe $('#colors-canvas[data-channel]').attr('data-channel')
+    #
+    #   this.subscribed_channel.bind 'new_color', (data)->
+    #     #
+    #     $(window).trigger 'color:update'
 
-          $(window).trigger 'color:update'
 
+  # --- Data ---
+
+  #
+  dataAssignCoords : (colors, startN) ->
+    startX = 0
+    startY = 0
+    startX = this.colors[startN].x if this.colors[startN]
+    startY = this.colors[startN].y if this.colors[startN]
+
+    # For now, linear
+    # TODO : CURVE IT
+    incrX = Math.ceil(Math.random() * 100) - 50
+    incrY = Math.ceil(Math.random() * 100) - 50
+
+    $.map colors, (n,i)->
+      n.x = startX + (incrX * i) if !n.x
+      n.y = startY + (incrY * i) if !n.y
+      return this
+
+    colors
+
+  #
+  dataLoadColors : (colors)->
+    colors = this.dataAssignCoords(colors, this.colors.length)
+    $.each colors, ((i,v) ->
+      this.colors[i] = v
+    ).bind(this)
+
+    this.canvasUpdateColors() if this.canvas.scene
+
+  #
+  dataAppendColors : (colors) ->
+    colors = this.dataAssignCoords(colors, this.colors.length)
+    Array.prototype.push.apply(this.colors, colors)
+
+  #
+  dataPrependColors : (colors) ->
+    colors = this.dataAssignCoords(colors.reverse(), 0).reverse() # reverse the order and then back
+    Array.prototype.unshift.apply(this.colors, colors)
+    this.canvas.step_index += colors.length
+
+
+  # --- Canvas ---
+
+  #
+  canvasInitialize : ->
+    this.canvas.element = $('<canvas></canvas>').attr('id', 'colorcamp-canvas')
+    $('body').append this.canvas.element
+
+    this.canvas.scene = new THREE.Scene()
+    this.canvas.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, .1, 100000 )
+    this.canvas.renderer = new THREE.WebGLRenderer({ alpha: true, canvas: this.canvas.element.get(0) })
+    this.canvas.mouse = new THREE.Vector2()
+
+    this.canvas.geometry = new THREE.BoxGeometry( 100, 75, 1 )
+    this.canvas.geometry.computeBoundingBox()
+    this.canvas.geometry.width = this.canvas.geometry.boundingBox.max.x - this.canvas.geometry.boundingBox.min.x
+    this.canvas.geometry.height = this.canvas.geometry.boundingBox.max.y - this.canvas.geometry.boundingBox.min.y
+    this.canvas.geometry.depth = this.canvas.geometry.boundingBox.max.z - this.canvas.geometry.boundingBox.min.z
+
+    this.canvas.camera.position.y = 0
+    this.canvas.camera.position.z = 0
+
+    this.canvasUpdateColors()
+
+    this.canvas.renderer.setSize( window.innerWidth, window.innerHeight )
+    document.body.appendChild( this.canvas.renderer.domElement )
+
+    $(document)
+      .on 'mousemove', this.canvasEventMousemove.bind(this)
+      .on 'keydown', this.canvasEventKeypress.bind(this)
+    $(window).on 'resize', this.canvasResize.bind(this)
+
+    this.canvasAnimate()
+
+  #
+  canvasAnimate : ->
+    requestAnimationFrame( this.canvasAnimate.bind(this) )
+    this.canvasRender()
+
+  #
+  canvasRender : ->
+    this.canvas.renderer.render this.canvas.scene, this.canvas.camera
+    TWEEN.update()
+
+  #
+  canvasResize : (e)->
+    this.canvas.camera.aspect = window.innerWidth / window.innerHeight
+    this.canvas.camera.updateProjectionMatrix()
+    this.canvas.renderer.setSize( window.innerWidth, window.innerHeight )
+
+  #
+  canvasUpdateColors : ->
+    # Items
+    this.canvas.scene.remove this.canvas.queue
+    this.canvas.queue = new THREE.Group()
+    this.canvasDrawColor(n,i) for i,n of this.colors
+    this.canvas.camera.position.z = -this.canvas.step_z * this.canvas.step_index
+
+    this.canvas.scene.add this.canvas.queue
+
+    # Timeline
+    # this.canvas.scene.remove this.canvas.timeline
+    # this.canvas.timeline = new THREE.Group()
+    # # DRAW TIMELINE
+    # this.canvas.scene.add this.canvas.timeline
+
+    # this.changeBackground() if this.colors.length > 0
+   
+  #
+  canvasDrawColor : (color,i)->
+    # Set and load material
+    hexColor = parseInt(color.color.hex, 16)
+    material = new THREE.MeshNormalMaterial {color: hexColor, transparent: false}
+    geometry = new THREE.BoxGeometry( 10, 10, .1 )
+
+    colorMesh = new THREE.Mesh geometry, material
+    # colorMesh.id = color.id
+    colorMesh.position.set color.x, color.y, ( -this.canvas.step_z * (i + 1) )
+    colorMesh.matrixAutoUpdate = false
+    colorMesh.updateMatrix()
+
+    # Add to canvas
+    this.canvas.queue.add colorMesh
+
+  #
+  canvasEventMousemove : (e)->
+    e.preventDefault()
+    this.canvas.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1
+    this.canvas.mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1
+
+  #
+  canvasEventKeypress : (e)->
+    if e.keyCode == 38 || e.keyCode == 40 # Up
+      e.preventDefault()
+      this.canvasMoveZ e
+
+  #
+  canvasMoveZ : (e) ->
+    i = 1
+    i = 10 if e.shiftKey # Skip 10 at time if shiftkey pressed
+    oldStep = this.canvas.step_index + 0
+
+    if e.keyCode == 38 # Up
+      this.canvas.step_index += i if (this.colors.length - 1) > this.canvas.step_index
+    else if e.keyCode == 40
+      this.canvas.step_index -= i if this.canvas.step_index > 0
+
+    # Normalize
+    this.canvas.step_index = Math.min((this.colors.length - 1), Math.max(0, this.canvas.step_index))
+
+    z = -this.canvas.step_z * this.canvas.step_index
+    y = this.colors[this.canvas.step_index].y
+    x = this.colors[this.canvas.step_index].x
+
+    # this.changeBackground() unless oldStep == this.canvas.step_index
+
+    new TWEEN.Tween( this.canvas.camera.position ).to( { z: z, x : x, y : y }, 250 ).start();
 }
+
+
+
 
 $ ->
 
-  window.colorCamp = new ColorCampSubscriber
+  @colorCamp = new ColorCampSubscriber
 
 
   # TODO : FIX W/ MESSAGING

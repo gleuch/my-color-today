@@ -1,15 +1,14 @@
 - daily = @user.report(:daily) rescue nil
 
-%article
+- unless @user.profile_private
+  %section#colors-canvas{'data-channel' => "user-#{@user.uuid}"}
+    - if daily.present?
+      %h3 Today: #{daily[:count]} pages (##{daily[:hex]})
+  :coffee
+    $ ->
+      @colorCamp.dataLoadColors #{@latest_colors.map(&:to_three_api).to_json}
+
+- else
   %section
-    %h1= @user.name
-    - unless @user.profile_private
-      - if daily.present?
-        %h3 Today: #{daily[:count]} pages (##{daily[:hex]})
-      %ul#page-colors-list.list-unstyled{'data-channel' => "user-#{@user.uuid}"}
-        - unless @latest_colors.blank?
-          - @latest_colors.each do |color|
-            = render 'globals/color', color: color
-    - else
-      .well
-        %p.text-center This user has made their account private.
+    .well
+      %p.text-center This user has made their account private.

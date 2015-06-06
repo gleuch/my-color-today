@@ -1,6 +1,4 @@
-%article
-  %section
-    %ul#page-colors-list.list-unstyled{'data-channel' => 'all_users'}
-      - unless @latest_colors.blank?
-        - @latest_colors.each do |color|
-          = render 'globals/color', color: color
+%section#colors-canvas{'data-channel' => 'all_users'}
+:coffee
+  $ ->
+    @colorCamp.dataLoadColors #{@latest_colors.map(&:to_three_api).to_json}
