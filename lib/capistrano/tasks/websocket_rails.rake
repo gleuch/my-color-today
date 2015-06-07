@@ -13,7 +13,11 @@ namespace :websocket_rails do
     on roles(websocket_rails_roles) do
       within release_path do
         with rails_env: fetch(:rails_env) do
-          execute :rake, 'websocket_rails:stop_server', args
+          begin
+            execute :rake, 'websocket_rails:stop_server', args
+          rescue
+            nil
+          end
         end
       end
     end

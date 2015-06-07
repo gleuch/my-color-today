@@ -79,13 +79,13 @@ gem 'websocket-rails',                '0.7.0'
 # --- DEVELOPMENT & TEST ---
 
 group :development do
-  gem 'unicorn',                      '4.8.3'
+  gem 'unicorn',                      '4.9.0'
   gem 'bullet',                       '4.14.4'
 
   # Capistrano deployment
   gem 'capistrano',                   '3.4.0'
   gem 'capistrano-rvm',               '0.1.2'
-  gem 'capistrano-rails',             '1.1.2'
+  gem 'capistrano-rails',             '1.1.3'
   gem 'capistrano-bundler',           '1.1.4'
   gem 'capistrano-sidekiq',           '0.5.2'
   gem 'quiet_assets',                 '1.1.0'
@@ -103,7 +103,7 @@ group :test do
 end
 
 group :development, :test do
-  gem 'rspec-rails',                  '3.2.1'
+  gem 'rspec-rails',                  '3.2.3'
   gem 'database_cleaner',             '1.4.1'
   gem 'ffaker',                       '2.0.0'
   gem 'factory_girl_rails',           '4.5.0'
