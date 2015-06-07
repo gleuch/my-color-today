@@ -8,7 +8,8 @@ begin
 
   case Rails.env
     when 'development'
-      Setting.chrome_extension_id = 'mlelncoamdohkknhfdkjfoghlifglkcn'
+      # Setting.chrome_extension_id = 'mlelncoamdohkknhfdkjfoghlifglkcn'
+      Setting.chrome_extension_id = 'pipehoklkfhchfckliliaifabhebjoln'
 
     else
       Setting.chrome_extension_id = 'nkghbibhhebkddaeebapfkooljjfhnca'

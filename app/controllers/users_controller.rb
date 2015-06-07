@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   def show
     respond_to do |format|
       format.html {
-        @latest_colors = @user.page_colors.order('created_at desc').limit(100)
+        @latest_colors = @user.page_colors.recently(5.days).limit(100)
         render :show
       }
     end

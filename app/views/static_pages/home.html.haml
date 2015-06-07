@@ -2,4 +2,4 @@
   %h1 Everyone
 
 :coffee
-  document.colorCamp.dataLoadColors #{@latest_colors.map(&:to_three_api).to_json}
+  document.colorCamp.dataLoadColors #{@latest_colors.map(&:to_public_api).to_json}

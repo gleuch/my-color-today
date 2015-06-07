@@ -8,6 +8,7 @@ ColorCampSubscriber = ->
   this.canvas = {
     step_z : 10
     step_index : 0
+    offsetZ : null
   }
   this.colors = []
 
@@ -81,36 +82,50 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   #
   websocketChannelSubscribe : ->
     this.subscribed_channel = this.dispatcher.subscribe this.channel_name
-    this.subscribed_channel.bind 'new_color', (data)->
-      console.log('new color', data)
-      $(window).trigger 'color:update'
+    this.subscribed_channel.bind 'new_color', ((data)->
+      this.dataAddNewColor(data)
+    ).bind(this)
 
 
   # --- Data ---
 
   #
   dataAssignCoords : (colors, startN) ->
+    return if !colors || colors.length == 0
+
     startX = 0
     startY = 0
-    startX = this.colors[startN].x if this.colors[startN]
-    startY = this.colors[startN].y if this.colors[startN]
+    startX = this.colors[startN].x if startN && this.colors[startN]
+    startY = this.colors[startN].y if startN && this.colors[startN]
 
-    # For now, linear
-    # TODO : CURVE IT
-    # incrX = Math.ceil(Math.random() * 100) - 50
-    # incrY = Math.ceil(Math.random() * 100) - 50
+    # Set an offset if not already
+    this.canvas.offsetZ = Date.parse colors[0].created_at unless this.canvas.offsetZ
+    offsetZ = this.canvas.offsetZ
 
     $.map colors, (n,i)->
       return this if n.x && n.y
+      incrX = Math.ceil(Math.random() * 100) - 50
+      n.x = incrX if !n.x
 
-      incrX = Math.ceil(Math.random() * 10) - 5
-      n.x = startX + (incrX * i) if !n.x
+      incrY = Math.ceil(Math.random() * 100) - 50
+      n.y = incrY if !n.y
 
-      incrY = Math.ceil(Math.random() * 10) - 5
-      n.y = startY + (incrY * i) if !n.y
+      n.z = (Date.parse(n.created_at) - offsetZ) / 100 / 60
+
       return this
 
     colors
+
+  #
+  dataAddNewColor : (color)->
+    this.dataPrependColors [color]
+    this.canvasDrawColors() if this.canvas.scene
+
+    if typeof this.colors[1] != 'undefined'
+      x = this.canvas.camera.position.x
+      y = this.canvas.camera.position.y
+      z = this.canvas.camera.position.z + this.colors[0].z - this.colors[1].z
+      new TWEEN.Tween( this.canvas.camera.position ).to( { z: z, x : x, y : y }, 250 ).start();
 
   #
   dataLoadColors : (colors)->
@@ -144,10 +159,11 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
     this.canvas.scene = new THREE.Scene()
 
-    this.canvas.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 3000 )
-    this.canvas.camera.position.set( 0, 0, 150 )
+    this.canvas.camera = new THREE.PerspectiveCamera 45, window.innerWidth / window.innerHeight, 1, 3000
+    this.canvas.camera.position.set 0, 0, 250
 
-    this.canvas.renderer = new THREE.WebGLRenderer({ alpha: true, canvas: this.canvas.element.get(0) })
+    this.canvas.renderer = new THREE.WebGLRenderer { canvas: this.canvas.element.get(0) }
+    this.canvas.renderer.setClearColor 0xFFFFFF, 1
     this.canvas.renderer.setPixelRatio( window.devicePixelRatio )
     this.canvas.renderer.setSize( window.innerWidth, window.innerHeight )
 
@@ -155,7 +171,6 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
     this.canvasDrawColors()
 
-    this.canvas.renderer.setSize( window.innerWidth, window.innerHeight )
     document.body.appendChild( this.canvas.renderer.domElement )
 
     $(document)
@@ -180,16 +195,15 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   canvasAnimate : ->
-    return unless this.canvas.scene
-    requestAnimationFrame( this.canvasAnimate.bind(this) )
     this.canvasRender()
+    setTimeout (->
+      requestAnimationFrame( this.canvasAnimate.bind(this) )
+    ).bind(this), 120 # ~30 fps
 
   #
   canvasRender : ->
-    this.canvas.camera.position.x += ( this.canvas.mouse.x - this.canvas.camera.position.x ) * 0.05;
-    this.canvas.camera.position.y += ( - this.canvas.mouse.y - this.canvas.camera.position.y ) * 0.05;
-    this.canvas.camera.lookAt this.canvas.scene.position
     this.canvas.renderer.render this.canvas.scene, this.canvas.camera
+    TWEEN.update()
 
   #
   canvasResize : (e)->
@@ -207,51 +221,33 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
       vertex = new THREE.Vector3()
       vertex.x = color.x
       vertex.y = color.y
-      vertex.z = - this.canvas.step_z * (parseInt(i) + 1)
+      vertex.z = color.z
       geometry.vertices.push( vertex );
       geometryColors[i] = new THREE.Color parseInt(color.color.hex, 16)
 
     geometry.colors = geometryColors
 
-    material = new THREE.PointCloudMaterial { size: 85, vertexColors: THREE.VertexColors, alphaTest: 0.5, transparent: true }
+    material = new THREE.PointCloudMaterial { size: 50, vertexColors: THREE.VertexColors }
 
     this.canvas.particles = new THREE.PointCloud geometry, material
     this.canvas.scene.add this.canvas.particles
 
   #
   canvasEventMousemove : (e)->
-    e.preventDefault()
-    this.canvas.mouse.x = e.clientX - (window.innerWidth / 2)
-    this.canvas.mouse.y = - (e.clientY - (window.innerHeight / 2))
+    # e.preventDefault()
+    # this.canvas.mouse.x = e.clientX - (window.innerWidth / 2)
+    # this.canvas.mouse.y = - (e.clientY - (window.innerHeight / 2))
 
   #
   canvasEventKeypress : (e)->
-    if e.keyCode == 38 || e.keyCode == 40 # Up
-      e.preventDefault()
-      this.canvasMoveZ e
+    # if e.keyCode == 38 || e.keyCode == 40 # Up
+    #   e.preventDefault()
+    #   this.canvasMoveZ e
 
   #
   canvasMoveZ : (e) ->
     return
-    # i = 1
-    # i = 10 if e.shiftKey # Skip 10 at time if shiftkey pressed
-    # oldStep = this.canvas.step_index + 0
-    #
-    # if e.keyCode == 38 # Up
-    #   this.canvas.step_index += i if (this.colors.length - 1) > this.canvas.step_index
-    # else if e.keyCode == 40
-    #   this.canvas.step_index -= i if this.canvas.step_index > 0
-    #
-    # # Normalize
-    # this.canvas.step_index = Math.min((this.colors.length - 1), Math.max(0, this.canvas.step_index))
-    #
-    # z = - this.canvas.step_z * this.canvas.step_index
-    # y = this.colors[this.canvas.step_index].y
-    # x = this.colors[this.canvas.step_index].x
-    #
-    # console.log this.canvas.step_index, '--', z, y, x
-    #
-    # # new TWEEN.Tween( this.canvas.camera.position ).to( { z: z, x : x, y : y }, 250 ).start();
+
 }
 
 
@@ -265,13 +261,13 @@ $ ->
 
 
   # TODO : FIX W/ MESSAGING
-  if chrome.app.isInstalled || !navigator.userAgent.match(/Chrome\//)
-    $('.extension-install.chrome').hide()
-  else
-    $('.extension-install.chrome a').on 'click', ->
-      chrome.webstore.install('https://chrome.google.com/webstore/detail/nkghbibhhebkddaeebapfkooljjfhnca', ->
-        console.log('Installed', arguments)
-      , ->
-        console.log('Unable to install', arguments)
-      )
-      return false
+  # if chrome.app.isInstalled || !navigator.userAgent.match(/Chrome\//)
+  #   $('.extension-install.chrome').hide()
+  # else
+  #   $('.extension-install.chrome a').on 'click', ->
+  #     chrome.webstore.install('https://chrome.google.com/webstore/detail/nkghbibhhebkddaeebapfkooljjfhnca', ->
+  #       console.log('Installed', arguments)
+  #     , ->
+  #       console.log('Unable to install', arguments)
+  #     )
+  #     return false

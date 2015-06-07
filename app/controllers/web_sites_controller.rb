@@ -20,7 +20,7 @@ class WebSitesController < ApplicationController
   def show
     respond_to do |format|
       format.html {
-        @latest_colors = @web_site.colors.order('created_at desc').limit(100)
+        @latest_colors = @web_site.colors.recently(5.days).limit(100)
         render :show
       }
     end
