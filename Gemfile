@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gem 'rails',                          '4.2.1'
 gem 'therubyracer',                   '0.12.2',       platforms: :ruby
 gem 'turbolinks',                     '2.5.3'
-gem 'jbuilder',                       '2.2.13'
+gem 'jbuilder',                       '2.2.16'
 gem 'unf',                            '0.1.4'
 # gem 'asset_sync',                     '1.1.0'
 gem 'mysql2',                         '0.3.18'
@@ -12,13 +12,13 @@ gem 'bcrypt',                         '3.1.10'
 
 
 # --- MODELS & CONTROLLERS ---
-gem 'paperclip',                      '4.2.1'
+gem 'paperclip',                      '4.2.2'
 gem 'paperclip-compression',          '0.3.7'
 gem 'friendly_id',                    '5.1.0'
 # gem 'impressionist',                  '1.5.1'
 gem 'will_paginate',                  '3.0.7'
 gem 'authlogic',                      '3.4.5'
-gem 'sanitize',                       '3.1.2'
+gem 'sanitize',                       '4.0.0'
 gem 'addressabler',                   '0.1.2'#,      git: 'https://github.com/gleuch/addressabler.git'
 
 
@@ -28,14 +28,14 @@ gem 'sass-rails',                     '5.0.3'
 gem 'uglifier',                       '2.7.1'
 gem 'coffee-rails',                   '4.1.0'
 gem 'jquery-rails',                   '4.0.3'
-gem 'jquery-ui-rails',                '5.0.3'
+gem 'jquery-ui-rails',                '5.0.5'
 gem 'will_paginate-bootstrap',        '1.0.1'
 gem 'bootstrap-sass',                 '3.3.4.1'
-gem 'bourbon',                        '4.2.2'
+gem 'bourbon',                        '4.2.3'
 
 
 # --- REDIS / SIDEKIQ ---
-gem 'sidekiq',                        '3.3.0'
+gem 'sidekiq',                        '3.3.4'
 gem 'sidekiq-unique-jobs',            '3.0.13'
 gem 'redis',                          '3.2.1'
 gem 'redis-rails',                    '4.0.0'
@@ -47,7 +47,7 @@ gem 'simple_form',                    '3.1.0'
 
 # --- GENERAL HELPERS ---
 gem 'browser',                        '0.8.0'
-gem 'rails-timeago',                  '2.11.1'
+gem 'rails-timeago',                  '2.12.0'
 # gem 'momentjs-rails',                 '2.8.3'
 # gem 'chartkick',                      '1.3.2'
 # gem 'sitemap_generator',              '5.0.5',        require: false
@@ -55,19 +55,19 @@ gem 'rails-timeago',                  '2.11.1'
 
 # --- MONITORING / PERFORMANCE ---
 gem 'rails-settings-cached',          '0.4.1'
-gem 'airbrake',                       '4.1.0'
+# gem 'airbrake',                       '4.2.0'
 # gem 'newrelic_rpm',                   '3.9.5.251'
 # gem 'whenever',                       '0.9.4',        require: false
 # gem 'split',                          '1.0.0',        require: 'split/dashboard'
 
 
 # --- OAUTH / APIS ---
-gem 'aws-sdk',                        '2.0.38'
+gem 'aws-sdk',                        '2.0.48'
 gem 'rest-client',                    '1.8.0'
 gem 'twitter',                        '5.14.0'
 gem 'fb_graph',                       '2.7.17'
 gem 'omniauth-facebook',              '2.0.1'
-gem 'omniauth-twitter',               '1.1.0'
+gem 'omniauth-twitter',               '1.2.0'
 # gem 'omniauth-google-oauth2',         '0.2.4'
 
 
