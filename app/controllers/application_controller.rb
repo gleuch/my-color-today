@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
   end
 
   def rescue_from_timeout(e)
-    notify_airbrake(e) rescue nil
+    # notify_airbrake(e) rescue nil
     respond_to do |format|
       format.html { render file: 'public/408', layout: false }
       format.any { render status: 408, text: '', layout: false }

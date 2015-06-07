@@ -8,7 +8,6 @@ ColorCampSubscriber = ->
   this.canvas = {
     step_z : 10
     step_index : 0
-    mouse : {x: 0, y: 0}
   }
   this.colors = []
 
@@ -83,7 +82,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   websocketChannelSubscribe : ->
     this.subscribed_channel = this.dispatcher.subscribe this.channel_name
     this.subscribed_channel.bind 'new_color', (data)->
-      console.log(data)
+      console.log('new color', data)
       $(window).trigger 'color:update'
 
 
@@ -120,7 +119,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
       this.colors[i] = v
     ).bind(this)
 
-    this.canvasUpdateColors() if this.canvas.scene
+    this.canvasDrawColors() if this.canvas.scene
 
   #
   dataAppendColors : (colors) ->
@@ -154,7 +153,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
     this.canvas.mouse = new THREE.Vector2()
 
-    this.canvasUpdateColors()
+    this.canvasDrawColors()
 
     this.canvas.renderer.setSize( window.innerWidth, window.innerHeight )
     document.body.appendChild( this.canvas.renderer.domElement )
@@ -189,11 +188,8 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   canvasRender : ->
     this.canvas.camera.position.x += ( this.canvas.mouse.x - this.canvas.camera.position.x ) * 0.05;
     this.canvas.camera.position.y += ( - this.canvas.mouse.y - this.canvas.camera.position.y ) * 0.05;
-
     this.canvas.camera.lookAt this.canvas.scene.position
-
     this.canvas.renderer.render this.canvas.scene, this.canvas.camera
-    TWEEN.update()
 
   #
   canvasResize : (e)->
@@ -202,14 +198,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.canvas.camera.updateProjectionMatrix()
 
   #
-  canvasUpdateColors : ->
-    # Items
-    # this.canvas.scene.remove this.canvas.queue
-    # this.canvas.queue = new THREE.Group()
-    # this.canvasDrawColor(n,i) for i,n of this.colors
-    # this.canvas.camera.position.z = - this.canvas.step_z * this.canvas.step_index
-
-
+  canvasDrawColors : ->
     this.canvas.scene.remove this.canvas.particles
 
     geometry = new THREE.Geometry
@@ -228,66 +217,10 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
     this.canvas.particles = new THREE.PointCloud geometry, material
     this.canvas.scene.add this.canvas.particles
-   
-  #
-  canvasDrawColors : (color,i)->
-    # container = document.createElement( 'div' );
-    # document.body.appendChild( container );
-    #
-    # camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 3000 );
-    # camera.position.z = 1400;
-    #
-    # scene = new THREE.Scene();
-    # scene.fog = new THREE.FogExp2( 0x000000, 0.0009 );
-    #
-    # geometry = new THREE.Geometry();
-    #
-    # sprite = THREE.ImageUtils.loadTexture( "textures/sprites/ball.png" );
-    #
-    # for ( i = 0; i < 5000; i ++ ) {
-    #
-    #   var vertex = new THREE.Vector3();
-    #   vertex.x = 2000 * Math.random() - 1000;
-    #   vertex.y = 2000 * Math.random() - 1000;
-    #   vertex.z = 2000 * Math.random() - 1000;
-    #
-    #   geometry.vertices.push( vertex );
-    #
-    #   colors[ i ] = new THREE.Color( 0xffffff );
-    #   colors[ i ].setHSL( ( vertex.x + 1000 ) / 2000, 1, 0.5 );
-    #
-    # }
-    #
-    # geometry.colors = colors;
-    #
-    # material = new THREE.PointCloudMaterial( { size: 85, map: sprite, vertexColors: THREE.VertexColors, alphaTest: 0.5, transparent: true } );
-    # material.color.setHSL( 1.0, 0.2, 0.7 );
-    #
-    # this.canvas.particles = new THREE.PointCloud( geometry, material );
-    # scene.add( particles );
-
-
-
-
-    # Set and load material
-    hexColor = parseInt(color.color.hex, 16)
-    material = new THREE.MeshBasicMaterial {color: hexColor, transparent: false}
-    geometry = new THREE.BoxGeometry 1, 1, .1
-
-    colorMesh = new THREE.Mesh geometry, material
-    colorMesh.position.set color.x, color.y, ( - this.canvas.step_z * (parseInt(i) + 1) )
-    colorMesh.scale.x = .1
-    colorMesh.scale.y = .1
-    colorMesh.matrixAutoUpdate = false
-    colorMesh.updateMatrix()
-
-    # Add to canvas
-    this.canvas.queue.add colorMesh
 
   #
   canvasEventMousemove : (e)->
     e.preventDefault()
-    console.log ('mm')
     this.canvas.mouse.x = e.clientX - (window.innerWidth / 2)
     this.canvas.mouse.y = - (e.clientY - (window.innerHeight / 2))
 
@@ -300,25 +233,25 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   #
   canvasMoveZ : (e) ->
     return
-    i = 1
-    i = 10 if e.shiftKey # Skip 10 at time if shiftkey pressed
-    oldStep = this.canvas.step_index + 0
-
-    if e.keyCode == 38 # Up
-      this.canvas.step_index += i if (this.colors.length - 1) > this.canvas.step_index
-    else if e.keyCode == 40
-      this.canvas.step_index -= i if this.canvas.step_index > 0
-
-    # Normalize
-    this.canvas.step_index = Math.min((this.colors.length - 1), Math.max(0, this.canvas.step_index))
-
-    z = - this.canvas.step_z * this.canvas.step_index
-    y = this.colors[this.canvas.step_index].y
-    x = this.colors[this.canvas.step_index].x
-
-    console.log this.canvas.step_index, '--', z, y, x
-
-    # new TWEEN.Tween( this.canvas.camera.position ).to( { z: z, x : x, y : y }, 250 ).start();
+    # i = 1
+    # i = 10 if e.shiftKey # Skip 10 at time if shiftkey pressed
+    # oldStep = this.canvas.step_index + 0
+    #
+    # if e.keyCode == 38 # Up
+    #   this.canvas.step_index += i if (this.colors.length - 1) > this.canvas.step_index
+    # else if e.keyCode == 40
+    #   this.canvas.step_index -= i if this.canvas.step_index > 0
+    #
+    # # Normalize
+    # this.canvas.step_index = Math.min((this.colors.length - 1), Math.max(0, this.canvas.step_index))
+    #
+    # z = - this.canvas.step_z * this.canvas.step_index
+    # y = this.colors[this.canvas.step_index].y
+    # x = this.colors[this.canvas.step_index].x
+    #
+    # console.log this.canvas.step_index, '--', z, y, x
+    #
+    # # new TWEEN.Tween( this.canvas.camera.position ).to( { z: z, x : x, y : y }, 250 ).start();
 }
 
 
