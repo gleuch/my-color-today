@@ -1,7 +1,7 @@
 ColorCampSubscriber = ->
   this.enabled = true
   this.dispatcher = null
-  this.channel_name = 'all_users'
+  this.channelName = 'all_users'
   this.subscribed_channel = null
   this.channel_svg = false
   this.reconnectIntv = null
@@ -81,7 +81,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   websocketChannelSubscribe : ->
-    this.subscribed_channel = this.dispatcher.subscribe this.channel_name
+    this.subscribed_channel = this.dispatcher.subscribe this.channelName
     this.subscribed_channel.bind 'new_color', ((data)->
       this.dataAddNewColor(data)
     ).bind(this)
