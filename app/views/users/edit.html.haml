@@ -1,7 +1,4 @@
-%article
-  %section
-    = simple_form_for current_user, url: user_settings_url, method: :put do |f|
-      = f.input :name
-      = f.input :email
-      = f.input :profile_private
-      = f.button :submit
+:coffee
+  $ ->
+    $(window).one 'colorcamp:settings:mounted', ->
+      $(window).trigger 'colorcamp:settings:open', {}

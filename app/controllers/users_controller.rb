@@ -28,9 +28,7 @@ class UsersController < ApplicationController
 
   def edit
     respond_to do |format|
-      format.html {
-        render :edit
-      }
+      format.html { render :edit }
     end
   end
 
@@ -45,6 +43,13 @@ class UsersController < ApplicationController
           redirect_to user_settings_url
         else
           render :edit
+        end
+      }
+      format.json {
+        if results.call
+          render json: { user: current_user.to_api(:current_user) }
+        else
+          render json: { errors: current_users.errors }, status: :unprocessable_entity
         end
       }
     end

@@ -35,6 +35,7 @@
         React.DOM.h3 { }, 'Everyone'
 
 
+
 @ColorCanvas = React.createClass
   getInitialState : ->
     {
@@ -42,29 +43,63 @@
       channelInfo : this.props.channelInfo
       url :         this.props.url
       viewType :    this.props.viewType
+      visible :     true
     }
 
   componentDidMount : ->
-    $(window).bind 'colorcamp:channel', this.handleEvent
+    $(window).bind 'colorcamp:channel', this.openChannel
+    $(window).bind 'colorcamp:channel:close colorcamp:modals:close', this.closeChannel
     $(window).trigger 'colorcamp:colorcanvas:mounted', {}
 
     if this.state.url
       this.getChannelData()
-    else
-      document.colorCamp.disable()
 
   componentWillUnmount : ->
-    $(window).unbind 'colorcamp:channel', this.handleEvent
+    $(window).unbind 'colorcamp:channel', this.openChannel
+    $(window).unbind 'colorcamp:channel:close colorcamp:modals:close', this.closeChannel
 
-  componentWillUpdate : ->
+  componentWillUpdate : (p,s)->
     #
 
   componentDidUpdate : (p,s)->
     if s.url != this.state.url
       this.getChannelData()
+    else if this.state.channelInfo && this.state.visible
+      unless this.state.viewType == 'user' && this.state.channelInfo.profile_private
+        document.colorCamp.enable()
 
-  handleEvent : (e,data)->
-    this.setState {viewType : data.viewType, url : data.url, channel : data.channel}
+  render : ->
+    if !this.state.channelInfo || !this.state.visible
+      document.colorCamp.disable()
+      return React.DOM.span {}, ''
+
+    details = ''
+    content = ''
+
+    if this.state.viewType == 'user'
+      details = `<ColorCanvasUserDetail user={this.state.channelInfo} />`
+      content = `<ColorCanvasUserContent user={this.state.channelInfo} />`
+    else if this.state.viewType == 'state'
+      details = `<ColorCanvasSiteDetail site={this.state.channelInfo} />`
+      # content = `<ColorCanvasSiteContent site={this.state.channelInfo} />`
+    else if this.state.viewType == 'everyone'
+      details = `<ColorCanvasEveryoneDetail />`
+
+    React.DOM.div { }, 
+      details
+      content
+      React.DOM.canvas {id: 'colorcamp-canvas'}, ''
+
+
+  # --- HELPER METHODS ---
+
+  openChannel : (e,data)->
+    $(window).trigger 'colorcamp:modals:close', { except : 'channel' }
+    this.setState { viewType : data.viewType, url : data.url, channel : data.channel, visible : true }
+
+  closeChannel : (e,data)->
+    unless data.except && data.except == 'channel'
+      this.setState { visible : false }
 
   getChannelData : ->
     $.ajax this.state.url, {
@@ -93,25 +128,3 @@
         #
       ).bind(this)
     }
-
-  render : ->
-    unless this.state.channelInfo
-      document.colorCamp.disable()
-      return React.DOM.span {}, ''
-
-    details = ''
-    content = ''
-
-    if this.state.viewType == 'user'
-      details = `<ColorCanvasUserDetail user={this.state.channelInfo} />`
-      content = `<ColorCanvasUserContent user={this.state.channelInfo} />`
-    else if this.state.viewType == 'state'
-      details = `<ColorCanvasSiteDetail site={this.state.channelInfo} />`
-      # content = `<ColorCanvasSiteContent site={this.state.channelInfo} />`
-    else if this.state.viewType == 'everyone'
-      details = `<ColorCanvasEveryoneDetail />`
-
-    React.DOM.div { }, 
-      details
-      content
-      React.DOM.canvas {id: 'colorcamp-canvas'}, ''

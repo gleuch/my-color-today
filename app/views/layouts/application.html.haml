@@ -24,8 +24,10 @@
     #wrapper
       #container
         #content.container-fluid
-          = react_component 'ColorCanvas', {}
           = yield
+
+          = react_component 'ColorCanvas', {}
+          = react_component 'Settings', { current_user: (current_user ? current_user.to_api(:current_user) : nil), visible: false }
           .clearfix
 
     %script{type: 'text/javascript'}

@@ -97,15 +97,19 @@ class User < ActiveRecord::Base
   # METHODS -------------------------------------------------------------------
 
   def to_api(*args)
-    {
-      id: self.uuid,
-      name: self.name,
-      login: self.login,
+    data = {}
+    attrs = [:id, :name, :login, :profile_private]
+
+    if args.include?(:current_user)
+      attrs << :email
+    end
+
+    attrs.each{|a| data[a] = self.send(a) if self.respond_to?(a) }
+    data.merge({
       avatar_small_url: self.avatar.url(:small),
       avatar_medium_url: self.avatar.url(:medium),
       avatar_large_url: self.avatar.url(:larger),
-      profile_private: self.profile_private
-    }
+    })
   end
 
 
