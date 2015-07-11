@@ -27,7 +27,7 @@ class WebSitePageColor < ActiveRecord::Base
 
   # SCOPES ----
 
-  scope :recently, ->(d=1.day) { where('created_at >= ?', Time.now - d).order('created_at desc') }
+  scope :recently, ->(d=1.day) { where("#{self.table_name}.created_at >= ?", Time.now - d).order("#{self.table_name}.created_at desc") }
   
 
   # CLASS METHODS -------------------------------------------------------------

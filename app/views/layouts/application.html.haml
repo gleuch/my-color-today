@@ -19,11 +19,12 @@
   %body{class: @body_classes}
     = # render 'layouts/body_header'
 
-    = render 'layouts/static/header'
+    = react_component 'Header', { current_user: (current_user ? current_user.to_api(:current_user) : nil) }
 
     #wrapper
       #container
         #content.container-fluid
+          = react_component 'ColorCanvas', {}
           = yield
           .clearfix
 

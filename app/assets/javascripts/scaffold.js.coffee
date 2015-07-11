@@ -154,8 +154,11 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   canvasInitialize : ->
     this.canvasUninitialize() # for clarify
 
-    this.canvas.element = $('<canvas></canvas>').attr('id', 'colorcamp-canvas')
-    $('body').append this.canvas.element
+    if ($('canvas#colorcamp-canvas').size() > 0)
+      this.canvas.element = $('canvas#colorcamp-canvas').eq(0)
+    else
+      this.canvas.element = $('<canvas></canvas>').attr('id', 'colorcamp-canvas')
+      $('body').append this.canvas.element
 
     this.canvas.scene = new THREE.Scene()
 

@@ -96,11 +96,15 @@ class User < ActiveRecord::Base
 
   # METHODS -------------------------------------------------------------------
 
-  def to_api
+  def to_api(*args)
     {
       id: self.uuid,
       name: self.name,
-      login: self.login
+      login: self.login,
+      avatar_small_url: self.avatar.url(:small),
+      avatar_medium_url: self.avatar.url(:medium),
+      avatar_large_url: self.avatar.url(:larger),
+      profile_private: self.profile_private
     }
   end
 

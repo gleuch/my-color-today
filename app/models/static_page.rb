@@ -3,9 +3,11 @@ class StaticPage
   # include ActionDispatch::Routing::UrlFor
   # include Rails.application.routes.url_helpers
 
+  attr_accessor :data
 
   def initialize(p={})
     @page, @format = p[:page], p[:format]
+    @data = {}
   end
 
   def matches?(r)

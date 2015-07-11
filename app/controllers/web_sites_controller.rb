@@ -18,10 +18,23 @@ class WebSitesController < ApplicationController
 
 
   def show
+    results = ->{
+      @latest_colors = @web_site.colors.recently(5.days).limit(100)
+    }
+
     respond_to do |format|
       format.html {
-        @latest_colors = @web_site.colors.recently(5.days).limit(100)
+        results.call
         render :show
+      }
+      format.json {
+        render json: {
+          channel:      @web_site.uuid,
+          channelInfo:  @web_site.to_api,
+          colors:       results.call.map(&:to_public_api),
+          url:          web_site_path(@web_site),
+          viewType:     :site
+        }
       }
     end
   end

@@ -22,3 +22,4 @@ secrets.yml
 
 
 public/system
+database.yml

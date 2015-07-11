@@ -55,6 +55,13 @@ class WebSite < ActiveRecord::Base
     @uri ||= Addressable::URI.parse(self.url)
   end
 
+  def to_api
+    {
+      id: self.uuid,
+      name: self.name
+    }
+  end
+
 
 private
 

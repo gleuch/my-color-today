@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 
 # --- CORE REQUIREMENTS ---
-gem 'rails',                          '4.2.1'
+gem 'rails',                          '4.2.3'
 gem 'therubyracer',                   '0.12.2',       platforms: :ruby
 gem 'turbolinks',                     '2.5.3'
-gem 'jbuilder',                       '2.2.16'
+gem 'jbuilder',                       '2.3.1'
 gem 'unf',                            '0.1.4'
 # gem 'asset_sync',                     '1.1.0'
 gem 'mysql2',                         '0.3.18'
@@ -12,14 +12,13 @@ gem 'bcrypt',                         '3.1.10'
 
 
 # --- MODELS & CONTROLLERS ---
-gem 'paperclip',                      '4.2.2'
+gem 'paperclip',                      '4.3.0'
 gem 'paperclip-compression',          '0.3.7'
 gem 'friendly_id',                    '5.1.0'
-# gem 'impressionist',                  '1.5.1'
 gem 'will_paginate',                  '3.0.7'
 gem 'authlogic',                      '3.4.5'
 gem 'sanitize',                       '4.0.0'
-gem 'addressabler',                   '0.1.2'#,      git: 'https://github.com/gleuch/addressabler.git'
+gem 'addressabler',                   '0.1.2'
 
 
 # --- FORMATTING, STYLING, DISPLAY ---
@@ -27,16 +26,17 @@ gem 'haml',                           '4.0.6'
 gem 'sass-rails',                     '5.0.3'
 gem 'uglifier',                       '2.7.1'
 gem 'coffee-rails',                   '4.1.0'
-gem 'jquery-rails',                   '4.0.3'
+gem 'jquery-rails',                   '4.0.4'
 gem 'jquery-ui-rails',                '5.0.5'
 gem 'will_paginate-bootstrap',        '1.0.1'
-gem 'bootstrap-sass',                 '3.3.4.1'
+gem 'bootstrap-sass',                 '3.3.5.1'
 gem 'bourbon',                        '4.2.3'
+gem 'react-rails',                    '1.1.0'
 
 
 # --- REDIS / SIDEKIQ ---
-gem 'sidekiq',                        '3.3.4'
-gem 'sidekiq-unique-jobs',            '3.0.13'
+gem 'sidekiq',                        '3.4.1'
+gem 'sidekiq-unique-jobs',            '3.0.14'
 gem 'redis',                          '3.2.1'
 gem 'redis-rails',                    '4.0.0'
 
@@ -62,7 +62,7 @@ gem 'rails-settings-cached',          '0.4.1'
 
 
 # --- OAUTH / APIS ---
-gem 'aws-sdk',                        '2.0.48'
+gem 'aws-sdk',                        '2.1.2'
 gem 'rest-client',                    '1.8.0'
 gem 'twitter',                        '5.14.0'
 gem 'fb_graph',                       '2.7.17'

@@ -5,10 +5,23 @@ class UsersController < ApplicationController
 
 
   def show
+    results = ->{
+      @latest_colors = @user.page_colors.recently(5.days).limit(100)
+    }
+
     respond_to do |format|
       format.html {
-        @latest_colors = @user.page_colors.recently(5.days).limit(100)
+        results.call
         render :show
+      }
+      format.json {
+        render json: {
+          channel:      @user.uuid,
+          channelInfo:  @user.to_api,
+          colors:       results.call.map(&:to_public_api),
+          url:          user_profile_path(@user),
+          viewType:     :user
+        }
       }
     end
   end
