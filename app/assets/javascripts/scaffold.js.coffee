@@ -10,8 +10,11 @@ ColorCampSubscriber = ->
     minZ : 0
     maxZ : 0
     positionOffsetZ : 250
+    matrixDimensions : [0,0] #y,x
+    colorBoxSize : 5
   }
   this.colors = []
+  this.colorsMatrix = []
 
   # Handle dev vs production
   if window.location.hostname == 'color.camp'
@@ -91,31 +94,78 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   # --- Data ---
 
   #
-  dataAssignCoords : (colors, startN) ->
-    return if !colors || colors.length == 0
+  dataResetMatrix : ->
+    this.colorsMatrix = []
+    for y in [0..(this.canvas.matrixDimensions[0]-1)]
+      this.colorsMatrix[y] = []
+      for x in [0..(this.canvas.matrixDimensions[1]-1)]
+        this.colorsMatrix[y][x] = null
 
-    startX = 0
-    startY = 0
-    startX = this.colors[startN].x if startN && this.colors[startN]
-    startY = this.colors[startN].y if startN && this.colors[startN]
+  #
+  dataIsMatrixFull : ->
+    for y in [0..(this.canvas.matrixDimensions[0]-1)]
+      for x in [0..(this.canvas.matrixDimensions[1]-1)]
+        return false unless this.colorsMatrix[y][x]
+    true
 
+  #
+  dataResizeMatrix : ->
+    # Extend X
+    for y in [0..(this.canvas.matrixDimensions[0]-1)]
+      this.colorsMatrix[y].unshift(null)
+      this.colorsMatrix[y].push(null)
+    this.canvas.matrixDimensions[1] += 2
+
+    # Extend Y
+    row = []
+    for x in [0..(this.canvas.matrixDimensions[1]-1)]
+      row[x] = null
+    this.colorsMatrix.unshift(row)
+    this.colorsMatrix.push(row)
+
+    this.canvas.matrixDimensions[0] += 2
+
+    # Reassociate colors
+    colorIds = $.map this.colors, (e)-> e.id
+    for y in [0..(this.canvas.matrixDimensions[0]-1)]
+      for x in [0..(this.canvas.matrixDimensions[1]-1)]
+        if this.colorsMatrix[y] && this.colorsMatrix[y][x]
+          i = colorIds.indexOf(this.colorsMatrix[y][x])
+          if i >= 0
+            this.colors[i].y += 1
+            this.colors[i].x += 1
+
+  #
+  dataGetEmptyMatrixPosition : ->
+    id = Math.ceil(Math.random() * 1000)
+    i = 0
+    while true
+      i++
+      y = Math.floor(Math.random() * this.canvas.matrixDimensions[0])
+      x = Math.floor(Math.random() * this.canvas.matrixDimensions[1])
+      return {x : x, y : y} unless this.colorsMatrix[y][x]
+      if i > 10
+        i = 0
+        this.dataResizeMatrix() 
+
+  #
+  dataAssignCoords : ->
     # Set an offset if not already
-    this.canvas.offsetZ = Date.parse colors[0].created_at unless this.canvas.offsetZ
-    offsetZ = this.canvas.offsetZ
+    this.canvas.offsetZ = Date.parse this.colors[0].created_at unless this.canvas.offsetZ
 
-    $.map colors, (n,i)->
-      return this if n.x && n.y
-      incrX = Math.ceil(Math.random() * 100) - 50
-      n.x = incrX if !n.x
+    # Resize matrix if the matrix is full
+    this.dataResizeMatrix() if this.dataIsMatrixFull()
 
-      incrY = Math.ceil(Math.random() * 100) - 50
-      n.y = incrY if !n.y
-
-      n.z = (Date.parse(n.created_at) - offsetZ) / 100 / 60
-
-      return this
-
-    colors
+    # Loop through each color, set if not x & y coords
+    $.each this.colors, ((i,n)->
+      unless n.x && n.y
+        pos = this.dataGetEmptyMatrixPosition()
+        return this unless pos
+        this.colorsMatrix[pos.y][pos.x] = n.id
+        this.colors[i].x = pos.x
+        this.colors[i].y = pos.y
+        this.colors[i].z = (Date.parse(n.created_at) - this.canvas.offsetZ) / 100 / 60
+    ).bind(this)
 
   #
   dataAddNewColor : (color)->
@@ -131,24 +181,23 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   dataLoadColors : (colors)->
-    return if colors.length < 1
-
-    colors = this.dataAssignCoords(colors, this.colors.length)
     $.each colors, ((i,v) ->
       this.colors[i] = v
     ).bind(this)
+    this.dataAssignCoords()
 
     this.canvasDrawColors() if this.canvas.scene
 
   #
   dataAppendColors : (colors) ->
-    colors = this.dataAssignCoords(colors, this.colors.length)
     Array.prototype.push.apply(this.colors, colors)
+    this.dataAssignCoords()
 
   #
   dataPrependColors : (colors) ->
-    colors = this.dataAssignCoords(colors.reverse(), 0).reverse() # reverse the order and then back
     Array.prototype.unshift.apply(this.colors, colors)
+    this.dataAssignCoords()
+    this.canvas.step_index += colors.length
 
 
   # --- Canvas ---
@@ -174,7 +223,8 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.canvas.renderer.setSize( window.innerWidth, window.innerHeight )
 
     this.canvas.mouse = new THREE.Vector2()
-
+    this.canvas.matrixDimensions = [6,10]#[24,36] #y,x
+    this.dataResetMatrix()
     this.canvasDrawColors()
 
     document.body.appendChild( this.canvas.renderer.domElement )
@@ -197,6 +247,10 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
       #
 
     this.canvas.scene = null
+
+    this.colors = []
+    this.colorsMatrix = []
+
     $('canvas#colorcamp-canvas').remove()
 
   #
@@ -225,15 +279,15 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     geometryColors = []
     for i,color of this.colors
       vertex = new THREE.Vector3()
-      vertex.x = color.x
-      vertex.y = color.y
-      vertex.z = color.z
+      vertex.x = (color.x - Math.floor(this.canvas.matrixDimensions[1] / 2)) * 15 #this.canvas.colorBoxSize
+      vertex.y = (color.y - Math.floor(this.canvas.matrixDimensions[0] / 2)) * 15 #this.canvas.colorBoxSize
+      vertex.z = color.z / 100
       geometry.vertices.push( vertex );
       geometryColors[i] = new THREE.Color parseInt(color.color.hex, 16)
 
     geometry.colors = geometryColors
 
-    material = new THREE.PointCloudMaterial { size: 50, vertexColors: THREE.VertexColors }
+    material = new THREE.PointCloudMaterial { size: 20, vertexColors: THREE.VertexColors, sizeAttenuation: true }
 
     this.canvas.particles = new THREE.PointCloud geometry, material
     this.canvas.scene.add this.canvas.particles
