@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 20150525184933) do
     t.integer  "color_red",        limit: 4
     t.integer  "color_green",      limit: 4
     t.integer  "color_blue",       limit: 4
-    t.boolean  "palette",          limit: 1,   default: false
+    t.boolean  "palette",                      default: false
     t.integer  "views_count",      limit: 4,   default: 0
     t.datetime "created_at",                                   null: false
     t.datetime "updated_at",                                   null: false
@@ -108,7 +108,7 @@ ActiveRecord::Schema.define(version: 20150525184933) do
     t.string   "last_login_ip",       limit: 255
     t.string   "signup_method",       limit: 255
     t.integer  "roles_mask",          limit: 4
-    t.boolean  "profile_private",     limit: 1,   default: false
+    t.boolean  "profile_private",                 default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

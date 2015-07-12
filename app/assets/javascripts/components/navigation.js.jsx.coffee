@@ -16,17 +16,17 @@
 
   render : ->
     links = []
-    links.push( React.DOM.li { }, (React.DOM.a { href : '/', onClick : this.loadHome }, 'Color Camp') )
+    links.push( React.DOM.li { }, (React.DOM.a { href : '/', onClick : this.loadHomeChannel }, 'Color Camp') )
 
     # Logged-in user
     if this.state.current_user
-      links.push( React.DOM.li null, (React.DOM.a { href : '/u/' + this.state.current_user.login, onClick : this.loadProfile }, 'Your Profile') )
-      links.push( React.DOM.li null, (React.DOM.a { href : '/settings', onClick : this.loadSettings }, 'Settings') )
+      links.push( React.DOM.li null, (React.DOM.a { href : '/u/' + this.state.current_user.login, onClick : this.loadProfileChannel }, 'Your Profile') )
+      links.push( React.DOM.li null, (React.DOM.a { href : '/settings', onClick : this.loadSettingsModal }, 'Settings') )
 
     # Guest user
     else
-      links.push( React.DOM.li null, (React.DOM.a { href : '/signup' }, 'Signup') )
-      links.push( React.DOM.li null, (React.DOM.a { href : '/login' }, 'Login') )
+      links.push( React.DOM.li null, (React.DOM.a { href : '/signup', onClick : this.loadSignupModal }, 'Signup') )
+      links.push( React.DOM.li null, (React.DOM.a { href : '/login', onClick : this.loadLoginModal }, 'Login') )
 
     # Chrome install URL
     links.push( React.DOM.li { className : 'extension-install chrome'}, (React.DOM.a { href : 'https://chrome.google.com/webstore/detail/nkghbibhhebkddaeebapfkooljjfhnca', target : '_blank' }, 'Install') )
@@ -38,23 +38,25 @@
 
   # --- HELPER METHODS ---
 
-  loadHome : (e)->
+  loadHomeChannel : (e)->
     e.preventDefault()
     $(window).trigger 'colorcamp:channel', { viewType: 'everyone', url: '/', channel: 'all_users' }
 
-  loadProfile : (e)->
+  loadProfileChannel : (e)->
     e.preventDefault()
     $(window).trigger 'colorcamp:channel', { viewType: 'user', url: '/u/' + this.state.current_user.login, channel: this.state.current_user.id }
 
-  loadSettings : (e)->
+  loadSettingsModal : (e)->
     e.preventDefault()
     $(window).trigger 'colorcamp:settings:open', {}
 
-  loadLogin : (e)->
-    #
+  loadLoginModal : (e)->
+    e.preventDefault()
+    $(window).trigger 'colorcamp:signuplogin:open', { signup : false }
 
-  loadSignup : (e)->
-    #
+  loadSignupModal : (e)->
+    e.preventDefault()
+    $(window).trigger 'colorcamp:signuplogin:open', { signup : true }
 
   currentUserChange : (e,data)-> 
     this.setState { current_user : data.current_user }

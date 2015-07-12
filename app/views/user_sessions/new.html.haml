@@ -1,8 +1,4 @@
-- if params[:welcome]
-  %h1 Sign Up
-  %p Some welcome info for getting started.
-- else
-  %h1 Login
-
-- User.available_providers.each do |provider|
-  %a.btn.btn-default{href: authenticate_url(provider)}= provider.to_s.titleize
+:coffee
+  $ ->
+    $(window).one 'colorcamp:signuplogin:mounted', ->
+      $(window).trigger 'colorcamp:signuplogin:open', {}

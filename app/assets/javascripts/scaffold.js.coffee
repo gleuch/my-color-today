@@ -26,7 +26,6 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   initialize : ->
-    alert('init' + this.enabled)
     return unless this.enabled
 
     this.websocketInitialize()

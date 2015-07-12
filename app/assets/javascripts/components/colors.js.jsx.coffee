@@ -48,7 +48,7 @@
 
   componentDidMount : ->
     $(window).bind 'colorcamp:channel', this.openChannel
-    $(window).bind 'colorcamp:channel:close colorcamp:modals:close', this.closeChannel
+    # $(window).bind 'colorcamp:channel:close colorcamp:modals:close', this.closeChannel
     $(window).trigger 'colorcamp:colorcanvas:mounted', {}
 
     if this.state.url
@@ -56,7 +56,7 @@
 
   componentWillUnmount : ->
     $(window).unbind 'colorcamp:channel', this.openChannel
-    $(window).unbind 'colorcamp:channel:close colorcamp:modals:close', this.closeChannel
+    # $(window).unbind 'colorcamp:channel:close colorcamp:modals:close', this.closeChannel
 
   componentWillUpdate : (p,s)->
     #
@@ -94,7 +94,7 @@
   # --- HELPER METHODS ---
 
   openChannel : (e,data)->
-    $(window).trigger 'colorcamp:modals:close', { except : 'channel' }
+    $(window).trigger 'colorcamp:modals:close', { }
     this.setState { viewType : data.viewType, url : data.url, channel : data.channel, visible : true }
 
   closeChannel : (e,data)->
