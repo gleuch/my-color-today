@@ -6,9 +6,10 @@ ColorCampSubscriber = ->
   this.channel_svg = false
   this.reconnectIntv = null
   this.canvas = {
-    step_z : 10
-    step_index : 0
     offsetZ : null
+    minZ : 0
+    maxZ : 0
+    positionOffsetZ : 250
   }
   this.colors = []
 
@@ -25,6 +26,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   initialize : ->
+    alert('init' + this.enabled)
     return unless this.enabled
 
     this.websocketInitialize()
@@ -125,10 +127,13 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
       x = this.canvas.camera.position.x
       y = this.canvas.camera.position.y
       z = this.canvas.camera.position.z + this.colors[0].z - this.colors[1].z
+
       new TWEEN.Tween( this.canvas.camera.position ).to( { z: z, x : x, y : y }, 250 ).start();
 
   #
   dataLoadColors : (colors)->
+    return if colors.length < 1
+
     colors = this.dataAssignCoords(colors, this.colors.length)
     $.each colors, ((i,v) ->
       this.colors[i] = v
@@ -145,7 +150,6 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   dataPrependColors : (colors) ->
     colors = this.dataAssignCoords(colors.reverse(), 0).reverse() # reverse the order and then back
     Array.prototype.unshift.apply(this.colors, colors)
-    this.canvas.step_index += colors.length
 
 
   # --- Canvas ---
@@ -163,7 +167,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.canvas.scene = new THREE.Scene()
 
     this.canvas.camera = new THREE.PerspectiveCamera 45, window.innerWidth / window.innerHeight, 1, 3000
-    this.canvas.camera.position.set 0, 0, 250
+    this.canvas.camera.position.set 0, 0, this.canvas.positionOffsetZ
 
     this.canvas.renderer = new THREE.WebGLRenderer { canvas: this.canvas.element.get(0) }
     this.canvas.renderer.setClearColor 0xFFFFFF, 1
