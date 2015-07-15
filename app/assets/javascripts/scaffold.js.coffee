@@ -9,9 +9,9 @@ ColorCampSubscriber = ->
     offsetZ : null
     minZ : 0
     maxZ : 0
-    positionOffsetZ : 250
+    positionOffsetZ : 0 #250
     matrixDimensions : [0,0] #y,x
-    colorBoxSize : 5
+    colorBoxSize : 159
   }
   this.colors = []
   this.colorsMatrix = []
@@ -125,6 +125,8 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
     this.canvas.matrixDimensions[0] += 2
 
+    this.dataSetColorBoxSize()
+
     # Reassociate colors
     colorIds = $.map this.colors, (e)-> e.id
     for y in [0..(this.canvas.matrixDimensions[0]-1)]
@@ -134,6 +136,14 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
           if i >= 0
             this.colors[i].y += 1
             this.colors[i].x += 1
+
+  #
+  dataSetColorBoxSize : ->
+    w = (this.canvas.element.parent().width() / Math.floor this.canvas.matrixDimensions[1])# * 0.8
+    h = (this.canvas.element.parent().height() / Math.floor this.canvas.matrixDimensions[0])# * 0.8
+    w = 100000 if w < 1 # Prevent 0
+    h = 100000 if h < 1 # Prevent 0
+    this.canvas.colorBoxSize = Math.min w, h, this.canvas.colorBoxSize
 
   #
   dataGetEmptyMatrixPosition : ->
@@ -164,7 +174,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
         this.colorsMatrix[pos.y][pos.x] = n.id
         this.colors[i].x = pos.x
         this.colors[i].y = pos.y
-        this.colors[i].z = (Date.parse(n.created_at) - this.canvas.offsetZ) / 100 / 60
+        this.colors[i].z = (Date.parse(n.created_at) - this.canvas.offsetZ) / 1000 / 60
     ).bind(this)
 
   #
@@ -175,7 +185,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     if typeof this.colors[1] != 'undefined'
       x = this.canvas.camera.position.x
       y = this.canvas.camera.position.y
-      z = this.canvas.camera.position.z + this.colors[0].z - this.colors[1].z
+      #z = this.canvas.camera.position.z + this.colors[0].z - this.colors[1].z
 
       new TWEEN.Tween( this.canvas.camera.position ).to( { z: z, x : x, y : y }, 250 ).start();
 
@@ -214,26 +224,25 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
       # $('body').append this.canvas.element
       return
 
-    w = this.canvas.element.width()
-    h = this.canvas.element.height()
+    w = this.canvas.element.parent().width()
+    h = this.canvas.element.parent().height()
 
     this.canvas.scene = new THREE.Scene()
-    this.canvas.scene.fog = new THREE.Fog 0xffffff, 1, 10000
+    # this.canvas.scene.fog = new THREE.Fog 0xffffff, 1, 10000
 
-    this.canvas.camera = new THREE.PerspectiveCamera 25, w / h, 1, 864
-    this.canvas.camera.position.set 0, 0, this.canvas.positionOffsetZ + 36
+    this.canvas.camera = new THREE.PerspectiveCamera 25, w / h, 1, 86400
+    this.canvas.camera.position.set 0, 0, 3600
 
     this.canvas.renderer = new THREE.WebGLRenderer { canvas: this.canvas.element.get(0) }
     this.canvas.renderer.setClearColor 0xFFFFFF, 1
-    this.canvas.renderer.setPixelRatio( window.devicePixelRatio )
+    this.canvas.renderer.setPixelRatio window.devicePixelRatio
     this.canvas.renderer.setSize w, h
 
     this.canvas.mouse = new THREE.Vector2()
     this.canvas.matrixDimensions = [6,10]#[24,36] #y,x
     this.dataResetMatrix()
+    this.dataSetColorBoxSize()
     this.canvasDrawColors()
-
-    # document.body.appendChild( this.canvas.renderer.domElement )
 
     $(document)
       .on 'mousemove', this.canvasEventMousemove.bind(this)
@@ -262,43 +271,23 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   #
   canvasAnimate : ->
     this.canvasRender()
-    setTimeout (->
-      requestAnimationFrame( this.canvasAnimate.bind(this) )
-    ).bind(this), 120 # ~30 fps
+    # setTimeout (->
+    requestAnimationFrame( this.canvasAnimate.bind(this) )
+    # ).bind(this), 120 # ~30 fps
 
   #
   canvasRender : ->
+    this.canvas.camera.position.x += ( this.canvas.mouse.x - this.canvas.camera.position.x ) * 0.05
+    this.canvas.camera.lookAt(this.canvas.scene.position)
     this.canvas.renderer.render this.canvas.scene, this.canvas.camera
-    TWEEN.update()
 
   #
   canvasResize : (e)->
-    w = this.canvas.element.width()
-    h = this.canvas.element.height()
+    w = this.canvas.element.parent().width()
+    h = this.canvas.element.parent().height()
     this.canvas.camera.aspect = w / h
     this.canvas.renderer.setSize w, h
     this.canvas.camera.updateProjectionMatrix()
-
-
-  # canvasDrawColors : ->
-  #   this.canvas.scene.remove this.canvas.particles
-  #
-  #   geometry = new THREE.Geometry
-  #   geometryColors = []
-  #   for i,color of this.colors
-  #     vertex = new THREE.Vector3()
-  #     vertex.x = (color.x - Math.floor(this.canvas.matrixDimensions[1] / 2)) * 15 #this.canvas.colorBoxSize
-  #     vertex.y = (color.y - Math.floor(this.canvas.matrixDimensions[0] / 2)) * 15 #this.canvas.colorBoxSize
-  #     vertex.z = color.z / 100
-  #     geometry.vertices.push( vertex );
-  #     geometryColors[i] = new THREE.Color parseInt(color.color.hex, 16)
-  #
-  #   geometry.colors = geometryColors
-  #
-  #   material = new THREE.PointCloudMaterial { size: 20, vertexColors: THREE.VertexColors, sizeAttenuation: true }
-  #
-  #   this.canvas.particles = new THREE.PointCloud geometry, material
-  #   this.canvas.scene.add this.canvas.particles
 
   #
   canvasDrawColors : ->
@@ -314,13 +303,14 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     # Set and load material
     hexColor = parseInt(color.color.hex, 16)
     material = new THREE.MeshBasicMaterial { color: hexColor, transparent: false }
-    geometry = new THREE.BoxGeometry( 10, 10, .1 )
+    geometry = new THREE.BoxGeometry( this.canvas.colorBoxSize, this.canvas.colorBoxSize, .1 )
 
     colorMesh = new THREE.Mesh geometry, material
     colorMesh.id = color.id
-    colorMesh.position.x = (color.x - Math.floor(this.canvas.matrixDimensions[1] / 2)) * 10
-    colorMesh.position.y = (color.y - Math.floor(this.canvas.matrixDimensions[0] / 2)) * 10 #this.canvas.colorBoxSize
-    colorMesh.position.z = color.z / 10
+    colorMesh.position.x = (color.x - Math.floor(this.canvas.matrixDimensions[1] / 2)) * this.canvas.colorBoxSize
+    colorMesh.position.y = (color.y - Math.floor(this.canvas.matrixDimensions[0] / 2)) * this.canvas.colorBoxSize
+    colorMesh.position.z = color.z
+
     colorMesh.matrixAutoUpdate = false
     colorMesh.updateMatrix()
 
@@ -330,9 +320,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   canvasEventMousemove : (e)->
-    # e.preventDefault()
-    # this.canvas.mouse.x = e.clientX - (window.innerWidth / 2)
-    # this.canvas.mouse.y = - (e.clientY - (window.innerHeight / 2))
+    this.canvas.mouse.x = (2 * e.clientX) - (window.innerWidth)
 
   #
   canvasEventKeypress : (e)->
