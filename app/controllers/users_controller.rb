@@ -1,28 +1,29 @@
 class UsersController < ApplicationController
 
   before_filter :get_user, only: [:show]
+  before_filter :get_colors_date, only: [:show]
   before_filter :authenticate_user!, only: [:edit,:update]
 
-  set_pagination_headers :latest_colors, only: [:show]
+  set_pagination_headers :colors, only: [:show]
 
 
   def show
     results = ->{
-      @latest_colors = @user.page_colors.recently(5.days).page(before: params[:next_id]).per(100)
+      @request_url ||= dated_user_profile_url(@user, @colors_date)
+      @colors ||= @user.page_colors.on(@colors_date).page(before: params[:next_id]).per(100)
     }
 
     respond_to do |format|
-      format.html {
-        results.call
-        render :show
-      }
+      format.html { render :show }
       format.json {
+        results.call
         render json: {
-          channel:      @user.uuid,
-          channelInfo:  @user.to_api,
-          colors:       results.call.map(&:to_public_api),
-          url:          user_profile_url(@user, before: params[:next_id]),
-          viewType:     :user
+          channel:        @user.uuid,
+          channelInfo:    @user.to_api,
+          date:           @colors_date.to_s,
+          dateUrl:        @request_url,
+          colorData:      @colors.map(&:to_public_api),
+          viewType:       :user
         }
       }
     end
@@ -62,6 +63,11 @@ private
   def get_user
     @user = User.find(params[:id])
     raise ActiveRecord::RecordNotFound if @user.blank?
+  end
+
+  def get_colors_date
+    @colors_date = Date.parse(params[:date]) rescue nil
+    @colors_date ||= @user.page_colors.recent.first.created_at.to_date rescue Date.today
   end
 
   def user_update_params
