@@ -26,11 +26,11 @@
         #content.container-fluid
           = yield
 
-
           - providers = User.available_providers.map{|provider| {name: provider.to_s.titleize, url: authenticate_url(provider)} }
-          = react_component 'ColorCanvas', {}
+          = react_component 'ColorChannel', {}
           = react_component 'SettingsModal', { current_user: (current_user ? current_user.to_api(:current_user) : nil), visible: false }
           = react_component 'SignupLoginModal', { providers: providers, visible: false }
+          = react_component 'ColorCanvas', {}
 
           .clearfix
 

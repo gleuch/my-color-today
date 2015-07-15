@@ -2,6 +2,8 @@ class StaticPagesController < ApplicationController
 
   before_filter :load_resource, only: [:show]
 
+  set_pagination_headers :latest_colors, only: [:show]
+
 
   def show
     @_static_page_options = {}
@@ -23,7 +25,7 @@ class StaticPagesController < ApplicationController
 
   def home
     results = -> {
-      @latest_colors = WebSitePageColor.recently(5.days).limit(100)
+      @latest_colors = WebSitePageColor.recently(5.days).page(before: params[:next_id]).per(100)
     }
 
     respond_to do |format|
@@ -33,7 +35,7 @@ class StaticPagesController < ApplicationController
           channel:      'all_users',
           channelInfo:  {},
           colors:       results.call.map(&:to_public_api),
-          url:          root_path,
+          url:          root_url,
           viewType:     :everyone
         }
       }

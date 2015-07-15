@@ -25,9 +25,12 @@ class WebSitePageColor < ActiveRecord::Base
   after_create :queue_average_color_worker
 
 
-  # SCOPES ----
+  # SCOPES --------------------------------------------------------------------
 
-  scope :recently, ->(d=1.day) { where("#{self.table_name}.created_at >= ?", Time.now - d).order("#{self.table_name}.created_at desc") }
+  scope :recently, ->(d=1.day) { 
+    #where("#{self.table_name}.created_at >= ?", Time.now - d).
+    order("#{self.table_name}.created_at desc")
+  }
   
 
   # CLASS METHODS -------------------------------------------------------------

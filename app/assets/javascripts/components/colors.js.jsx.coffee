@@ -1,4 +1,4 @@
-@ColorCanvasUserDetail = React.createClass
+@ColorChannelUserDetail = React.createClass
   render : ->
     React.DOM.section {id : 'user-profile', className : 'details-container'},
       React.DOM.div { className : 'avatar' },
@@ -7,7 +7,7 @@
         React.DOM.h3 { }, this.props.user.name
     
 
-@ColorCanvasUserContent = React.createClass
+@ColorChannelUserContent = React.createClass
   render : ->
     unless this.props.user.profile_private
       React.DOM.section { },
@@ -18,7 +18,7 @@
           React.DOM.p { className : 'text-center' }, 'This user has made their account private.'
 
 
-@ColorCanvasSiteDetail = React.createClass
+@ColorChannelSiteDetail = React.createClass
   render : ->
     React.DOM.section { id : 'site-profile', className : 'details-container' },
       React.DOM.div { className : 'avatar' },
@@ -28,20 +28,62 @@
         React.DOM.h3 { }, this.props.site.name
 
 
-@ColorCanvasEveryoneDetail = React.createClass
+@ColorChannelEveryoneDetail = React.createClass
   render : ->
     React.DOM.section { },
       React.DOM.div { className : 'info' },
         React.DOM.h3 { }, 'Everyone'
 
 
+@ColorChannelPagination = React.createClass
+  getInitialState : ->
+    {
+      paginateCanvas : this.props.paginateCanvas
+      nextUrl : this.props.nextUrl
+      prevUrl : this.props.prevUrl
+    }
+
+  render : ->
+    nextLink = if this.state.nextUrl
+      React.DOM.a { className : 'paginate older', href : this.props.nextUrl, onClick : this.nextPage }, 'Older'
+    else
+      React.DOM.span { className : 'paginate older' }, 'Older'
+
+    prevLink = if this.state.prevUrl
+      React.DOM.a { className : 'paginate newer', href : this.props.prevUrl, onClick : this.prevPage }, 'Newer'
+    else
+      React.DOM.span { className : 'paginate newer' }, 'Newer'
+
+    React.DOM.nav { className : 'timeline' },
+      {nextLink}
+      React.DOM.span { }, ' '
+      {prevLink}
+
+
+  # --- HELPER METHODS ---
+
+  prevPage : (e)->
+    e.preventDefault()
+    this.state.paginateCanvas(this.props.prevUrl)
+
+  nextPage : (e)->
+    e.preventDefault()
+    this.state.paginateCanvas(this.props.nextUrl)
+
 
 @ColorCanvas = React.createClass
+  render : ->
+    React.DOM.canvas {id: 'colorcamp-canvas'}, ''
+
+
+@ColorChannel = React.createClass
   getInitialState : ->
     {
       channel :     this.props.channel
       channelInfo : this.props.channelInfo
       url :         this.props.url
+      nextUrl :     null
+      prevUrl :     null
       viewType :    this.props.viewType
       visible :     true
     }
@@ -75,20 +117,21 @@
 
     details = ''
     content = ''
+    timeline = `<ColorChannelPagination prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
 
     if this.state.viewType == 'user'
-      details = `<ColorCanvasUserDetail user={this.state.channelInfo} />`
-      content = `<ColorCanvasUserContent user={this.state.channelInfo} />`
+      details = `<ColorChannelUserDetail user={this.state.channelInfo} />`
+      content = `<ColorChannelUserContent user={this.state.channelInfo} />`
     else if this.state.viewType == 'state'
-      details = `<ColorCanvasSiteDetail site={this.state.channelInfo} />`
-      # content = `<ColorCanvasSiteContent site={this.state.channelInfo} />`
+      details = `<ColorChannelSiteDetail site={this.state.channelInfo} />`
+      # content = `<ColorChannelSiteContent site={this.state.channelInfo} />`
     else if this.state.viewType == 'everyone'
-      details = `<ColorCanvasEveryoneDetail />`
+      details = `<ColorChannelEveryoneDetail />`
 
     React.DOM.div { }, 
       details
       content
-      React.DOM.canvas {id: 'colorcamp-canvas'}, ''
+      timeline
 
 
   # --- HELPER METHODS ---
@@ -101,16 +144,25 @@
     unless data.except && data.except == 'channel'
       this.setState { visible : false }
 
-  getChannelData : ->
-    $.ajax this.state.url, {
+  paginateCanvas : (url)->
+    this.setState { url : url }
+
+  getChannelData : (url)->
+    $.ajax url || this.state.url, {
       dataType : 'json'
       method : 'GET'
       success : ((d,s,x)->
         if d && !d.errors
+          try
+            p = JSON.parse x.getResponseHeader('X-Pagination')
+          catch
+            p = {}
+
           this.setState {
             channel : d.channel,
             channelInfo : d.channelInfo
-            url : d.url
+            prevUrl : p.prev_url
+            nextUrl : p.next_url
             viewType : d.viewType
           }
 
@@ -122,6 +174,7 @@
               document.colorCamp.channelName = this.state.channel
             else
               document.colorCamp.channelName = this.state.viewType + '-' + this.state.channel
+
             document.colorCamp.dataLoadColors d.colors
       ).bind(this)
       error : ((x,s,e) ->

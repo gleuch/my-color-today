@@ -87,4 +87,23 @@ private
     end
   end
 
+
+  def self.set_pagination_headers(name, options = {})
+    after_filter(options) do |controller|
+      results = instance_variable_get("@#{name}") rescue nil
+      if results.present?
+        headers["X-Pagination"] = {
+          total_results: results.total_results,
+          total_entities: results.total_entities,
+          next_cursor: results.next_cursor,
+          prev_cursor: results.prev_cursor,
+          current_cursor: (options[:request_url] || request.url rescue nil),
+          next_url: (results.next_url(options[:request_url] || request.url) rescue nil),
+          prev_url: (results.prev_url(options[:request_url] || request.url) rescue nil)
+        }.to_json
+      end
+    end
+  end
+
+
 end

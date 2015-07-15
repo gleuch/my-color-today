@@ -3,10 +3,12 @@ class UsersController < ApplicationController
   before_filter :get_user, only: [:show]
   before_filter :authenticate_user!, only: [:edit,:update]
 
+  set_pagination_headers :latest_colors, only: [:show]
+
 
   def show
     results = ->{
-      @latest_colors = @user.page_colors.recently(5.days).limit(100)
+      @latest_colors = @user.page_colors.recently(5.days).page(before: params[:next_id]).per(100)
     }
 
     respond_to do |format|
@@ -19,7 +21,7 @@ class UsersController < ApplicationController
           channel:      @user.uuid,
           channelInfo:  @user.to_api,
           colors:       results.call.map(&:to_public_api),
-          url:          user_profile_path(@user),
+          url:          user_profile_url(@user, before: params[:next_id]),
           viewType:     :user
         }
       }

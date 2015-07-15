@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/barkbox/cursor.git
+  revision: 79b6c76f437adb754eefb1ca791bcb9018e8c064
+  specs:
+    cursor (0.1.3)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -55,7 +63,7 @@ GEM
       jmespath (~> 1.0)
     aws-sdk-resources (2.1.2)
       aws-sdk-core (= 2.1.2)
-    babel-source (5.6.16)
+    babel-source (5.6.19)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
@@ -418,7 +426,7 @@ GEM
       raindrops (~> 0.7)
     uniform_notifier (1.9.0)
     websocket (1.2.2)
-    websocket-driver (0.6.0)
+    websocket-driver (0.6.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
     websocket-rails (0.7.0)
@@ -430,9 +438,6 @@ GEM
       redis
       redis-objects
       thin
-    will_paginate (3.0.7)
-    will_paginate-bootstrap (1.0.1)
-      will_paginate (>= 3.0.3)
     xpath (2.0.0)
       nokogiri (~> 1.3)
 
@@ -456,6 +461,7 @@ DEPENDENCIES
   capybara (= 2.4.4)
   capybara-webkit (= 1.5.0)
   coffee-rails (= 4.1.0)
+  cursor!
   database_cleaner (= 1.4.1)
   factory_girl_rails (= 4.5.0)
   fb_graph (= 2.7.17)
@@ -495,5 +501,3 @@ DEPENDENCIES
   unf (= 0.1.4)
   unicorn (= 4.9.0)
   websocket-rails (= 0.7.0)
-  will_paginate (= 3.0.7)
-  will_paginate-bootstrap (= 1.0.1)
