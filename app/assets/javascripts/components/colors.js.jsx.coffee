@@ -117,7 +117,8 @@
 
     details = ''
     content = ''
-    timeline = `<ColorChannelPagination prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
+    timeline = ''
+    # timeline = `<ColorChannelPagination prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
 
     if this.state.viewType == 'user'
       details = `<ColorChannelUserDetail user={this.state.channelInfo} />`

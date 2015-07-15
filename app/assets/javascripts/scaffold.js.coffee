@@ -213,6 +213,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
       $('body').append this.canvas.element
 
     this.canvas.scene = new THREE.Scene()
+    this.canvas.scene.fog = new THREE.Fog 0xffffff, 1, 10000
 
     this.canvas.camera = new THREE.PerspectiveCamera 45, window.innerWidth / window.innerHeight, 1, 3000
     this.canvas.camera.position.set 0, 0, this.canvas.positionOffsetZ
@@ -272,25 +273,53 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.canvas.camera.updateProjectionMatrix()
 
   #
+  # canvasDrawColors : ->
+  #   this.canvas.scene.remove this.canvas.particles
+  #
+  #   geometry = new THREE.Geometry
+  #   geometryColors = []
+  #   for i,color of this.colors
+  #     vertex = new THREE.Vector3()
+  #     vertex.x = (color.x - Math.floor(this.canvas.matrixDimensions[1] / 2)) * 15 #this.canvas.colorBoxSize
+  #     vertex.y = (color.y - Math.floor(this.canvas.matrixDimensions[0] / 2)) * 15 #this.canvas.colorBoxSize
+  #     vertex.z = color.z / 100
+  #     geometry.vertices.push( vertex );
+  #     geometryColors[i] = new THREE.Color parseInt(color.color.hex, 16)
+  #
+  #   geometry.colors = geometryColors
+  #
+  #   material = new THREE.PointCloudMaterial { size: 20, vertexColors: THREE.VertexColors, sizeAttenuation: true }
+  #
+  #   this.canvas.particles = new THREE.PointCloud geometry, material
+  #   this.canvas.scene.add this.canvas.particles
+
+  #
   canvasDrawColors : ->
+    # Items
     this.canvas.scene.remove this.canvas.particles
+    if this.colors.length > 0
+      this.canvas.particles = new THREE.Group()
+      this.canvasDrawColor(color,i) for i,color of this.colors
+      this.canvas.scene.add this.canvas.particles
 
-    geometry = new THREE.Geometry
-    geometryColors = []
-    for i,color of this.colors
-      vertex = new THREE.Vector3()
-      vertex.x = (color.x - Math.floor(this.canvas.matrixDimensions[1] / 2)) * 15 #this.canvas.colorBoxSize
-      vertex.y = (color.y - Math.floor(this.canvas.matrixDimensions[0] / 2)) * 15 #this.canvas.colorBoxSize
-      vertex.z = color.z / 100
-      geometry.vertices.push( vertex );
-      geometryColors[i] = new THREE.Color parseInt(color.color.hex, 16)
+  #
+  canvasDrawColor : (color,i)->
+    # Set and load material
+    hexColor = parseInt(color.color.hex, 16)
+    material = new THREE.MeshBasicMaterial { color: hexColor, transparent: false }
+    geometry = new THREE.BoxGeometry( 10, 10, .1 )
 
-    geometry.colors = geometryColors
+    colorMesh = new THREE.Mesh geometry, material
+    colorMesh.id = color.id
+    colorMesh.position.x = (color.x - Math.floor(this.canvas.matrixDimensions[1] / 2)) * 10
+    colorMesh.position.y = (color.y - Math.floor(this.canvas.matrixDimensions[0] / 2)) * 10 #this.canvas.colorBoxSize
+    colorMesh.position.z = color.z / 10
+    colorMesh.matrixAutoUpdate = false
+    colorMesh.updateMatrix()
 
-    material = new THREE.PointCloudMaterial { size: 20, vertexColors: THREE.VertexColors, sizeAttenuation: true }
+    # Add to canvas
+    this.canvas.particles.add colorMesh
 
-    this.canvas.particles = new THREE.PointCloud geometry, material
-    this.canvas.scene.add this.canvas.particles
 
   #
   canvasEventMousemove : (e)->
