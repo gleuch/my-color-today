@@ -15,11 +15,11 @@ body ::selection {background: rgba($color-mid-black,.24);}
 
 
 // --- LAYOUT ---
-#header, #wrapper, #footer {position: relative; z-index: 2;}
+#wrapper, #footer {position: relative; z-index: 1;}
 
 
 // --- CANVAS ---
-.colorcamp-canvas-area {position: fixed; top: 8em; right: 5em; bottom: 10em; left: 5em; z-index: 1;
+.colorcamp-canvas-area {position: fixed; top: 8em; right: 0; bottom: 10em; left: 0; z-index: 1;
   canvas { width: 100%; height: 100%; }
 }
 
@@ -36,10 +36,50 @@ body ::selection {background: rgba($color-mid-black,.24);}
 
 // --- MENU ---
 #header {
-  position: fixed; bottom: 0; right: 0;
-  ul { list-style: none;
-    li {
-      a { }
+  #header-links {
+    position: fixed;
+    bottom: 15px;
+    right: -160px;
+    width: 150px;
+    z-index: 12;
+    @include transition(right .2s ease-in-out);
+
+    a.toggle-menu {
+      position: absolute;
+      left: -46px;
+      bottom: 0;
+      color: $color-black;
+      &:hover {}
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    ul {
+      opacity: 0;
+      list-style: none;
+      margin: 0;
+      padding: 0 0 2px 0;
+      @include transition(opacity .2s ease-in-out);
+
+      li {
+        margin: 0;
+        padding: .1em 0;
+        a {
+          color: $color-black;
+          font-weight: bold;
+          font-size: 1.6rem;
+          line-height: 1.0em;
+        }
+      }
+    }
+
+    &.opened {
+      right: 0;
+      ul {
+        opacity: 1;
+      }
     }
   }
 }
@@ -47,9 +87,31 @@ body ::selection {background: rgba($color-mid-black,.24);}
 
 // --- TIMELINE ---
 .timeline {
-  position: fixed; bottom: 0; left: 0; right: 0; text-align: center;
+  position: fixed; bottom: 0; left: 0; right: 0; text-align: center; z-index: 12;
   .timeline-content { display: inline-block; width: auto; margin: 0 auto; 
     a { display: inline-block; padding: 3px 5px; color: #000; }
     span { }
+  }
+}
+
+
+// --- PAGES ---
+.screen-enter {
+  opacity: 0.01;
+  transition: opacity .5s ease-in, transform .5s ease-in;
+  
+  &.screen-enter-hidden {
+    display: none !important;
+  }
+  &.screen-enter-active {
+    opacity: 1;
+  }
+}
+.screen-leave {
+  opacity: 1;
+  transition: opacity .5s ease-in, transform .5s ease-in;
+
+  &.screen-leave-active {
+    opacity: 0.01;
   }
 }

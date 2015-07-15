@@ -1,8 +1,9 @@
 class WebSitesController < ApplicationController
 
   before_filter :get_web_site, only: [:show]
+  before_filter :get_colors_date, only: [:show]
 
-  set_pagination_headers :latest_colors, only: [:show]
+  set_pagination_headers :colors, only: [:show]
 
 
   def index
@@ -21,21 +22,21 @@ class WebSitesController < ApplicationController
 
   def show
     results = ->{
-      @latest_colors = @web_site.colors.recently(5.days).page(before: params[:next_id]).per(100)
+      @request_url ||= dated_web_site_url(@web_site, @colors_date)
+      @colors ||= @web_site.page_colors.on(@colors_date).page(before: params[:next_id]).per(100)
     }
 
     respond_to do |format|
-      format.html {
-        results.call
-        render :show
-      }
+      format.html { render :show }
       format.json {
+        results.call
         render json: {
-          channel:      @web_site.uuid,
-          channelInfo:  @web_site.to_api,
-          colors:       results.call.map(&:to_public_api),
-          url:          web_site_url(@web_site),
-          viewType:     :site
+          channel:        @web_site.uuid,
+          channelInfo:    @web_site.to_api,
+          date:           @colors_date.to_s,
+          dateUrl:        @request_url,
+          colorData:      @colors.map(&:to_public_api),
+          viewType:       :site
         }
       }
     end

@@ -1,12 +1,10 @@
 class StaticPage
 
-  # include ActionDispatch::Routing::UrlFor
-  # include Rails.application.routes.url_helpers
-
   attr_accessor :data
 
-  def initialize(p={})
-    @page, @format = p[:page], p[:format]
+
+  def initialize(p={}, format=nil)
+    @page, @format = p[:page], format || p[:format]
     @data = {}
   end
 
@@ -23,9 +21,12 @@ class StaticPage
 
   def exists?(format=nil)
     return false if self.page.blank?
-    fpath = File.join(Rails.root, "app/views/static_pages/#{self.page}.#{self.format}.haml")
-    return false unless fpath.match(/app\/views\/static_pages\//) # dirup hack prevention
-    File.exists?(fpath) && File.readable?(fpath)
+    return self.exists_for? || self.exists_for?('.haml')
+  end
+
+  def load_json_data(format=nil)
+    return nil unless self.page.present? && self.exists_for?(nil,:json)
+    self.data = File.read(self.fpath(nil,:json))# rescue nil
   end
 
   def self.available_pages(f=:html)
@@ -35,5 +36,14 @@ class StaticPage
 
 protected
 
+  def fpath(suffix=nil, format=nil)
+    File.join(Rails.root, "app/views/static_pages/#{self.page}.#{format || self.format}#{suffix}")
+  end
+
+  def exists_for?(suffix=nil, format=nil)
+    f = self.fpath(suffix, format)
+    return false unless f.match(/app\/views\/static_pages\//) # dirup hack prevention
+    File.exists?(f) && File.readable?(f)
+  end
 
 end

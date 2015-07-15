@@ -4,9 +4,13 @@
 //= require turbolinks
 //= require react
 //= require react_ujs
+//= require react_router.min
+//= require react_router_ujs
+//= require react-timed-transition-group
+//= require react-svg
 //= require components
 //= require websocket_rails/main
 //= require three.min
-//= require tween.min
-//= require scaffold
+//= rfequire tween.min
+//= require canvas
 

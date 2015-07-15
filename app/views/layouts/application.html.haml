@@ -8,34 +8,25 @@
     %meta{name: :viewport, content: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"}
 
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
-    = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
 
     = render 'layouts/static/meta_tags'
 
-    = # render 'layouts/header'
+    :coffee
+      @ColorInitialProps ||= {}
+      @ColorInitialProps.current_user = #{ (current_user ? current_user.to_api(:current_user) : nil).to_json }
+      @ColorInitialProps.signin_providers = #{ signin_providers.to_json }
+
+    / %script{src: '//use.typekit.net/hba1asi.js'}
+    / %script try{Typekit.load();}catch(e){}
 
 
   %body{class: @body_classes}
-    = # render 'layouts/body_header'
+    = yield
 
-    = react_component 'Header', { current_user: (current_user ? current_user.to_api(:current_user) : nil) }
-
-    #wrapper
-      #container
-        #content.container-fluid
-          = yield
-
-          - providers = User.available_providers.map{|provider| {name: provider.to_s.titleize, url: authenticate_url(provider)} }
-          = react_component 'ColorChannel', {}
-          = react_component 'SettingsModal', { current_user: (current_user ? current_user.to_api(:current_user) : nil), visible: false }
-          = react_component 'SignupLoginModal', { providers: providers, visible: false }
-          = react_component 'ColorCanvas', {}
-
-          .clearfix
+    = react_router 'ColorRoutes', 'HistoryLocation'
 
     %script{type: 'text/javascript'}
       = extension_send_message.html_safe
 
-    = # render 'layouts/static/footer'
-    = # render 'layouts/footer'
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true

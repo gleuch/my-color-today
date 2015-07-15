@@ -19,6 +19,8 @@ module ColorCamp
 
     config.action_mailer.preview_path = "#{Rails.root}/lib/mailer_previews"
 
+    config.react.addons = true # defaults to false
+
   end
 end
 

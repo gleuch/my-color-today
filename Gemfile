@@ -13,11 +13,11 @@ gem 'bcrypt',                         '3.1.10'
 
 # --- MODELS & CONTROLLERS ---
 gem 'paperclip',                      '4.3.0'
-gem 'paperclip-compression',          '0.3.7'
+gem 'paperclip-compression',          '0.3.9'
 gem 'friendly_id',                    '5.1.0'
 # gem 'will_paginate',                  '3.0.7'
-gem 'cursor',                                         github: 'barkbox/cursor'
-gem 'authlogic',                      '3.4.5'
+gem 'cursor',                                         github: 'gleuch/cursor'
+gem 'authlogic',                      '3.4.6'
 gem 'sanitize',                       '4.0.0'
 gem 'addressabler',                   '0.1.2'
 
@@ -33,10 +33,11 @@ gem 'jquery-ui-rails',                '5.0.5'
 gem 'bootstrap-sass',                 '3.3.5.1'
 gem 'bourbon',                        '4.2.3'
 gem 'react-rails',                    '1.1.0'
+gem 'react-router-rails',             '0.13.3'
 
 
 # --- REDIS / SIDEKIQ ---
-gem 'sidekiq',                        '3.4.1'
+gem 'sidekiq',                        '3.4.2'
 gem 'sidekiq-unique-jobs',            '3.0.14'
 gem 'redis',                          '3.2.1'
 gem 'redis-rails',                    '4.0.0'
@@ -63,7 +64,7 @@ gem 'rails-settings-cached',          '0.4.1'
 
 
 # --- OAUTH / APIS ---
-gem 'aws-sdk',                        '2.1.2'
+gem 'aws-sdk',                        '2.1.7'
 gem 'rest-client',                    '1.8.0'
 gem 'twitter',                        '5.14.0'
 gem 'fb_graph',                       '2.7.17'
@@ -98,15 +99,15 @@ end
 group :test do
   gem 'capybara',                     '2.4.4'
   gem 'capybara-webkit',              '1.5.0'
-  gem 'simplecov',                    '0.9.2',        require: false
+  gem 'simplecov',                    '0.10.0',        require: false
   gem 'selenium-webdriver',           '2.45.0'
   gem 'sqlite3',                      '1.3.10'
 end
 
 group :development, :test do
-  gem 'rspec-rails',                  '3.2.3'
+  gem 'rspec-rails',                  '3.3.3'
   gem 'database_cleaner',             '1.4.1'
-  gem 'ffaker',                       '2.0.0'
+  gem 'ffaker',                       '2.1.0'
   gem 'factory_girl_rails',           '4.5.0'
 end
 

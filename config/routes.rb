@@ -12,7 +12,9 @@ Rails.application.routes.draw do
   match '/settings' => 'users#update', via: [:put]
 
   # User profile
-  match '/u/:id' => 'users#show', via: [:get], as: :user_profile
+  resources :users, path: '/u', only: [:show], as: :user_profile, constraints: { id: /[^\/]+/ } do
+    get '/:date', action: :show, as: :dated, on: :member
+  end
 
   # Omniauth
   match '/auth/:provider/callback' => 'user_authentications#create', via: [:get, :post]
@@ -25,9 +27,12 @@ Rails.application.routes.draw do
   match '/logout' => 'user_sessions#destroy', as: :logout, via: [:get, :post]
 
   # Web Sites
-  resources :web_sites, path: '/s', only: [:index, :show], constraints: { id: /[^\/]+/ }
+  resources :web_sites, path: '/s', only: [:index, :show], constraints: { id: /[^\/]+/ } do
+    get '/:date', action: :show, as: :dated, on: :member
+  end
 
   # Static pages routing, use StaticPage to check if exists as constraint
+  match '/home/:date' => 'static_pages#show', via: [:get], page: 'home', as: :dated_everyone
   match '/*page' => 'static_pages#show', as: :static_page, constraints: StaticPage.new, via: [:get]
 
   root to: 'static_pages#show', page: 'home'

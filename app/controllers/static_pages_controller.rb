@@ -2,7 +2,7 @@ class StaticPagesController < ApplicationController
 
   before_filter :load_resource, only: [:show]
 
-  set_pagination_headers :latest_colors, only: [:show]
+  set_pagination_headers :colors, only: [:show]
 
 
   def show
@@ -17,7 +17,8 @@ class StaticPagesController < ApplicationController
       }
       format.json {
         trigger_actions
-        render json: @page.data
+        json = JSON.parse(@page.data) rescue nil
+        render json: json || @page.data, callback: params[:callback]
       }
       format.any { render_not_found }
     end
@@ -25,7 +26,11 @@ class StaticPagesController < ApplicationController
 
   def home
     results = -> {
-      @latest_colors = WebSitePageColor.recently(5.days).page(before: params[:next_id]).per(100)
+      @colors_date = Date.parse(params[:date]) rescue nil
+      @colors_date ||= WebSitePageColor.recent.first.created_at.to_date rescue Date.today
+
+      @request_url ||= dated_everyone_url(@colors_date)
+      @colors = WebSitePageColor.on(@colors_date).page(before: params[:next_id]).per(100)
     }
 
     respond_to do |format|
@@ -33,9 +38,10 @@ class StaticPagesController < ApplicationController
       format.json {
         @page.data = {
           channel:      'all_users',
-          channelInfo:  {},
-          colors:       results.call.map(&:to_public_api),
-          url:          root_url,
+          channelInfo:    {},
+          date:           @colors_date.to_s,
+          dateUrl:        @request_url,
+          colorData:      results.call.map(&:to_public_api),
           viewType:     :everyone
         }
       }
@@ -43,6 +49,10 @@ class StaticPagesController < ApplicationController
   end
   alias_method :svg, :home
 
+  def load_data
+    @page.load_json_data
+  end
+  alias_method :about, :load_data
 
 protected
 
