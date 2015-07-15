@@ -206,29 +206,34 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   canvasInitialize : ->
     this.canvasUninitialize() # for clarify
 
-    if ($('canvas#colorcamp-canvas').size() > 0)
-      this.canvas.element = $('canvas#colorcamp-canvas').eq(0)
+    if ($('canvas.colorcamp-canvas').size() > 0)
+      this.canvas.element = $('canvas.colorcamp-canvas').eq(0)
     else
-      this.canvas.element = $('<canvas></canvas>').attr('id', 'colorcamp-canvas')
-      $('body').append this.canvas.element
+      # alert('make')
+      # this.canvas.element = $('<canvas></canvas>').addClass('colorcamp-canvas')
+      # $('body').append this.canvas.element
+      return
+
+    w = this.canvas.element.width()
+    h = this.canvas.element.height()
 
     this.canvas.scene = new THREE.Scene()
     this.canvas.scene.fog = new THREE.Fog 0xffffff, 1, 10000
 
-    this.canvas.camera = new THREE.PerspectiveCamera 45, window.innerWidth / window.innerHeight, 1, 3000
-    this.canvas.camera.position.set 0, 0, this.canvas.positionOffsetZ
+    this.canvas.camera = new THREE.PerspectiveCamera 25, w / h, 1, 864
+    this.canvas.camera.position.set 0, 0, this.canvas.positionOffsetZ + 36
 
     this.canvas.renderer = new THREE.WebGLRenderer { canvas: this.canvas.element.get(0) }
     this.canvas.renderer.setClearColor 0xFFFFFF, 1
     this.canvas.renderer.setPixelRatio( window.devicePixelRatio )
-    this.canvas.renderer.setSize( window.innerWidth, window.innerHeight )
+    this.canvas.renderer.setSize w, h
 
     this.canvas.mouse = new THREE.Vector2()
     this.canvas.matrixDimensions = [6,10]#[24,36] #y,x
     this.dataResetMatrix()
     this.canvasDrawColors()
 
-    document.body.appendChild( this.canvas.renderer.domElement )
+    # document.body.appendChild( this.canvas.renderer.domElement )
 
     $(document)
       .on 'mousemove', this.canvasEventMousemove.bind(this)
@@ -252,7 +257,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.colors = []
     this.colorsMatrix = []
 
-    $('canvas#colorcamp-canvas').remove()
+    #$('canvas.colorcamp-canvas').remove()
 
   #
   canvasAnimate : ->
@@ -268,11 +273,13 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   canvasResize : (e)->
-    this.canvas.camera.aspect = window.innerWidth / window.innerHeight
-    this.canvas.renderer.setSize( window.innerWidth, window.innerHeight )
+    w = this.canvas.element.width()
+    h = this.canvas.element.height()
+    this.canvas.camera.aspect = w / h
+    this.canvas.renderer.setSize w, h
     this.canvas.camera.updateProjectionMatrix()
 
-  #
+
   # canvasDrawColors : ->
   #   this.canvas.scene.remove this.canvas.particles
   #
@@ -344,10 +351,6 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 document.colorCamp = new ColorCampSubscriber
 
 $ ->
-
-  # Start
-  document.colorCamp.initialize()
-
 
   # TODO : FIX W/ MESSAGING
   # if chrome.app.isInstalled || !navigator.userAgent.match(/Chrome\//)

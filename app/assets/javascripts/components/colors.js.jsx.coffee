@@ -55,9 +55,10 @@
       React.DOM.span { className : 'paginate newer' }, 'Newer'
 
     React.DOM.nav { className : 'timeline' },
-      {nextLink}
-      React.DOM.span { }, ' '
-      {prevLink}
+      React.DOM.div { className : 'timeline-content' },
+        {nextLink}
+        React.DOM.span { }, ' '
+        {prevLink}
 
 
   # --- HELPER METHODS ---
@@ -73,7 +74,8 @@
 
 @ColorCanvas = React.createClass
   render : ->
-    React.DOM.canvas {id: 'colorcamp-canvas'}, ''
+    React.DOM.section { className : 'colorcamp-canvas-area' }, 
+      React.DOM.canvas { className : 'colorcamp-canvas' }
 
 
 @ColorChannel = React.createClass
@@ -118,7 +120,8 @@
     details = ''
     content = ''
     timeline = ''
-    # timeline = `<ColorChannelPagination prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
+
+    timeline = `<ColorChannelPagination prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
 
     if this.state.viewType == 'user'
       details = `<ColorChannelUserDetail user={this.state.channelInfo} />`
