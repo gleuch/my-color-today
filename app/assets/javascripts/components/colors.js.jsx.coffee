@@ -36,23 +36,16 @@
 
 
 @ColorChannelPagination = React.createClass
-  getInitialState : ->
-    {
-      paginateCanvas : this.props.paginateCanvas
-      nextUrl : this.props.nextUrl
-      prevUrl : this.props.prevUrl
-    }
-
   render : ->
-    nextLink = if this.state.nextUrl
+    nextLink = if this.props.nextUrl
       React.DOM.a { className : 'paginate older', href : this.props.nextUrl, onClick : this.nextPage }, 'Older'
     else
-      React.DOM.span { className : 'paginate older' }, 'Older'
+      React.DOM.span { className : 'paginate older' }, '-Older-'
 
-    prevLink = if this.state.prevUrl
+    prevLink = if this.props.prevUrl
       React.DOM.a { className : 'paginate newer', href : this.props.prevUrl, onClick : this.prevPage }, 'Newer'
     else
-      React.DOM.span { className : 'paginate newer' }, 'Newer'
+      React.DOM.span { className : 'paginate newer' }, '-Newer-'
 
     React.DOM.nav { className : 'timeline' },
       React.DOM.div { className : 'timeline-content' },
@@ -65,11 +58,11 @@
 
   prevPage : (e)->
     e.preventDefault()
-    this.state.paginateCanvas(this.props.prevUrl)
+    this.props.paginateCanvas(this.props.prevUrl)
 
   nextPage : (e)->
     e.preventDefault()
-    this.state.paginateCanvas(this.props.nextUrl)
+    this.props.paginateCanvas(this.props.nextUrl)
 
 
 @ColorCanvas = React.createClass

@@ -1,6 +1,6 @@
 GIT
-  remote: git://github.com/barkbox/cursor.git
-  revision: 79b6c76f437adb754eefb1ca791bcb9018e8c064
+  remote: git://github.com/gleuch/cursor.git
+  revision: 1cc1d3c868de2af876258f283996be23bc8fa860
   specs:
     cursor (0.1.3)
       actionpack (>= 3.0.0)

@@ -95,7 +95,7 @@ private
         request_url = instance_var_get("@request_url") rescue nil
         headers["X-Pagination"] = {
           total_results: results.total_results,
-          total_entities: results.total_entities,
+          total_entries: results.total_entries,
           next_cursor: results.next_cursor,
           prev_cursor: results.prev_cursor,
           current_cursor: (request_url || options[:request_url] || request.url rescue nil),
