@@ -53,6 +53,14 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.enabled = false
     this.uninitialize()
 
+  #
+  setChannelName : (name)->
+    this.websocketChannelUnsubscribe()
+    this.channelName = name
+
+    if this.channelName && this.dispatcher.state == 'connected'
+      this.websocketChannelSubscribe()
+
 
   # --- Websocket ---
 
@@ -76,7 +84,9 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   #
   websocketUninitialize : ->
     try
-      this.dispatcher.unsubscribe(k) for k,n of this.dispatcher.channels
+      this.websocketChannelUnsubscribe()
+      if this.dispatcher.channels
+        this.dispatcher.unsubscribe(k) for k,n of this.dispatcher.channels
       this.dispatcher.disconnect()
     catch e
       #
@@ -85,10 +95,18 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   websocketChannelSubscribe : ->
+    this.websocketChannelUnsubscribe()
     this.subscribed_channel = this.dispatcher.subscribe this.channelName
-    this.subscribed_channel.bind 'new_color', ((data)->
-      this.dataAddNewColor(data)
-    ).bind(this)
+    this.subscribed_channel.bind 'new_color', this.dataAddNewColor.bind(this)
+
+  #
+  websocketChannelUnsubscribe : ->
+    try
+      this.subscribed_channel.destroy()
+      this.dispatcher.unsubscribe(this.channelName)
+      this.subscribed_channel = null
+    catch e
+      #
 
 
   # --- Data ---
@@ -262,11 +280,9 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
       #
 
     this.canvas.scene = null
-
     this.colors = []
     this.colorsMatrix = []
 
-    #$('canvas.colorcamp-canvas').remove()
 
   #
   canvasAnimate : ->

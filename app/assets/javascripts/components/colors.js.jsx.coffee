@@ -173,13 +173,15 @@
           if d.viewType == 'user' && d.channelInfo.profile_private
             document.colorCamp.disable()
           else
-            document.colorCamp.enable()
-            if this.state.viewType == 'everyone'
-              document.colorCamp.channelName = this.state.channel
+            channelName = if this.state.viewType == 'everyone'
+              this.state.channel
             else
-              document.colorCamp.channelName = this.state.viewType + '-' + this.state.channel
+              this.state.viewType + '-' + this.state.channel
 
+            document.colorCamp.enable()
+            document.colorCamp.setChannelName channelName
             document.colorCamp.dataLoadColors d.colors
+
       ).bind(this)
       error : ((x,s,e) ->
         #
