@@ -11,7 +11,8 @@ ColorCampSubscriber = ->
     maxZ : 0
     positionOffsetZ : 0 #250
     matrixDimensions : [0,0] #y,x
-    colorBoxSize : 159
+    colorBoxSize : 20
+    matrixHeightPct : 0.6
   }
   this.colors = []
   this.colorsMatrix = []
@@ -118,6 +119,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
       this.colorsMatrix[y] = []
       for x in [0..(this.canvas.matrixDimensions[1]-1)]
         this.colorsMatrix[y][x] = null
+    this.canvasResize()
 
   #
   dataIsMatrixFull : ->
@@ -155,6 +157,8 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
             this.colors[i].y += 1
             this.colors[i].x += 1
 
+    this.canvasResize()
+
   #
   dataSetColorBoxSize : ->
     w = (this.canvas.element.parent().width() / Math.floor this.canvas.matrixDimensions[1])# * 0.8
@@ -178,9 +182,6 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   dataAssignCoords : ->
-    # Set an offset if not already
-    this.canvas.offsetZ = Date.parse this.colors[0].created_at unless this.canvas.offsetZ
-
     # Resize matrix if the matrix is full
     this.dataResizeMatrix() if this.dataIsMatrixFull()
 
@@ -203,7 +204,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     if typeof this.colors[1] != 'undefined'
       x = this.canvas.camera.position.x
       y = this.canvas.camera.position.y
-      #z = this.canvas.camera.position.z + this.colors[0].z - this.colors[1].z
+      z = this.canvas.camera.position.z + this.colors[0].z - this.colors[1].z
 
       new TWEEN.Tween( this.canvas.camera.position ).to( { z: z, x : x, y : y }, 250 ).start();
 
@@ -212,6 +213,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     $.each colors, ((i,v) ->
       this.colors[i] = v
     ).bind(this)
+    this.canvasSetOffsets()
     this.dataAssignCoords()
 
     this.canvasDrawColors() if this.canvas.scene
@@ -234,13 +236,8 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   canvasInitialize : ->
     this.canvasUninitialize() # for clarify
 
-    if ($('canvas.colorcamp-canvas').size() > 0)
-      this.canvas.element = $('canvas.colorcamp-canvas').eq(0)
-    else
-      # alert('make')
-      # this.canvas.element = $('<canvas></canvas>').addClass('colorcamp-canvas')
-      # $('body').append this.canvas.element
-      return
+    return unless $('canvas.colorcamp-canvas').size() > 0
+    this.canvas.element = $('canvas.colorcamp-canvas').eq(0)
 
     w = this.canvas.element.parent().width()
     h = this.canvas.element.parent().height()
@@ -299,11 +296,26 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   canvasResize : (e)->
+    # Reset canvas size and aspect ration
     w = this.canvas.element.parent().width()
     h = this.canvas.element.parent().height()
     this.canvas.camera.aspect = w / h
     this.canvas.renderer.setSize w, h
+
+    # Resize the vFOV to 
+    matrixHeight = (this.canvas.matrixDimensions[0] * this.canvas.colorBoxSize) / this.canvas.matrixHeightPct
+    fov = (2 * Math.atan( matrixHeight / ( 2 * this.canvas.camera.position.z - this.canvas.closestZ ) ) ) * (180 / Math.PI)
+    this.canvas.camera.fov = fov
+
+    # Update the projection
     this.canvas.camera.updateProjectionMatrix()
+
+  #
+  canvasSetOffsets : ->
+    # Store offset positions
+    this.canvas.offsetZ = Date.parse this.colors[0].created_at
+    this.canvas.closestZ = (Date.parse(this.colors[0].created_at) - this.canvas.offsetZ) / 1000 / 60
+    
 
   #
   canvasDrawColors : ->
