@@ -59,4 +59,8 @@ module ApplicationHelper
     "chrome.runtime.sendMessage('#{Setting.chrome_extension_id}', " + msg.to_json.html_safe + ", function() {});"
   end
 
+  def signup_providers
+    User.available_providers.map{|provider| {name: provider.to_s.titleize, url: authenticate_url(provider)} }
+  end
+
 end

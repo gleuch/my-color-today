@@ -1,62 +1,23 @@
-@Header = React.createClass
-  getInitialState : ->
-    current_user : this.props.current_user
-
-  componentDidMount : ->
-    $(window).bind 'colorcamp:current_user:change', this.currentUserChange
-
-  componentWillUnmount : ->
-    $(window).unbind 'colorcamp:current_user:change', this.currentUserChange
-
-  componentWillUpdate : (p,s)->
-    #
-
-  componentDidUpdate : (p,s)->
-    #
-
+@ColorHeader = React.createClass
   render : ->
-    links = []
-    links.push( React.DOM.li { }, (React.DOM.a { href : '/', onClick : this.loadHomeChannel }, 'Color Camp') )
+    links = [
+      `<li><ColorLink to="/">Color Camp</ColorLink></li>`
+    ]
 
     # Logged-in user
-    if this.state.current_user
-      links.push( React.DOM.li null, (React.DOM.a { href : '/u/' + this.state.current_user.login, onClick : this.loadProfileChannel }, 'Your Profile') )
-      links.push( React.DOM.li null, (React.DOM.a { href : '/settings', onClick : this.loadSettingsModal }, 'Settings') )
+    if this.props.current_user
+      links.push `<li><ColorLink to={'/u/' + this.props.current_user.login}>Your Profile</ColorLink></li>`
+      links.push `<li><ColorLink to="/settings">Settings</ColorLink></li>`
 
     # Guest user
     else
-      links.push( React.DOM.li null, (React.DOM.a { href : '/signup', onClick : this.loadSignupModal }, 'Signup') )
-      links.push( React.DOM.li null, (React.DOM.a { href : '/login', onClick : this.loadLoginModal }, 'Login') )
+      links.push `<li><ColorLink to="/signup">Signup</ColorLink></li>`
+      links.push `<li><ColorLink to="/login">Login</ColorLink></li>`
 
     # Chrome install URL
     links.push( React.DOM.li { className : 'extension-install chrome'}, (React.DOM.a { href : 'https://chrome.google.com/webstore/detail/nkghbibhhebkddaeebapfkooljjfhnca', target : '_blank' }, 'Install') )
     
     # Return HTML
-    React.DOM.header { id : 'header' }, 
-      React.DOM.ul {}, {links}
-
-
-  # --- HELPER METHODS ---
-
-  loadHomeChannel : (e)->
-    e.preventDefault()
-    $(window).trigger 'colorcamp:channel', { viewType: 'everyone', url: '/', channel: 'all_users' }
-
-  loadProfileChannel : (e)->
-    e.preventDefault()
-    $(window).trigger 'colorcamp:channel', { viewType: 'user', url: '/u/' + this.state.current_user.login, channel: this.state.current_user.id }
-
-  loadSettingsModal : (e)->
-    e.preventDefault()
-    $(window).trigger 'colorcamp:settings:open', {}
-
-  loadLoginModal : (e)->
-    e.preventDefault()
-    $(window).trigger 'colorcamp:signuplogin:open', { signup : false }
-
-  loadSignupModal : (e)->
-    e.preventDefault()
-    $(window).trigger 'colorcamp:signuplogin:open', { signup : true }
-
-  currentUserChange : (e,data)-> 
-    this.setState { current_user : data.current_user }
+    `<header id="header">
+      <ul>{links}</ul>
+    </header>`

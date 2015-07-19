@@ -290,6 +290,9 @@ GEM
       execjs
       rails (>= 3.2)
       tilt
+    react-router-rails (0.13.3)
+      rails (>= 3.1)
+      react-rails (>= 0.12)
     redis (3.2.1)
     redis-actionpack (4.0.0)
       actionpack (~> 4)
@@ -481,6 +484,7 @@ DEPENDENCIES
   rails-settings-cached (= 0.4.1)
   rails-timeago (= 2.12.0)
   react-rails (= 1.1.0)
+  react-router-rails (= 0.13.3)
   redis (= 3.2.1)
   redis-rails (= 4.0.0)
   rest-client (= 1.8.0)

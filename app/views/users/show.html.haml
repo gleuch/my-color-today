@@ -1,6 +1,2 @@
-- info = {viewType: :user, url: user_profile_url(@user), channel: @user.uuid}.to_json
-
 :coffee
-  $ ->
-    $(window).one 'colorcamp:colorcanvas:mounted', ->
-      $(window).trigger 'colorcamp:channel', #{info}
+  @ColorInitialProps.channel = #{ {viewType: :user, url: user_profile_url(@user), channel: @user.uuid}.to_json }

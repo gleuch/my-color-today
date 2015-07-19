@@ -33,6 +33,7 @@ gem 'jquery-ui-rails',                '5.0.5'
 gem 'bootstrap-sass',                 '3.3.5.1'
 gem 'bourbon',                        '4.2.3'
 gem 'react-rails',                    '1.1.0'
+gem 'react-router-rails',             '0.13.3'
 
 
 # --- REDIS / SIDEKIQ ---

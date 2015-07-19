@@ -94,19 +94,13 @@
 
 @SettingsModal = React.createClass
   getInitialState : ->
-    visible : this.props.visible
     current_user : this.props.current_user
 
   componentDidMount : ->
-    $(window).bind 'colorcamp:settings:open', this.openDialog
-    $(window).bind 'colorcamp:settings:close colorcamp:modals:close', this.closeDialog
-    $(window).bind 'colorcamp:current_user:change', this.currentUserChange
-    $(window).trigger 'colorcamp:settings:mounted', {}
+    #
 
   componentWillUnmount : ->
-    $(window).unbind 'colorcamp:settings:open', this.openDialog
-    $(window).unbind 'colorcamp:settings:close colorcamp:modals:close', this.closeDialog
-    $(window).unbind 'colorcamp:current_user:change', this.currentUserChange
+    #
 
   componentWillUpdate : (p,s)->
     #
@@ -115,7 +109,7 @@
     #
 
   render : ->
-    unless this.state.current_user && this.state.visible
+    unless this.state.current_user
       return React.DOM.span {}, ''
 
     disabled = !this.valid()

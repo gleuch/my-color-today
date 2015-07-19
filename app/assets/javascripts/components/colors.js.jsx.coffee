@@ -71,29 +71,51 @@
       React.DOM.canvas { className : 'colorcamp-canvas' }
 
 
+@ColorUserChannel = React.createClass
+  getInitialState : ->
+    current_user : this.props.current_user
+    channel:
+      channel : this.props.params.id
+      viewType : 'user'
+      url : location.href
+
+  render : ->
+    `<ColorChannel {...this.state} />`
+
+
+@ColorEveryoneChannel = React.createClass
+  getInitialState : ->
+    current_user : this.props.current_user
+    channel:
+      channel : 'all_users'
+      viewType : 'everyone'
+      url : location.href
+
+  render : ->
+    `<ColorChannel {...this.state} />`
+
+
 @ColorChannel = React.createClass
   getInitialState : ->
     {
-      channel :     this.props.channel
-      channelInfo : this.props.channelInfo
-      url :         this.props.url
+      channel :     this.props.channel.channel
+      channelInfo : this.props.channel.channelInfo
+      url :         this.props.channel.url
       nextUrl :     null
       prevUrl :     null
-      viewType :    this.props.viewType
+      viewType :    this.props.channel.viewType
       visible :     true
     }
 
-  componentDidMount : ->
-    $(window).bind 'colorcamp:channel', this.openChannel
-    # $(window).bind 'colorcamp:channel:close colorcamp:modals:close', this.closeChannel
-    $(window).trigger 'colorcamp:colorcanvas:mounted', {}
+  getDefaultProps : ->
+    channel : { }
 
+  componentDidMount : ->
     if this.state.url
       this.getChannelData()
 
   componentWillUnmount : ->
-    $(window).unbind 'colorcamp:channel', this.openChannel
-    # $(window).unbind 'colorcamp:channel:close colorcamp:modals:close', this.closeChannel
+    #
 
   componentWillUpdate : (p,s)->
     #
@@ -134,7 +156,6 @@
   # --- HELPER METHODS ---
 
   openChannel : (e,data)->
-    $(window).trigger 'colorcamp:modals:close', { }
     this.setState { viewType : data.viewType, url : data.url, channel : data.channel, visible : true }
 
   closeChannel : (e,data)->
@@ -171,9 +192,9 @@
             else
               this.state.viewType + '-' + this.state.channel
 
-            document.colorCamp.enable()
-            document.colorCamp.setChannelName channelName
-            document.colorCamp.dataLoadColors d.colors
+            # document.colorCamp.enable()
+            # document.colorCamp.setChannelName channelName
+            # document.colorCamp.dataLoadColors d.colors
 
       ).bind(this)
       error : ((x,s,e) ->
