@@ -172,6 +172,11 @@
     this.setState { url : url }
 
   getChannelData : (url)->
+    this.setState {
+      prevUrl : null
+      nextUrl : null
+    }
+
     $.ajax url || this.state.url, {
       dataType : 'json'
       method : 'GET'
@@ -180,9 +185,7 @@
           try
             p = JSON.parse x.getResponseHeader('X-Pagination')
           catch
-            p = {}
-
-          console.log p
+            p = { prev_url : null, next_url : null }
 
           this.setState {
             channel : d.channel,
@@ -194,6 +197,7 @@
 
           if d.viewType == 'user' && d.channelInfo.profile_private
             document.colorCamp.disable()
+
           else
             channelName = if this.state.viewType == 'everyone'
               this.state.channel
@@ -203,6 +207,13 @@
             document.colorCamp.enable()
             document.colorCamp.setChannelName channelName
             document.colorCamp.dataLoadColors d.colorData
+
+            # Listen for new colors via websocket if only if today
+            today = (new Date()).toJSON().replace(/^(\d{4}\-\d{2}\-\d{2})(.*)$/, '$1')
+            if today == d.date
+              document.colorCamp.websocketInitialize()
+            else
+              document.colorCamp.websocketUninitialize()
 
       ).bind(this)
       error : ((x,s,e) ->

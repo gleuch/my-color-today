@@ -32,7 +32,6 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   initialize : ->
     return unless this.enabled
 
-    this.websocketInitialize()
     $(document).ready (->
       this.canvasInitialize() if this.enabled
     ).bind(this)
@@ -59,7 +58,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.websocketChannelUnsubscribe()
     this.channelName = name
 
-    if this.channelName && this.dispatcher.state == 'connected'
+    if this.channelName && this.dispatcher && this.dispatcher.state == 'connected'
       this.websocketChannelSubscribe()
 
 
@@ -285,16 +284,19 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   #
   canvasAnimate : ->
     this.canvasRender()
-    # setTimeout (->
-    requestAnimationFrame( this.canvasAnimate.bind(this) )
-    # ).bind(this), 120 # ~30 fps
+    setTimeout (->
+      requestAnimationFrame( this.canvasAnimate.bind(this) )
+    ).bind(this), 60
 
   #
   canvasRender : ->
+    this.canvas.lastCameraX = this.canvas.camera.position.x
     this.canvas.camera.position.x += ( this.canvas.mouse.x - this.canvas.camera.position.x ) * 0.05
-    if this.canvas.scene
-      this.canvas.camera.lookAt(this.canvas.scene.position)
-      this.canvas.renderer.render this.canvas.scene, this.canvas.camera
+
+    if !this.canvas.lastCameraX || this.canvas.lastCameraX != this.canvas.camera.position.x
+      if this.canvas.scene
+        this.canvas.camera.lookAt(this.canvas.scene.position)
+        this.canvas.renderer.render this.canvas.scene, this.canvas.camera
 
   #
   canvasResize : (e)->
