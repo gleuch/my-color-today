@@ -210,13 +210,14 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   dataLoadColors : (colors)->
-    $.each colors, ((i,v) ->
-      this.colors[i] = v
-    ).bind(this)
-    this.canvasSetOffsets()
-    this.dataAssignCoords()
+    if colors
+      $.each colors, ((i,v) ->
+        this.colors[i] = v
+      ).bind(this)
+      this.canvasSetOffsets()
+      this.dataAssignCoords()
 
-    this.canvasDrawColors() if this.canvas.scene
+      this.canvasDrawColors() if this.canvas.scene
 
   #
   dataAppendColors : (colors) ->
@@ -291,8 +292,9 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   #
   canvasRender : ->
     this.canvas.camera.position.x += ( this.canvas.mouse.x - this.canvas.camera.position.x ) * 0.05
-    this.canvas.camera.lookAt(this.canvas.scene.position)
-    this.canvas.renderer.render this.canvas.scene, this.canvas.camera
+    if this.canvas.scene
+      this.canvas.camera.lookAt(this.canvas.scene.position)
+      this.canvas.renderer.render this.canvas.scene, this.canvas.camera
 
   #
   canvasResize : (e)->

@@ -4,14 +4,14 @@
   getInitialState : ->
     {
       current_user : this.props.current_user || ColorInitialProps.current_user
-      signup_providers : this.props.signup_providers || ColorInitialProps.signup_providers
+      signin_providers : this.props.signin_providers || ColorInitialProps.signin_providers
       channel : this.props.channel || ColorInitialProps.channel
     }
 
   getDefaultProps : ->
     {
       current_user : ColorInitialProps.current_user
-      signup_providers : ColorInitialProps.signup_providers
+      signin_providers : ColorInitialProps.signin_providers
       channel : ColorInitialProps.channel
     }
 
@@ -34,7 +34,6 @@
         <div id="container">
           <div id="content" className="container-fluid">
             <ColorRouteHandler {...this.state} />
-            <ColorCanvas />
             <div className="clearfix"></div>
           </div>
         </div>

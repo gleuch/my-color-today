@@ -147,10 +147,12 @@
     else if this.state.viewType == 'everyone'
       details = `<ColorChannelEveryoneDetail />`
 
-    React.DOM.div { }, 
-      details
-      content
-      timeline
+    `<div>
+      {details}
+      {content}
+      {timeline}
+      <ColorCanvas />
+    </div>`
 
 
   # --- HELPER METHODS ---

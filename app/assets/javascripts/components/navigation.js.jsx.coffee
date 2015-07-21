@@ -15,7 +15,8 @@
       links.push `<li><ColorLink to="/login">Login</ColorLink></li>`
 
     # Chrome install URL
-    links.push( React.DOM.li { className : 'extension-install chrome'}, (React.DOM.a { href : 'https://chrome.google.com/webstore/detail/nkghbibhhebkddaeebapfkooljjfhnca', target : '_blank' }, 'Install') )
+    links.push `<li><ColorLink to="/about">About</ColorLink></li>`
+    links.push `<li className="extension-install chrome"><a href="https://chrome.google.com/webstore/detail/nkghbibhhebkddaeebapfkooljjfhnca" target="_blank">Install</a></li>`
     
     # Return HTML
     `<header id="header">
