@@ -66,9 +66,13 @@
 
 
 @ColorCanvas = React.createClass
+  shouldComponentUpdate : (p,s)->
+    false
+
   render : ->
-    React.DOM.section { className : 'colorcamp-canvas-area' }, 
-      React.DOM.canvas { className : 'colorcamp-canvas' }
+    `<section className="colorcamp-canvas-area">
+      <canvas className="colorcamp-canvas" />
+    </section>`
 
 
 @ColorUserChannel = React.createClass
@@ -178,6 +182,8 @@
           catch
             p = {}
 
+          console.log p
+
           this.setState {
             channel : d.channel,
             channelInfo : d.channelInfo
@@ -194,9 +200,9 @@
             else
               this.state.viewType + '-' + this.state.channel
 
-            # document.colorCamp.enable()
-            # document.colorCamp.setChannelName channelName
-            # document.colorCamp.dataLoadColors d.colors
+            document.colorCamp.enable()
+            document.colorCamp.setChannelName channelName
+            document.colorCamp.dataLoadColors d.colorData
 
       ).bind(this)
       error : ((x,s,e) ->

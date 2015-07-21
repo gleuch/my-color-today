@@ -2,7 +2,7 @@ class StaticPagesController < ApplicationController
 
   before_filter :load_resource, only: [:show]
 
-  set_pagination_headers :latest_colors, only: [:show]
+  set_pagination_headers :colors, only: [:show]
 
 
   def show
@@ -25,7 +25,11 @@ class StaticPagesController < ApplicationController
 
   def home
     results = -> {
-      @latest_colors = WebSitePageColor.recently(5.days).page(before: params[:next_id]).per(100)
+      @colors_date = Date.parse(params[:date]) rescue nil
+      @colors_date ||= WebSitePageColor.recent.first.created_at.to_date rescue Date.today
+
+      @request_url ||= dated_everyone_url(@colors_date)
+      @colors = WebSitePageColor.on(@colors_date).page(before: params[:next_id]).per(100)
     }
 
     respond_to do |format|
@@ -33,9 +37,10 @@ class StaticPagesController < ApplicationController
       format.json {
         @page.data = {
           channel:      'all_users',
-          channelInfo:  {},
-          colors:       results.call.map(&:to_public_api),
-          url:          root_url,
+          channelInfo:    {},
+          date:           @colors_date.to_s,
+          dateUrl:        @request_url,
+          colorData:      results.call.map(&:to_public_api),
           viewType:     :everyone
         }
       }
