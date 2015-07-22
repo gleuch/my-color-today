@@ -1,5 +1,6 @@
 @ColorInitialProps ||= {}
 
+
 @ColorApp = React.createClass
   getInitialState : ->
     {
@@ -43,3 +44,4 @@
   # --- HELPER METHODS ---
 
   #
+

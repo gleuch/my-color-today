@@ -9,6 +9,6 @@
 //= require components
 //= require websocket_rails/main
 //= require three.min
-//= require tween.min
+//= rfequire tween.min
 //= require canvas
 

@@ -1,57 +1,76 @@
 @ColorChannelUserDetail = React.createClass
   render : ->
-    React.DOM.section {id : 'user-profile', className : 'details-container'},
-      React.DOM.div { className : 'avatar' },
-        React.DOM.img {src: this.props.user.avatar_medium_url, alt: '', title: this.props.user.name}
-      React.DOM.div { className : 'info' },
-        React.DOM.h3 { }, this.props.user.name
+    img = '[icon]'
+    if this.props.user.avatar_medium_url
+      img = `<img src={this.props.user.avatar_medium_url} alt="" title={this.props.user.name} />`
+
+    `<section className="details-container user-profile">
+      <div className="avatar">
+        {img}
+      </div>
+      <div className="info">
+        <h3>{this.props.user.name}</h3>
+      </div>
+    </section>`
     
 
 @ColorChannelUserContent = React.createClass
   render : ->
     unless this.props.user.profile_private
-      React.DOM.section { },
-        React.DOM.h3 { }, 'Today: XXX pages (#HEX)'
+      `<section>
+        <h3>Today: XXX pages (#HEX)</h3>
+      </section>`
     else
-      React.DOM.section { },
-        React.DOM.div { className : 'well'},
-          React.DOM.p { className : 'text-center' }, 'This user has made their account private.'
+      `<section>
+        <div className="well">
+          <p className="text-center">This user has made their account private.</p>
+        </div>
+      </section>`
 
 
 @ColorChannelSiteDetail = React.createClass
   render : ->
-    React.DOM.section { id : 'site-profile', className : 'details-container' },
-      React.DOM.div { className : 'avatar' },
-        '[icon]'
-        # React.DOM.img {src: this.props.site.avatar_medium_url, alt: '', title: this.props.user.name}
-      React.DOM.div { className : 'info' },
-        React.DOM.h3 { }, this.props.site.name
+    img = '[icon]'
+    # React.DOM.img {src: this.props.site.avatar_medium_url, alt: '', title: this.props.user.name}
+
+    `<section className="details-container site-profile">
+      <div className="avatar">
+        {img}
+      </div>
+      <div className="info">
+        <h3>{this.props.site.name}</h3>
+      </div>
+    </section>`
 
 
 @ColorChannelEveryoneDetail = React.createClass
   render : ->
-    React.DOM.section { },
-      React.DOM.div { className : 'info' },
-        React.DOM.h3 { }, 'Everyone'
+    `<section className="details-container everyone">
+      <div className="info">
+        <h3>Everyone</h3>
+      </div>
+    </section>`
 
 
 @ColorChannelPagination = React.createClass
   render : ->
     nextLink = if this.props.nextUrl
-      React.DOM.a { className : 'paginate older', href : this.props.nextUrl, onClick : this.nextPage }, 'Older'
+      `<a className="paginate older" href={this.props.nextUrl} onClick={this.nextPage}>Older</a>`
     else
-      React.DOM.span { className : 'paginate older' }, '-Older-'
+      `<span className="paginate older">Older</span>`
 
     prevLink = if this.props.prevUrl
-      React.DOM.a { className : 'paginate newer', href : this.props.prevUrl, onClick : this.prevPage }, 'Newer'
+      `<a className="paginate newer" href={this.props.prevPage} onClick={this.prevPage}>Newer</a>`
     else
-      React.DOM.span { className : 'paginate newer' }, '-Newer-'
+      `<span className="paginate newer">Newer</span>`
 
-    React.DOM.nav { className : 'timeline' },
-      React.DOM.div { className : 'timeline-content' },
+    `<div className="timeline">
+      <div className="timeline-content">
         {nextLink}
-        React.DOM.span { }, ' '
+        <span> </span>
         {prevLink}
+      </div>
+    </div>`
 
 
   # --- HELPER METHODS ---
@@ -134,7 +153,7 @@
   render : ->
     if !this.state.channelInfo || !this.state.visible
       document.colorCamp.disable()
-      return React.DOM.span {}, ''
+      return `<span></span>`
 
     details = ''
     content = ''
