@@ -46,28 +46,21 @@ endEvents = []
   return if typeof window == "undefined"
 
   testEl = document.createElement 'div'
-  style = testEl.style
+  styles = Object.keys testEl.style
 
-  # // On some platforms, in particular some releases of Android 4.x, the
-  # // un-prefixed "animation" and "transition" properties are defined on the
-  # // style object but the events that fire will still be prefixed, so we need
-  # // to check if the un-prefixed events are useable, and if not remove them
-  # // from the map
+  # On some platforms, in particular some releases of Android 4.x, the
+  # un-prefixed "animation" and "transition" properties are defined on the
+  # style object but the events that fire will still be prefixed, so we need
+  # to check if the un-prefixed events are useable, and if not remove them
+  # from the map
+  delete EVENT_NAME_MAP.animationend.animation unless window.AnimationEvent
+  delete EVENT_NAME_MAP.transitionend.transition unless window.TransitionEvent
 
-  unless 'AnimationEvent' in window
-    delete EVENT_NAME_MAP.animationend.animation;
-
-  unless 'TransitionEvent' in window
-    delete EVENT_NAME_MAP.transitionend.transition;
-
-  basename = null
-  styleName = null
-  for baseEventName in EVENT_NAME_MAP
+  for baseEventName, baseEvents of EVENT_NAME_MAP
     if EVENT_NAME_MAP.hasOwnProperty baseEventName
-      baseEvents = EVENT_NAME_MAP[baseEventName]
-      for styleName in baseEvents
-        if styleName in style
-          endEvents.push baseEvents[styleName]
+      for styleName, styleValue of baseEvents
+        if styles.indexOf(styleName) >= 0
+          endEvents.push styleValue
           break
 )()
 
@@ -96,9 +89,9 @@ removeClass = (element, className)->
 
 hasClass = (element, className)->
   if element.classList
-    element.classList.contains className
+    return element.classList.contains className
   else
-    (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1
+    return (' ' + element.className + ' ').indexOf(' ' + className + ' ') > -1
 
 
 @TimeoutTransitionGroupChild = React.createClass
@@ -106,26 +99,32 @@ hasClass = (element, className)->
     node = this.getDOMNode()
     className = this.props.name + '-' + animationType
     activeClassName = className + '-active'
+    hiddenClassName = className + '-hidden'
 
     endListener = ->
       removeClass node, className
       removeClass node, activeClassName
-
-      # // Usually this optional callback is used for informing an owner of
-      # // a leave animation and telling it to remove the child.
-      finishCallback && finishCallback()
+      removeClass node, hiddenClassName
+      finishCallback() if finishCallback
 
     unless animationSupported()
       endListener()
     else
       if animationType == "enter"
-        this.animationTimeout = setTimeout endListener, this.props.enterTimeout
+        enterListener = ->
+          removeClass node, hiddenClassName
+          this.queueClass activeClassName
+          this.animationTimeout = setTimeout endListener.bind(this), this.props.enterTimeout
+
+        addClass node, className
+        addClass node, hiddenClassName
+        this.animationTimeout = setTimeout enterListener.bind(this), this.props.leaveTimeout
+        return
+
       else if animationType == "leave"
-        this.animationTimeout = setTimeout endListener, this.props.leaveTimeout
+        this.animationTimeout = setTimeout endListener.bind(this), this.props.leaveTimeout
 
     addClass node, className
-
-    # Need to do this to actually trigger a transition.
     this.queueClass activeClassName
 
   queueClass : (className)->
@@ -135,9 +134,8 @@ hasClass = (element, className)->
 
   flushClassNameQueue : ->
     if this.isMounted()
-      this.classNameQueue.forEach ((name)->
+      for i,name of this.classNameQueue
         addClass this.getDOMNode(), name
-      ).bind(this)
 
     this.classNameQueue.length = 0
     this.timeout = null
@@ -174,7 +172,6 @@ hasClass = (element, className)->
     transitionName: React.PropTypes.string.isRequired
     transitionEnter: React.PropTypes.bool
     transitionLeave: React.PropTypes.bool
-
 
   getDefaultProps : ->
     transitionEnter: true

@@ -58,15 +58,18 @@ body ::selection {background: rgba($color-mid-black,.24);}
 // --- PAGES ---
 .screen-enter {
   opacity: 0.01;
-  transition: opacity .3s ease-in;
+  transition: opacity .5s ease-in, transform .5s ease-in;
   
+  &.screen-enter-hidden {
+    display: none !important;
+  }
   &.screen-enter-active {
     opacity: 1;
   }
 }
 .screen-leave {
   opacity: 1;
-  transition: opacity .3s ease-in;
+  transition: opacity .5s ease-in, transform .5s ease-in;
 
   &.screen-leave-active {
     opacity: 0.01;
