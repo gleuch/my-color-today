@@ -53,3 +53,22 @@ body ::selection {background: rgba($color-mid-black,.24);}
     span { }
   }
 }
+
+
+// --- PAGES ---
+.screen-enter {
+  opacity: 0.01;
+  transition: opacity .3s ease-in;
+  
+  &.screen-enter-active {
+    opacity: 1;
+  }
+}
+.screen-leave {
+  opacity: 1;
+  transition: opacity .3s ease-in;
+
+  &.screen-leave-active {
+    opacity: 0.01;
+  }
+}

@@ -6,6 +6,7 @@
 //= require react_ujs
 //= require react_router.min
 //= require react_router_ujs
+//= require react-timed-transition-group
 //= require components
 //= require websocket_rails/main
 //= require three.min

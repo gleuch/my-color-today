@@ -15,9 +15,11 @@
     #
 
   render : ->
-    `<div className={'static-page ' + this.props.pageName}>
-      <div className="static-page-content">
-        {this.props.content}
+    `<div>
+      <div className={'static-page ' + this.props.pageName}>
+        <div className="static-page-content">
+          {this.props.content}
+        </div>
       </div>
     </div>`
 
@@ -189,8 +191,13 @@
 
 
 @ColorAboutPage = React.createClass
-
   render : ->
     # html = this.props.aboutHtml
     html = 'About page here'
     `<ColorStaticPageDisplay content={html} pageName="about" />`
+
+
+@ColorNotFoundPage = React.createClass
+  render : ->
+    html = 'Page not found. Sorry :('
+    `<ColorStaticPageDisplay content={html} pageName="not-found" />`
