@@ -17,7 +17,8 @@ class StaticPagesController < ApplicationController
       }
       format.json {
         trigger_actions
-        render json: @page.data
+        json = JSON.parse(@page.data) rescue nil
+        render json: json || @page.data, callback: params[:callback]
       }
       format.any { render_not_found }
     end
@@ -48,6 +49,10 @@ class StaticPagesController < ApplicationController
   end
   alias_method :svg, :home
 
+  def load_data
+    @page.load_json_data
+  end
+  alias_method :about, :load_data
 
 protected
 

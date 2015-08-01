@@ -15,13 +15,11 @@
     #
 
   render : ->
-    `<div>
-      <div className={'static-page ' + this.props.pageName}>
-        <div className="static-page-content">
-          {this.props.content}
-        </div>
-      </div>
-    </div>`
+    content = this.props.content
+    if this.props.dangerousHTML
+      content = `<div className="static-page-content" dangerouslySetInnerHTML={ {__html : this.props.dangerousHTML} } />`
+
+    `<div className={'static-page ' + this.props.pageName}>{content}</div>`
 
 
   # --- HELPER METHODS ---    
@@ -191,10 +189,23 @@
 
 
 @ColorAboutPage = React.createClass
+  getInitialState : ->
+    html : null
+
+  componentDidMount : ->
+    unless this.state.html
+      $.ajax '/about',
+        dataType: 'json'
+        success : ((d,s,x)->
+          if d && d.html
+            this.setState { html : d.html }
+        ).bind(this)
+        error : ((x,s,e)->
+          #
+        ).bind(this)
+
   render : ->
-    # html = this.props.aboutHtml
-    html = 'About page here'
-    `<ColorStaticPageDisplay content={html} pageName="about" />`
+    `<ColorStaticPageDisplay dangerousHTML={this.state.html} pageName="about" />`
 
 
 @ColorNotFoundPage = React.createClass
