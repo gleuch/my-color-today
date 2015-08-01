@@ -1,4 +1,7 @@
 @ColorHeader = React.createClass
+  getInitialState : ->
+    visible : false
+
   render : ->
     links = [
       `<li><ColorLink to="/">Color Camp</ColorLink></li>`
@@ -17,8 +20,22 @@
     # Chrome install URL
     links.push `<li><ColorLink to="/about">About</ColorLink></li>`
     links.push `<li className="extension-install chrome"><a href="https://chrome.google.com/webstore/detail/nkghbibhhebkddaeebapfkooljjfhnca" target="_blank">Install</a></li>`
-    
+
+    visibleClassName = ''
+    visibleClassName = 'opened' if this.state.visible
+
     # Return HTML
     `<header id="header">
-      <ul>{links}</ul>
+      <div id="header-links" className={visibleClassName}>
+        <a href="javascript:;" className="toggle-menu" onClick={this.toggleVisibility}>
+          ==
+        </a>
+        <ul>{links}</ul>
+      </div>
     </header>`
+
+
+  # --- HELPERS ---
+
+  toggleVisibility : ->
+    this.setState { visible : !this.state.visible }
