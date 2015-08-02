@@ -1,6 +1,10 @@
 @ColorHeader = React.createClass
   getInitialState : ->
     visible : false
+    menuSvg : null
+
+  componentDidMount : ->
+    window.ColorCampSvgs.add('menuSvg', '/assets/menu.svg', this) unless this.state.menuSvg
 
   render : ->
     links = [
@@ -24,12 +28,14 @@
     visibleClassName = ''
     visibleClassName = 'opened' if this.state.visible
 
+    menuSvg = ''
+    if this.state.menuSvg
+      menuSvg = `<span dangerouslySetInnerHTML={{__html : this.state.menuSvg }} />`
+
     # Return HTML
     `<header id="header">
       <div id="header-links" className={visibleClassName}>
-        <a href="javascript:;" className="toggle-menu" onClick={this.toggleVisibility}>
-          ==
-        </a>
+        <a href="javascript:;" className="toggle-menu" onClick={this.toggleVisibility}>{menuSvg}</a>
         <ul>{links}</ul>
       </div>
     </header>`

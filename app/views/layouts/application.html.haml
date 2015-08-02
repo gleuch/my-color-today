@@ -17,7 +17,8 @@
       @ColorInitialProps.current_user = #{ (current_user ? current_user.to_api(:current_user) : nil).to_json }
       @ColorInitialProps.signin_providers = #{ signin_providers.to_json }
 
-    = # render 'layouts/header'
+    %script{src: '//use.typekit.net/hba1asi.js'}
+    %script try{Typekit.load();}catch(e){}
 
 
   %body{class: @body_classes}
