@@ -13,6 +13,8 @@ ColorCampSubscriber = ->
     matrixDimensions : [0,0] #y,x
     colorBoxSize : 20
     matrixHeightPct : 0.6
+    particles : null
+    usePointCloud : true
   }
   this.colors = []
   this.colorsMatrix = []
@@ -253,6 +255,8 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.canvas.renderer.setPixelRatio window.devicePixelRatio
     this.canvas.renderer.setSize w, h
 
+    this.canvas.raycaster = new THREE.Raycaster()
+
     this.canvas.mouse = new THREE.Vector2()
     this.canvas.matrixDimensions = [6,10]#[24,36] #y,x
     this.dataResetMatrix()
@@ -284,9 +288,9 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   #
   canvasAnimate : ->
     this.canvasRender()
-    setTimeout (->
-      requestAnimationFrame( this.canvasAnimate.bind(this) )
-    ).bind(this), 60
+    # setTimeout (->
+    requestAnimationFrame( this.canvasAnimate.bind(this) )
+    # ).bind(this), 60
 
   #
   canvasRender : ->
@@ -319,16 +323,39 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     # Store offset positions
     this.canvas.offsetZ = Date.parse this.colors[0].created_at
     this.canvas.closestZ = (Date.parse(this.colors[0].created_at) - this.canvas.offsetZ) / 1000 / 60
-    
 
   #
   canvasDrawColors : ->
     # Items
     this.canvas.scene.remove this.canvas.particles
-    if this.colors.length > 0
+    return unless this.colors.length > 0
+
+    if this.canvas.usePointCloud
+      this.canvas.geometry = new THREE.Geometry()
+      this.canvas.particleColors = []
+      this.canvasDrawColorPointCloud(color,i) for i,color of this.colors
+      this.canvas.geometry.colors = this.canvas.particleColors
+
+      sprite = THREE.ImageUtils.loadTexture 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIABAMAAAFxUflfAAAAJ1BMVEX8/Pz7+/v8/Pz9/f39/f3+/v79/f3+/v7////+/v7////+/v7///+579fpAAAAC3RSTlP3+Pj4/Pz9/f3+/lvbVvIAAAOTSURBVHja7d09TjJRFIDhMyT2rMAQWxs6W5dAQ8ciWABLcAkuwaWwBsIOtFQIYGEm/sJoRrky57mF8fu8nLw+CgxxgOpsFBHRG8RFvF3bZSwiIqKaTOPgsuF4G2ajP99wOzyBDXcDGyKimocNv7MhyS/MEa6bR7iNcnfwfzaM48vjh0XUxw9uYWywwQYbbLDBhh8eYIQBBhjwvQFNj5xOYEDT48sMA5oexhuQY8A8DDCgEwNcnTsxoAN3rh04RnKoa4ABLwPGb/7RG9Qf9q3tsv5QX8S9swEGGGCAAQYYYIABBhhggAEGGGCAAQYYYIABBhhggAEGGGCAAQYYcHMdRVfrMygECBAgQIAAAQIECBBw+gFtn2UgQICA1gFtn68kQIAAAa0D2j73U4AAAQIECBBw+gHzECBAgAABAgQIEJA9wFGxAAECBAjwBws/AgECigc4h0SAACc0ChAgQIAAAQIECBBQPKD4n2zG+77y+j4IB98R4eBafPHZ+7UpLVA84EmAAAECBAgQIECAAAECBAgQIECAAAECBAhIH7AWIECAAAECBKQPcP6AAAECBAgQIECAAAECBAgQIGAnQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQKczCZAgAABAgQIECBAgAABXgZEQPqAlQC/hK4FAtIHPAoQIECAAAECBAgQIECAAAECBAgQIECAgNIBUTyg9Kom09Tf/xMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQvbUGMBsBAAAAAAAAAAAAAAAAAIBsa1PdDgEAAAAAAAAAAAAAAAAAAAAAAADkArgbAAAAAAAAAAAAAAAAAACAbGsHAAAAAAAAAAAAAAAAAAAAAACQDyD5Gy4CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALoM4FRZAAAAAAAAAAAAAAAAAAAAAECy5cXUAAAAAABAagDvMDF0FQAAwG0AAAAAAAAAAAAAAAAAsgHMRgAAJF5rAAAApAZYAQDgNgAAgNS3AZMpAAAA8q5HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ0FSP86QlfnP7tE7wPYxYevV/37qPq/1bd7aNqx+Pxf22Xzxerv5vIZgbMGZM6EZtYAAAAASUVORK5CYII='
+      size = this.canvas.colorBoxSize * (this.canvas.matrixDimensions[1] + 1)
+
+      material = new THREE.PointCloudMaterial { size: size, map: sprite, vertexColors: THREE.VertexColors, alphaTest: 0, transparent: true}
+      this.canvas.particles = new THREE.PointCloud this.canvas.geometry, material
+
+    else
       this.canvas.particles = new THREE.Group()
       this.canvasDrawColor(color,i) for i,color of this.colors
-      this.canvas.scene.add this.canvas.particles
+
+    this.canvas.scene.add this.canvas.particles
+
+  #
+  canvasDrawColorPointCloud : (color,i)->
+    vertex = new THREE.Vector3()
+    vertex.x = (color.x - Math.floor(this.canvas.matrixDimensions[1] / 2)) * this.canvas.colorBoxSize
+    vertex.y = (color.y - Math.floor(this.canvas.matrixDimensions[0] / 2)) * this.canvas.colorBoxSize
+    vertex.z = color.z
+    this.canvas.geometry.vertices.push vertex
+    this.canvas.particleColors[ i ] = new THREE.Color parseInt(color.color.hex, 16)
 
   #
   canvasDrawColor : (color,i)->
