@@ -18,6 +18,7 @@ ColorCampSubscriber = ->
   }
   this.colors = []
   this.colorsMatrix = []
+  this.updateRaycastData = null
 
   # Handle dev vs production
   if window.location.hostname == 'color.camp'
@@ -49,6 +50,9 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   enable : ->
     this.enabled = true
     this.initialize()
+    if this.updateRaycastData
+      alert 'check updateRaycastData'
+      this.updateRaycastData 'enabled'
 
   #
   disable : ->
@@ -256,8 +260,11 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.canvas.renderer.setSize w, h
 
     this.canvas.raycaster = new THREE.Raycaster()
+    this.canvas.raycaster.params.PointCloud.threshold = 10
 
+    this.canvas.mousePan = new THREE.Vector2()
     this.canvas.mouse = new THREE.Vector2()
+
     this.canvas.matrixDimensions = [6,10]#[24,36] #y,x
     this.dataResetMatrix()
     this.dataSetColorBoxSize()
@@ -287,19 +294,46 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   canvasAnimate : ->
-    this.canvasRender()
-    # setTimeout (->
     requestAnimationFrame( this.canvasAnimate.bind(this) )
-    # ).bind(this), 60
+    this.canvasRender()
 
   #
   canvasRender : ->
-    this.canvas.lastCameraX = this.canvas.camera.position.x
-    this.canvas.camera.position.x += ( this.canvas.mouse.x - this.canvas.camera.position.x ) * 0.05
+    # this.canvas.lastCameraX = this.canvas.camera.position.x
+    # this.canvas.camera.position.x += ( this.canvas.mousePan.x - this.canvas.camera.position.x ) * 0.05
+
+    if this.canvas.particles
+      this.canvas.raycaster.setFromCamera this.canvas.mouse, this.canvas.camera
+
+      intersections = this.canvas.raycaster.intersectObjects [ this.canvas.particles ]
+
+      intersection = if intersections.length > 0
+        intersections[ intersections.length - 1 ]
+      else
+        null
+
+      if intersection && intersection.index >= 0
+        if !this.currentIntersection || this.currentIntersection.index != intersection.index
+          
+          # if this.currentIntersection && this.currentIntersection.index
+          #   this.currentIntersection.object.geometry.attributes.position.array[ this.currentIntersection.index * 3 + 2 ] -= 1000
+          # console.log(intersection.object.geometry.attributes.position.array[ this.currentIntersection.index * 3 + 2 ])
+          
+          this.currentIntersection = intersection
+          console.log this.colors[ this.currentIntersection.index ].site, intersection
+          # console.log(this.canvas.geometry)
+          
+          # this.currentIntersection.object.geometry.attributes.position.array[ this.currentIntersection.index * 3 + 2 ] += 1000
+
+
+        else
+          #
+      else
+        #
 
     if !this.canvas.lastCameraX || this.canvas.lastCameraX != this.canvas.camera.position.x
       if this.canvas.scene
-        this.canvas.camera.lookAt(this.canvas.scene.position)
+        # this.canvas.camera.lookAt(this.canvas.scene.position)
         this.canvas.renderer.render this.canvas.scene, this.canvas.camera
 
   #
@@ -308,6 +342,9 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     w = this.canvas.element.parent().width()
     h = this.canvas.element.parent().height()
     this.canvas.camera.aspect = w / h
+
+    # Update the projection
+    this.canvas.camera.updateProjectionMatrix()
     this.canvas.renderer.setSize w, h
 
     # Resize the vFOV to 
@@ -315,8 +352,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     fov = (2 * Math.atan( matrixHeight / ( 2 * this.canvas.camera.position.z - this.canvas.closestZ ) ) ) * (180 / Math.PI)
     this.canvas.camera.fov = fov
 
-    # Update the projection
-    this.canvas.camera.updateProjectionMatrix()
+
 
   #
   canvasSetOffsets : ->
@@ -331,16 +367,21 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     return unless this.colors.length > 0
 
     if this.canvas.usePointCloud
-      this.canvas.geometry = new THREE.Geometry()
-      this.canvas.particleColors = []
-      this.canvasDrawColorPointCloud(color,i) for i,color of this.colors
-      this.canvas.geometry.colors = this.canvas.particleColors
+      this.canvas.geometry = new THREE.BufferGeometry()
+      this.canvas.particlePositions = new Float32Array this.colors.length * 3
+      this.canvas.particleColors = new Float32Array this.colors.length * 3
 
-      sprite = THREE.ImageUtils.loadTexture 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIABAMAAAFxUflfAAAAJ1BMVEX8/Pz7+/v8/Pz9/f39/f3+/v79/f3+/v7////+/v7////+/v7///+579fpAAAAC3RSTlP3+Pj4/Pz9/f3+/lvbVvIAAAOTSURBVHja7d09TjJRFIDhMyT2rMAQWxs6W5dAQ8ciWABLcAkuwaWwBsIOtFQIYGEm/sJoRrky57mF8fu8nLw+CgxxgOpsFBHRG8RFvF3bZSwiIqKaTOPgsuF4G2ajP99wOzyBDXcDGyKimocNv7MhyS/MEa6bR7iNcnfwfzaM48vjh0XUxw9uYWywwQYbbLDBhh8eYIQBBhjwvQFNj5xOYEDT48sMA5oexhuQY8A8DDCgEwNcnTsxoAN3rh04RnKoa4ABLwPGb/7RG9Qf9q3tsv5QX8S9swEGGGCAAQYYYIABBhhggAEGGGCAAQYYYIABBhhggAEGGGCAAQYYcHMdRVfrMygECBAgQIAAAQIECBBw+gFtn2UgQICA1gFtn68kQIAAAa0D2j73U4AAAQIECBBw+gHzECBAgAABAgQIEJA9wFGxAAECBAjwBws/AgECigc4h0SAACc0ChAgQIAAAQIECBBQPKD4n2zG+77y+j4IB98R4eBafPHZ+7UpLVA84EmAAAECBAgQIECAAAECBAgQIECAAAECBAhIH7AWIECAAAECBKQPcP6AAAECBAgQIECAAAECBAgQIGAnQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQKczCZAgAABAgQIECBAgAABXgZEQPqAlQC/hK4FAtIHPAoQIECAAAECBAgQIECAAAECBAgQIECAgNIBUTyg9Kom09Tf/xMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADQvbUGMBsBAAAAAAAAAAAAAAAAAIBsa1PdDgEAAAAAAAAAAAAAAAAAAAAAAADkArgbAAAAAAAAAAAAAAAAAACAbGsHAAAAAAAAAAAAAAAAAAAAAACQDyD5Gy4CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALoM4FRZAAAAAAAAAAAAAAAAAAAAAECy5cXUAAAAAABAagDvMDF0FQAAwG0AAAAAAAAAAAAAAAAAsgHMRgAAJF5rAAAApAZYAQDgNgAAgNS3AZMpAAAA8q5HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ0FSP86QlfnP7tE7wPYxYevV/37qPq/1bd7aNqx+Pxf22Xzxerv5vIZgbMGZM6EZtYAAAAASUVORK5CYII='
+      this.canvasDrawColorPointCloud(color,i) for i,color of this.colors
+      this.canvas.geometry.addAttribute 'position', new THREE.BufferAttribute( this.canvas.particlePositions, 3 )
+      this.canvas.geometry.addAttribute 'color', new THREE.BufferAttribute( this.canvas.particleColors, 3 )
+      this.canvas.geometry.computeBoundingBox()
+
       size = this.canvas.colorBoxSize * (this.canvas.matrixDimensions[1] + 1)
 
-      material = new THREE.PointCloudMaterial { size: size, map: sprite, vertexColors: THREE.VertexColors, alphaTest: 0, transparent: true}
+      material = new THREE.PointCloudMaterial { size: size, vertexColors: THREE.VertexColors }
       this.canvas.particles = new THREE.PointCloud this.canvas.geometry, material
+      this.canvas.particles.scale.set(1,1,1)
+      this.canvas.particles.position.set(0,0,0)
 
     else
       this.canvas.particles = new THREE.Group()
@@ -354,8 +395,14 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     vertex.x = (color.x - Math.floor(this.canvas.matrixDimensions[1] / 2)) * this.canvas.colorBoxSize
     vertex.y = (color.y - Math.floor(this.canvas.matrixDimensions[0] / 2)) * this.canvas.colorBoxSize
     vertex.z = color.z
-    this.canvas.geometry.vertices.push vertex
-    this.canvas.particleColors[ i ] = new THREE.Color parseInt(color.color.hex, 16)
+
+    this.canvas.particlePositions[ i * 3 ] = vertex.x
+    this.canvas.particlePositions[ i * 3 + 1 ] = vertex.y
+    this.canvas.particlePositions[ i * 3 + 2 ] = vertex.z
+
+    this.canvas.particleColors[ i * 3 ] = color.color.rgb[0] / 255
+    this.canvas.particleColors[ i * 3 + 1 ] = color.color.rgb[1] / 255
+    this.canvas.particleColors[ i * 3 + 2 ] = color.color.rgb[2] / 255
 
   #
   canvasDrawColor : (color,i)->
@@ -379,7 +426,9 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
   canvasEventMousemove : (e)->
-    this.canvas.mouse.x = (2 * e.clientX) - (window.innerWidth)
+    this.canvas.mousePan.x = (2 * e.clientX) - (window.innerWidth)
+    this.canvas.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1
+    this.canvas.mouse.y = ( -e.clientY / window.innerHeight ) * 2 + 1
 
   #
   canvasEventKeypress : (e)->

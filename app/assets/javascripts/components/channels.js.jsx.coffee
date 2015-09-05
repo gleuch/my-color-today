@@ -118,6 +118,14 @@
     `<ColorChannel {...this.state} />`
 
 
+@ColorChannelRaycastInfo = React.createClass
+  getInitialState : ->
+    raycast : this.props.raycast
+
+  render : ->
+    `<p>Raycast info</p>`
+
+
 @ColorChannel = React.createClass
   getInitialState : ->
     {
@@ -128,6 +136,7 @@
       prevUrl :     null
       viewType :    this.props.channel.viewType
       visible :     true
+      raycast :     null
     }
 
   getDefaultProps : ->
@@ -158,6 +167,7 @@
     details = ''
     content = ''
     timeline = ''
+    raycast = ''
 
     timeline = `<ColorChannelPagination prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
 
@@ -170,15 +180,22 @@
     else if this.state.viewType == 'everyone'
       details = `<ColorChannelEveryoneDetail />`
 
+    unless this.state.raycast
+      raycast = `<ColorChannelRaycastInfo raycast={this.state.raycast} />`
+
     `<div>
       {details}
       {content}
       {timeline}
+      {raycast}
       <ColorCanvas />
     </div>`
 
 
   # --- HELPER METHODS ---
+
+  updateRaycastData : (data)->
+    alert 'update raycast data: ' + data
 
   openChannel : (e,data)->
     this.setState { viewType : data.viewType, url : data.url, channel : data.channel, visible : true }
@@ -224,6 +241,7 @@
               this.state.viewType + '-' + this.state.channel
 
             document.colorCamp.enable()
+            document.colorCamp.updateRaycastData = this.updateRaycastData
             document.colorCamp.setChannelName channelName
             document.colorCamp.dataLoadColors d.colorData
 

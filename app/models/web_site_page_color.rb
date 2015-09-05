@@ -123,6 +123,7 @@ class WebSitePageColor < ActiveRecord::Base
         rgb: palette_rgb_color,
         hex: palette_hex_color,
       },
+      site: self.site.uri_domain_tld,
       page: self.page.to_api,
       created_at: self.created_at
     }
