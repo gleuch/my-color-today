@@ -1,4 +1,5 @@
 ColorCampSubscriber = ->
+  this.debug = true
   this.enabled = true
   this.dispatcher = null
   this.channelName = 'all_users'
@@ -18,7 +19,6 @@ ColorCampSubscriber = ->
   }
   this.colors = []
   this.colorsMatrix = []
-  this.updateRaycastData = null
 
   # Handle dev vs production
   if window.location.hostname == 'color.camp'
@@ -50,9 +50,6 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   enable : ->
     this.enabled = true
     this.initialize()
-    if this.updateRaycastData
-      alert 'check updateRaycastData'
-      this.updateRaycastData 'enabled'
 
   #
   disable : ->
@@ -251,7 +248,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.canvas.scene = new THREE.Scene()
     # this.canvas.scene.fog = new THREE.Fog 0xffffff, 1, 10000
 
-    this.canvas.camera = new THREE.PerspectiveCamera 25, w / h, 1, 86400
+    this.canvas.camera = new THREE.PerspectiveCamera 20, w / h, 1, 86400
     this.canvas.camera.position.set 0, 0, 3600
 
     this.canvas.renderer = new THREE.WebGLRenderer { canvas: this.canvas.element.get(0) }
@@ -269,6 +266,17 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.dataResetMatrix()
     this.dataSetColorBoxSize()
     this.canvasDrawColors()
+
+    if this.debug
+      this.canvas.spheres = []
+      this.canvas.spheresIndex = 0
+      sphereGeometry = new THREE.SphereGeometry 8,32,32
+      sphereMaterial = new THREE.MeshBasicMaterial { color: 0xff0000, shading: THREE.FlatShading }
+      sphere = new THREE.Mesh sphereGeometry, sphereMaterial
+      sphere.position.z = 1
+      this.canvas.scene.add sphere
+      this.canvas.spheres.push sphere
+    
 
     $(document)
       .on 'mousemove', this.canvasEventMousemove.bind(this)
@@ -308,32 +316,35 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
       intersections = this.canvas.raycaster.intersectObjects [ this.canvas.particles ]
 
       intersection = if intersections.length > 0
-        intersections[ intersections.length - 1 ]
+        intersections[ 0 ]
       else
-        null
 
       if intersection && intersection.index >= 0
         if !this.currentIntersection || this.currentIntersection.index != intersection.index
-          
-          # if this.currentIntersection && this.currentIntersection.index
-          #   this.currentIntersection.object.geometry.attributes.position.array[ this.currentIntersection.index * 3 + 2 ] -= 1000
-          # console.log(intersection.object.geometry.attributes.position.array[ this.currentIntersection.index * 3 + 2 ])
-          
           this.currentIntersection = intersection
-          console.log this.colors[ this.currentIntersection.index ].site, intersection
-          # console.log(this.canvas.geometry)
-          
-          # this.currentIntersection.object.geometry.attributes.position.array[ this.currentIntersection.index * 3 + 2 ] += 1000
 
+          # show site name
+          $(window).trigger 'colorcamp:raycast:change', this.colors[ this.currentIntersection.index ]
 
-        else
-          #
+          if this.debug
+            x = this.currentIntersection.object.geometry.attributes.position.array[ this.currentIntersection.index * 3 ]
+            y = this.currentIntersection.object.geometry.attributes.position.array[ this.currentIntersection.index * 3 + 1 ]
+            z = this.currentIntersection.object.geometry.attributes.position.array[ this.currentIntersection.index * 3 + 2 ]
+            this.canvas.spheres[ this.canvas.spheresIndex ].position.setX x
+            this.canvas.spheres[ this.canvas.spheresIndex ].position.setY y
+            this.canvas.spheres[ this.canvas.spheresIndex ].position.setZ z + 10
+            this.canvas.spheres[ this.canvas.spheresIndex ].scale.set 1, 1, 1
+
       else
-        #
+        $(window).trigger 'colorcamp:raycast:change', null
+
+        if this.debug
+          this.canvas.spheres[ this.canvas.spheresIndex ].scale.set .1, .1, .1
+        
 
     if !this.canvas.lastCameraX || this.canvas.lastCameraX != this.canvas.camera.position.x
       if this.canvas.scene
-        # this.canvas.camera.lookAt(this.canvas.scene.position)
+        this.canvas.camera.lookAt(this.canvas.scene.position)
         this.canvas.renderer.render this.canvas.scene, this.canvas.camera
 
   #
@@ -427,8 +438,10 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   #
   canvasEventMousemove : (e)->
     this.canvas.mousePan.x = (2 * e.clientX) - (window.innerWidth)
-    this.canvas.mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1
-    this.canvas.mouse.y = ( -e.clientY / window.innerHeight ) * 2 + 1
+    this.canvas.mouse.x = ( e.clientX / this.canvas.element.width() ) * 2 - 1
+    # Normalize because canvas is not full height of window
+    this.canvas.mouse.y = -( Math.max(0, e.clientY - this.canvas.element.offset().top) / this.canvas.element.height() ) * 2 + 1
+    this.canvas.mouse.z = 0.5
 
   #
   canvasEventKeypress : (e)->
