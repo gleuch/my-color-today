@@ -18,7 +18,7 @@ ColorCampSubscriber = ->
   this.colorsMatrix = []
 
   # Handle dev vs production
-  if window.location.hostname == 'color.camp'
+  if window.location.hostname.match(/color\.camp|mycolor\.today/i)
     this.url = window.location.hostname + '/websocket/'
   else
     this.url = window.location.hostname + ':3001/websocket/'

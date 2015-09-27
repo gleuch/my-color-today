@@ -1,11 +1,11 @@
 # PRODUCTION CONFIG
 set :rails_env, :production
 
-role :app, %w{color.camp}
-role :web, %w{color.camp}
-role :db,  %w{color.camp}
+role :app, %w{mycolor.today}
+role :web, %w{mycolor.today}
+role :db,  %w{mycolor.today}
 
-server 'color.camp', user: 'colorcamp', roles: %w{web app db}
+server 'mycolor.today', user: 'colorcamp', roles: %w{web app db}
 
 set :deploy_to, '/home/colorcamp/color.camp'
 
