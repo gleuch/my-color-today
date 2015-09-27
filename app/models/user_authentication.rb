@@ -67,7 +67,7 @@ private
       begin
         uri = Addressable::URI.parse(self.profile_image_url)
         Timeout::timeout(30) do # 30 seconds
-          io = open(uri, read_timeout: 30, "User-Agent" => 'color.camp', allow_redirections: :all)
+          io = open(uri, read_timeout: 30, "User-Agent" => 'mycolor.today', allow_redirections: :all)
           io.class_eval { attr_accessor :original_filename }
           raise "invalid content-type" unless io.content_type.match(/^image\//i)
           io.original_filename = File.basename(uri.path)

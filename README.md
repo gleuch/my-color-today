@@ -1,4 +1,6 @@
-# Color Camp
+# MyColor.Today
+
+Available at https://mycolor.today.
 
 
 ### Websocket Server
