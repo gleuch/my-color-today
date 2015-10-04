@@ -4,7 +4,7 @@
     menuSvg : null
 
   componentDidMount : ->
-    window.ColorCampSvgs.add('menuSvg', '/assets/menu.svg', this) unless this.state.menuSvg
+    window.ColorCampSvgs.add('menuSvg', "<%= asset_url 'menu.svg' %>", this) unless this.state.menuSvg
 
   render : ->
     links = []
