@@ -31,6 +31,8 @@ class WebSitePageColor < ActiveRecord::Base
   scope :recently, ->(d=1.day) { recent }
   scope :recent, -> { order("#{self.table_name}.created_at desc") }
   
+  default_scope { where(active: true) }
+
 
   # CLASS METHODS -------------------------------------------------------------
 

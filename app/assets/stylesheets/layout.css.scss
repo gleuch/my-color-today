@@ -1,37 +1,90 @@
-body {}
+//body {}
+//
+//
+//#content {padding: 0;}
+//
+//
+//#page-colors-list {
+//  .color {
+//    .color-info {display: none;}
+//  }
+//}
+//
+//
+//
+//#page-colors-list {
+//  padding: 30px;
+//
+//  .color {
+//    display: inline-block;
+//    margin: 7.5px;
+//    width: 30px;
+//    height: 30px;
+//
+//    .color-area {
+//      width: 30px;
+//      height: 30px;
+//      cursor: pointer;
+//      @include transition(box-shadow .2s ease-out, margin .2s ease-out, width .2s ease-out, height .2s ease-out);
+//
+//      &:hover {
+//        width: 36px;
+//        height: 36px;
+//        margin: -3px;
+//        box-shadow: 0 1px 2px rgba(0,0,0,.1);
+//      }
+//    }
+//  }
+//}
 
 
-#content {padding: 0;}
+ul.buttons {
+  margin: 0;
+  padding: 12px 0 24px 0;
 
+  li {
+    padding: 5px 12px;
+    margin: 0 auto;
+    list-style: none;
+    max-width: 260px;
 
-#page-colors-list {
-  .color {
-    .color-info {display: none;}
-  }
-}
+    a.btn {
+      padding: 10px 6px;
+      margin: 0;
+      display: block;
+      border: none !important;
+      border-radius: 0;
+      text-align: center;
+      font-weight: 600;
+      outline: none;
+      box-shadow: none;
+      color: $color-white;
+      background-color: rgba($color-black, .28);
+      @include transition(opacity .2s ease-out);
 
+      &:focus, &:hover {
+        opacity: .72;
+      }
 
-
-#page-colors-list {
-  padding: 30px;
-
-  .color {
-    display: inline-block;
-    margin: 7.5px;
-    width: 30px;
-    height: 30px;
-
-    .color-area {
-      width: 30px;
-      height: 30px;
-      cursor: pointer;
-      @include transition(box-shadow .2s ease-out, margin .2s ease-out, width .2s ease-out, height .2s ease-out);
-
-      &:hover {
-        width: 36px;
-        height: 36px;
-        margin: -3px;
-        box-shadow: 0 1px 2px rgba(0,0,0,.1);
+      &.btn-facebook {
+        background-color: $social-facebook;
+        color: $color-white;
+      }
+      &.btn-twitter {
+        background-color: $social-twitter;
+        color: $color-white;
+      }
+      &.btn-amazon {
+        background-color: $social-amazon;
+        color: $color-black;
+      }
+      &.btn-lulu {
+        background-color: $social-lulu;
+        color: $color-white;
+      }
+      &.btn-google {
+        background-color: $social-google;
+        color: $color-white;
       }
     }
   }

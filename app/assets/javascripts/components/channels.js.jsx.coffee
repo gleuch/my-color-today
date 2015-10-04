@@ -51,6 +51,12 @@
       </div>
     </section>`
 
+@ColorChannelEveryoneContent = React.createClass
+  render : ->
+    `<section>
+      <h3>My Color Today</h3>
+    </section>`
+
 
 @ColorChannelPagination = React.createClass
   render : ->
@@ -169,6 +175,7 @@
       # content = `<ColorChannelSiteContent site={this.state.channelInfo} />`
     else if this.state.viewType == 'everyone'
       details = `<ColorChannelEveryoneDetail />`
+      content = `<ColorChannelEveryoneContent />`
 
     `<div>
       {details}

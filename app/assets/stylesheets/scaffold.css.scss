@@ -1,11 +1,12 @@
 html, html * {font-weight: 500;
-  -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; text-rendering: optimizeLegibility; 
+  -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; font-smoothing: antialiased;
 }
 body, h1, h2, h3, h4, h5, h6, td, dt, dd, li, p {font-family: $webfont-sans;}
 h1, h2, h3, h4, h5, h6, strong, b, th, dt {font-weight: 600; color: $color-mid-black; padding: 0; margin: 0;
   & a, & span {font-weight: 600;}
 }
+span {font-weight: inherit;}
 p, div, li, td, dd {color: $color-text-grey;}
 a {color: darken($color-logo, 5%); @include transition(color .2s ease-out);
   &:focus, &:hover {color: $color-mid-black; text-decoration: none;}
@@ -15,7 +16,7 @@ body ::selection {background: rgba($color-mid-black,.24);}
 
 
 // --- LAYOUT ---
-#wrapper, #footer {position: relative; z-index: 1;}
+#wrapper {position: relative; z-index: 1;}
 
 
 // --- CANVAS ---
@@ -25,28 +26,46 @@ body ::selection {background: rgba($color-mid-black,.24);}
 
 
 // --- PROFILE DETAILS ---
-.details-container {
-  position: fixed; bottom: 25px; left: 25px; z-index: 150; padding-left: 60px; min-height: 50px;
-  .avatar {position: absolute; top: 0; left: 0; z-index: 151;
-    img {width: 50px; height: 50px; border: 2px solid #fff; border-radius: 100%; box-shadow: 0 3px 5px rgba(0,0,0,.2); background-color: #eee;}
-  }
-  h3 {padding: 7px 0 0 0; color: #888; text-shadow: 0px 1px 1px rgba(0,0,0,.12);}
-}
+//.details-container {
+//  position: fixed; bottom: 25px; left: 25px; z-index: 150; padding-left: 60px; min-height: 50px;
+//  .avatar {position: absolute; top: 0; left: 0; z-index: 151;
+//    img {width: 50px; height: 50px; border: 2px solid #fff; border-radius: 100%; box-shadow: 0 3px 5px rgba(0,0,0,.2); background-color: #eee;}
+//  }
+//  h3 {padding: 7px 0 0 0; color: #888; text-shadow: 0px 1px 1px rgba(0,0,0,.12);}
+//}
 
 
 // --- MENU ---
 #header {
+  h1 {
+    position: fixed;
+    bottom: 32px;
+    left: 24px;
+    font-size: 1.9rem;
+    line-height: 1.0em;
+    color: $color-black;
+    
+    a {
+      color: $color-black;
+      text-decoration: none;
+
+      &:hover {
+        color: rgba($color-black, .72);
+      }
+    }
+  }
+  
   #header-links {
     position: fixed;
-    bottom: 15px;
-    right: -160px;
-    width: 150px;
+    top: 15px;
+    right: -180px;
+    width: 170px;
     z-index: 12;
     @include transition(right .2s ease-in-out);
 
     a.toggle-menu {
       position: absolute;
-      left: -46px;
+      left: -42px;
       bottom: 0;
       color: $color-black;
       &:hover {}
@@ -60,17 +79,25 @@ body ::selection {background: rgba($color-mid-black,.24);}
       opacity: 0;
       list-style: none;
       margin: 0;
-      padding: 0 0 2px 0;
+      padding: 0 1.2rem 0 0;
       @include transition(opacity .2s ease-in-out);
 
       li {
         margin: 0;
         padding: .1em 0;
+        text-align: right;
         a {
-          color: $color-black;
-          font-weight: bold;
-          font-size: 1.6rem;
+          color: rgba($color-black,.72);
+          font-size: 1.4rem;
           line-height: 1.0em;
+          text-transform: lowercase;
+          strong {
+            display: inline-block;
+            font-size: 1.6rem;
+            padding: .5em 0;
+            text-transform: none;
+            color: $color-black;
+          }
         }
       }
     }
@@ -85,12 +112,114 @@ body ::selection {background: rgba($color-mid-black,.24);}
 }
 
 
+
 // --- TIMELINE ---
-.timeline {
-  position: fixed; bottom: 0; left: 0; right: 0; text-align: center; z-index: 12;
-  .timeline-content { display: inline-block; width: auto; margin: 0 auto; 
-    a { display: inline-block; padding: 3px 5px; color: #000; }
-    span { }
+//.timeline {
+//  position: fixed; bottom: 0; left: 0; right: 0; text-align: center; z-index: 12;
+//  .timeline-content { display: inline-block; width: auto; margin: 0 auto;
+//    a { display: inline-block; padding: 3px 5px; color: #000; }
+//    span { }
+//  }
+//}
+
+// --- STATIC PAGES ---
+.static-page {
+  position: fixed;
+  top: 64px;
+  left: 32px;
+  bottom: 64px;
+  right: 32px;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 1126px;
+  background-color: rgba($color-white, .96);
+
+
+  .static-page-content {
+    float: left;
+    position: relative;
+    width: 71%;
+
+    section {
+      position: relative;
+      padding: 10px 0 10px 37%;
+
+      h1 {
+        position: absolute;
+        width: 37%;
+        margin: 0 0 0 -37%;
+        padding: 20px 24px 0 0;
+        text-align: right;
+        color: $color-black;
+        font-size: 3.2rem;
+        line-height: 1.0em;
+      }
+
+      p {
+        margin: 0;
+        padding: 0 0 8px 0;
+        font-size: 1.6rem;
+        line-height: 1.5625em;
+        color: $color-black;
+
+        a {
+          color: $color-black;
+          text-decoration: underline;
+          &:hover {
+            color: rgba($color-black,.82);
+          }
+        }
+
+        &.disclaimer {
+          font-size: 1.1rem;
+          line-height: 1.45em;
+          padding: 0 0 6px 0;
+          color: rgba($color-black,.32);
+          
+          a {
+            color: rgba($color-black, .32);
+            &:hover {
+              color: rgba($color-black, .72);
+            }
+          }
+        }
+      }
+    }
+  }
+  .static-page-gutter {
+    float: right;
+    position: relative;
+    width: 29%;
+    padding: 24px 0 0 0;
+
+    section {
+      max-width: 230px;
+      padding: 10px 0 10px 24px;
+
+      h3 {
+        margin: 0;
+        padding: 0 0 12px 0;
+        font-size: 1.6rem;
+        line-height: 1.0em;
+        color: $color-black;
+      }
+
+      p {
+        margin: 0;
+        padding: 0 0 8px 0;
+        font-size: 1.3rem;
+        line-height: 1.45em;
+        color: rgba($color-black,.5);
+        
+        a {
+          color: rgba($color-black, .5);
+          text-decoration: underline;
+          &:hover {
+            color: $color-black;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -99,7 +228,7 @@ body ::selection {background: rgba($color-mid-black,.24);}
 .screen-enter {
   opacity: 0.01;
   transition: opacity .5s ease-in, transform .5s ease-in;
-  
+
   &.screen-enter-hidden {
     display: none !important;
   }

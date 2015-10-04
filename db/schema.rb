@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150525184933) do
+ActiveRecord::Schema.define(version: 20150927181053) do
 
   create_table "api_tokens", force: :cascade do |t|
     t.integer  "user_id",      limit: 4
@@ -127,6 +127,7 @@ ActiveRecord::Schema.define(version: 20150525184933) do
     t.string   "uuid",             limit: 255
     t.integer  "user_id",          limit: 4
     t.integer  "api_token_id",     limit: 4
+    t.boolean  "active",                       default: true
     t.integer  "color_red",        limit: 4
     t.integer  "palette_red",      limit: 4
     t.integer  "palette_green",    limit: 4

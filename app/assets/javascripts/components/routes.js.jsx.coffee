@@ -11,6 +11,7 @@
     <ColorNotFoundRoute handler={ColorNotFoundPage} />
 
     <ColorRoute handler={ColorAboutPage} path='about' />
+    <ColorRoute handler={ColorInstallPage} path='install' />
     <ColorRoute handler={ColorSignupPage} path='signup' />
     <ColorRoute handler={ColorLoginPage} path='login' />
     <ColorRoute handler={ColorUserSettings} path='settings' />

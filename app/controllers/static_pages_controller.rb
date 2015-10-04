@@ -52,7 +52,7 @@ class StaticPagesController < ApplicationController
   def load_data
     @page.load_json_data
   end
-  alias_method :about, :load_data
+
 
 protected
 
