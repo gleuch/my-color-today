@@ -14,6 +14,8 @@
     <ColorRoute handler={ColorInstallPage} path='install' />
     <ColorRoute handler={ColorSignupPage} path='signup' />
     <ColorRoute handler={ColorLoginPage} path='login' />
+    <ColorRoute handler={ColorPrivacyPage} path='privacy' />
+    <ColorRoute handler={ColorPrivacyPage} path='terms' />
     <ColorRoute handler={ColorUserSettings} path='settings' />
     <ColorRoute handler={ColorUserChannel} path='u/:id' />
   </ColorRoute>
