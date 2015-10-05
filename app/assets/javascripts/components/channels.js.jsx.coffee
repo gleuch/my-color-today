@@ -1,34 +1,20 @@
-@ColorChannelUserDetail = React.createClass
+@ColorChannelUserContent = React.createClass
   render : ->
     img = '[icon]'
     if this.props.user.avatar_medium_url
       img = `<img src={this.props.user.avatar_medium_url} alt="" title={this.props.user.name} />`
 
-    `<section className="details-container user-profile">
-      <div className="avatar">
-        {img}
-      </div>
-      <div className="info">
-        <h3>{this.props.user.name}</h3>
-      </div>
-    </section>`
+    `<header className="channel-heading">
+      <h1>
+        <span>{img}</span>
+        <span>{this.props.user.name.toLowerCase()}</span>
+        <span>&nbsp; / &nbsp;</span>
+        <em>today</em>
+      </h1>
+    </header>`
     
 
-@ColorChannelUserContent = React.createClass
-  render : ->
-    unless this.props.user.profile_private
-      `<section>
-        <h3>Today: XXX pages (#HEX)</h3>
-      </section>`
-    else
-      `<section>
-        <div className="well">
-          <p className="text-center">This user has made their account private.</p>
-        </div>
-      </section>`
-
-
-@ColorChannelSiteDetail = React.createClass
+@ColorChannelSiteContent = React.createClass
   render : ->
     img = '[icon]'
     # React.DOM.img {src: this.props.site.avatar_medium_url, alt: '', title: this.props.user.name}
@@ -43,18 +29,27 @@
     </section>`
 
 
-@ColorChannelEveryoneDetail = React.createClass
-  render : ->
-    `<section className="details-container everyone">
-      <div className="info">
-        <h3>Everyone</h3>
-      </div>
-    </section>`
-
 @ColorChannelEveryoneContent = React.createClass
   render : ->
-    `<section>
-      <h3>My Color Today</h3>
+    `<header className="channel-heading">
+      <h1>
+        <span>everyone's color</span>
+        <span>&nbsp; / &nbsp;</span>
+        <em>today</em>
+      </h1>
+    </header>`
+
+
+@ColorChannelDetail = React.createClass
+  render : ->
+    date = 'abc'
+    `<section className="channel-details">
+      <h3>{date}</h3>
+      <p>
+        <span>{0} web pages</span>
+        <span>&nbsp; / &nbsp;</span>
+        <span>{0} web sites</span>
+      </p>
     </section>`
 
 
@@ -161,28 +156,30 @@
       document.colorCamp.disable()
       return `<span></span>`
 
-    details = ''
     content = ''
-    timeline = ''
-
-    timeline = `<ColorChannelPagination prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
+    canvas = `<ColorCanvas />`
+    details = `<ColorChannelDetail details={this.state.channelInfo} />`
+    # timeline = `<ColorChannelPagination prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
 
     if this.state.viewType == 'user'
-      details = `<ColorChannelUserDetail user={this.state.channelInfo} />`
       content = `<ColorChannelUserContent user={this.state.channelInfo} />`
-    else if this.state.viewType == 'state'
-      details = `<ColorChannelSiteDetail site={this.state.channelInfo} />`
-      # content = `<ColorChannelSiteContent site={this.state.channelInfo} />`
+      if this.state.channelInfo.profile_private
+        details = ''
+        canvas = `<section>
+          <div className="well">
+            <p className="text-center">This user has made their account private.</p>
+          </div>
+        </section>`
+    else if this.state.viewType == 'site'
+      content = `<ColorChannelSiteContent site={this.state.channelInfo} />`
     else if this.state.viewType == 'everyone'
-      details = `<ColorChannelEveryoneDetail />`
       content = `<ColorChannelEveryoneContent />`
 
-    `<div>
+    `<article className="channel">
       {details}
       {content}
-      {timeline}
-      <ColorCanvas />
-    </div>`
+      {canvas}
+    </article>`
 
 
   # --- HELPER METHODS ---

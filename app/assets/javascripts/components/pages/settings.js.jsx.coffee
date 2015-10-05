@@ -26,8 +26,9 @@
       savingText = `<span>Updating...</span>`
       disabled = true
 
-    html = `<div>
-      <h1>Settings</h1>
+    content = `<section>
+      <h1>your settings</h1>
+      <p>sdfsfs</p>
       <form onSubmit={this.handleSubmit}>
         <div className="input string required user_name">
           <label className="string required" htmlFor="user_name">
@@ -55,9 +56,9 @@
           {savingText}
         </p>
       </form>
-    </div>`
+    </section>`
 
-    `<ColorStaticPageDisplay content={html} pageName="user-settings" />`
+    `<ColorStaticPageDisplay content={content} pageName="user-settings" />`
 
   # --- HELPER METHODS ---
 
