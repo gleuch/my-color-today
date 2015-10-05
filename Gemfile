@@ -1,19 +1,19 @@
 source 'https://rubygems.org'
 
 # --- CORE REQUIREMENTS ---
-gem 'rails',                          '4.2.3'
+gem 'rails',                          '4.2.4'
 gem 'therubyracer',                   '0.12.2',       platforms: :ruby
 gem 'turbolinks',                     '2.5.3'
-gem 'jbuilder',                       '2.3.1'
+gem 'jbuilder',                       '2.3.2'
 gem 'unf',                            '0.1.4'
 # gem 'asset_sync',                     '1.1.0'
-gem 'mysql2',                         '0.3.18'
+gem 'mysql2',                         '0.3.20'
 gem 'bcrypt',                         '3.1.10'
 
 
 # --- MODELS & CONTROLLERS ---
-gem 'paperclip',                      '4.3.0'
-gem 'paperclip-compression',          '0.3.9'
+gem 'paperclip',                      '4.3.1'
+gem 'paperclip-compression',          '0.3.11'
 gem 'friendly_id',                    '5.1.0'
 # gem 'will_paginate',                  '3.0.7'
 gem 'cursor',                                         github: 'gleuch/cursor'
@@ -23,32 +23,32 @@ gem 'addressabler',                   '0.1.2'
 
 
 # --- FORMATTING, STYLING, DISPLAY ---
-gem 'haml',                           '4.0.6'
-gem 'sass-rails',                     '5.0.3'
-gem 'uglifier',                       '2.7.1'
+gem 'haml',                           '4.0.7'
+gem 'sass-rails',                     '5.0.4'
+gem 'uglifier',                       '2.7.2'
 gem 'coffee-rails',                   '4.1.0'
-gem 'jquery-rails',                   '4.0.4'
+gem 'jquery-rails',                   '4.0.5'
 gem 'jquery-ui-rails',                '5.0.5'
 # gem 'will_paginate-bootstrap',        '1.0.1'
 gem 'bootstrap-sass',                 '3.3.5.1'
-gem 'bourbon',                        '4.2.3'
-gem 'react-rails',                    '1.1.0'
-gem 'react-router-rails',             '0.13.3'
+gem 'bourbon',                        '4.2.5'
+gem 'react-rails',                    '1.3.1'
+gem 'react-router-rails',             '0.13.3.1'
 
 
 # --- REDIS / SIDEKIQ ---
-gem 'sidekiq',                        '3.4.2'
-gem 'sidekiq-unique-jobs',            '3.0.14'
+gem 'sidekiq',                        '3.5.0'
+gem 'sidekiq-unique-jobs',            '3.0.15'
 gem 'redis',                          '3.2.1'
 gem 'redis-rails',                    '4.0.0'
 
 
 # --- FORM & RENDER HELPERS ---
-gem 'simple_form',                    '3.1.0'
+gem 'simple_form',                    '3.2.0'
 
 
 # --- GENERAL HELPERS ---
-gem 'browser',                        '0.8.0'
+gem 'browser',                        '1.0.1'
 gem 'rails-timeago',                  '2.12.0'
 # gem 'momentjs-rails',                 '2.8.3'
 # gem 'chartkick',                      '1.3.2'
@@ -56,7 +56,7 @@ gem 'rails-timeago',                  '2.12.0'
 
 
 # --- MONITORING / PERFORMANCE ---
-gem 'rails-settings-cached',          '0.4.1'
+gem 'rails-settings-cached',          '0.4.6'
 # gem 'airbrake',                       '4.2.0'
 # gem 'newrelic_rpm',                   '3.9.5.251'
 # gem 'whenever',                       '0.9.4',        require: false
@@ -64,12 +64,12 @@ gem 'rails-settings-cached',          '0.4.1'
 
 
 # --- OAUTH / APIS ---
-gem 'aws-sdk',                        '2.1.7'
+gem 'aws-sdk',                        '2.1.26'
 gem 'rest-client',                    '1.8.0'
-gem 'twitter',                        '5.14.0'
+gem 'twitter',                        '5.15.0'
 gem 'fb_graph',                       '2.7.17'
 gem 'omniauth-facebook',              '2.0.1'
-gem 'omniauth-twitter',               '1.2.0'
+gem 'omniauth-twitter',               '1.2.1'
 # gem 'omniauth-google-oauth2',         '0.2.4'
 
 
