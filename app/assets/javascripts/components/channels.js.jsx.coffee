@@ -1,56 +1,84 @@
 @ColorChannelUserContent = React.createClass
   render : ->
-    img = '[icon]'
+    img = ''
     if this.props.user.avatar_medium_url
-      img = `<img src={this.props.user.avatar_medium_url} alt="" title={this.props.user.name} />`
+      img = `<span><img src={this.props.user.avatar_medium_url} alt="" title={this.props.user.name} /></span>`
+
+    color = ''
+    if this.props.report && this.props.report.hex
+      style = { backgroundColor : '#' + this.props.report.hex }
+      color = `<span>
+        <span>&nbsp; / &nbsp;</span>
+        <em><i className="color-block" style={style}></i> #{this.props.report.hex}</em>
+      </span>`
 
     `<header className="channel-heading">
       <h1>
-        <span>{img}</span>
+        {img}
         <span>{this.props.user.name.toLowerCase()}</span>
-        <span>&nbsp; / &nbsp;</span>
-        <a href="javascript:;" onClick={this.props.screenshot}><em>png</em></a>
-        <em>today</em>
+        {color}
       </h1>
     </header>`
     
 
 @ColorChannelSiteContent = React.createClass
   render : ->
-    img = '[icon]'
-    # React.DOM.img {src: this.props.site.avatar_medium_url, alt: '', title: this.props.user.name}
+    color = ''
+    if this.props.report && this.props.report.hex
+      style = { backgroundColor : '#' + this.props.report.hex }
+      color = `<span>
+        <span>&nbsp; / &nbsp;</span>
+        <em><i className="color-block" style={style}></i> #{this.props.report.hex}</em>
+      </span>`
 
-    `<section className="details-container site-profile">
-      <div className="avatar">
-        {img}
-      </div>
-      <div className="info">
-        <h3>{this.props.site.name}</h3>
-      </div>
-    </section>`
+    `<header className="channel-heading">
+      <h1>
+        <span>{this.props.site.name}'s color</span>
+        {color}
+      </h1>
+    </header>`
 
 
 @ColorChannelEveryoneContent = React.createClass
   render : ->
+    color = ''
+    if this.props.report && this.props.report.hex
+      style = { backgroundColor : '#' + this.props.report.hex }
+      color = `<span>
+        <span>&nbsp; / &nbsp;</span>
+        <em><i className="color-block" style={style}></i> #{this.props.report.hex}</em>
+      </span>`
+
     `<header className="channel-heading">
       <h1>
         <span>everyone's color</span>
-        <span>&nbsp; / &nbsp;</span>
-        <a href="javascript:;" onClick={this.props.screenshot}><em>png</em></a>
+        {color}
       </h1>
     </header>`
 
 
 @ColorChannelDetail = React.createClass
   render : ->
-    date = 'abc'
+    date = if this.props.date then new Date(this.props.date) else new Date()
+    date = moment(date).format('ddd, DD MMM YYYY').toLowerCase()
+
+    report = `<p>&nbsp;</p>`
+    if this.props.report
+      pages = this.props.report.pages_count + ' web page'
+      pages = pages + 's' unless pages == 1
+      sites = this.props.report.sites_count + ' web site'
+      sites = sites + 's' unless sites == 1
+
+      report = `<p>
+        <span>{pages}</span>
+        <span>&nbsp; / &nbsp;</span>
+        <span>{sites}</span>
+      </p>`
+
+
     `<section className="channel-details">
       <h3>{date}</h3>
-      <p>
-        <span>{0} web pages</span>
-        <span>&nbsp; / &nbsp;</span>
-        <span>{0} web sites</span>
-      </p>
+      {report}
     </section>`
 
 
@@ -125,7 +153,9 @@
     {
       channel :     this.props.channel.channel
       channelInfo : this.props.channel.channelInfo
+      date :        this.props.date
       url :         this.props.channel.url
+      report :      this.props.report
       nextUrl :     null
       prevUrl :     null
       viewType :    this.props.channel.viewType
@@ -159,12 +189,13 @@
 
     content = ''
     canvas = `<ColorCanvas />`
-    details = `<ColorChannelDetail details={this.state.channelInfo} />`
+    details = `<ColorChannelDetail {...this.state} />`
     # timeline = `<ColorChannelPagination prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
 
     if this.state.viewType == 'user'
-      content = `<ColorChannelUserContent user={this.state.channelInfo} screenshot={this.onScreenshot} />`
+      content = `<ColorChannelUserContent {...this.state} user={this.state.channelInfo} screenshot={this.onScreenshot} />`
       if this.state.channelInfo.profile_private
+        content = `<ColorChannelUserContent user={this.state.channelInfo} />`
         details = ''
         canvas = `<section>
           <div className="well">
@@ -172,9 +203,9 @@
           </div>
         </section>`
     else if this.state.viewType == 'site'
-      content = `<ColorChannelSiteContent site={this.state.channelInfo} screenshot={this.onScreenshot} />`
+      content = `<ColorChannelSiteContent {...this.state} site={this.state.channelInfo} screenshot={this.onScreenshot} />`
     else if this.state.viewType == 'everyone'
-      content = `<ColorChannelEveryoneContent screenshot={this.onScreenshot} />`
+      content = `<ColorChannelEveryoneContent {...this.state} screenshot={this.onScreenshot} />`
 
     `<article className="channel">
       {details}
@@ -214,9 +245,11 @@
           this.setState {
             channel : d.channel,
             channelInfo : d.channelInfo
+            date : d.date
             prevUrl : p.prev_url
             nextUrl : p.next_url
             viewType : d.viewType
+            report : d.report
           }
 
           if d.viewType == 'user' && d.channelInfo.profile_private

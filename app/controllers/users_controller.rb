@@ -23,6 +23,7 @@ class UsersController < ApplicationController
           date:           @colors_date.to_s,
           dateUrl:        @request_url,
           colorData:      @colors.map(&:to_public_api),
+          report:         @user.report(:daily, date: @colors_date),
           viewType:       :user
         }
       }

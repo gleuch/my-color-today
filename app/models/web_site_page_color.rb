@@ -152,7 +152,7 @@ private
     # Ping user websocket wth new color and update user's daily color report
     if self.user.present?
       # Update report
-      ColorWorker.perform_in(30.seconds, :user_report, self.user.id, on: :daily)
+      ColorWorker.perform_in(30.seconds, :user_report, self.user.id, on: :daily, date: Date.today)
 
       # Send through websocket unless user profile is private
       WebsocketRails["user-#{self.user.uuid}"].trigger(:new_color, self.to_public_api) unless self.user.profile_private

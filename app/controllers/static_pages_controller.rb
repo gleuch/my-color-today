@@ -38,10 +38,11 @@ class StaticPagesController < ApplicationController
       format.json {
         @page.data = {
           channel:      'all_users',
-          channelInfo:    {},
-          date:           @colors_date.to_s,
-          dateUrl:        @request_url,
-          colorData:      results.call.map(&:to_public_api),
+          channelInfo:  {},
+          date:         @colors_date.to_s,
+          dateUrl:      @request_url,
+          colorData:    results.call.map(&:to_public_api),
+          report:       ColorReport.everyone.on(:daily, date: @colors_date).get.to_api,
           viewType:     :everyone
         }
       }

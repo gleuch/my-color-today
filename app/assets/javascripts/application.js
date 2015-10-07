@@ -14,5 +14,6 @@
 //= require websocket_rails/main
 //= require three.min
 //= rfequire tween.min
+//= require moment.min
 //= require canvas
 //= require screenshot

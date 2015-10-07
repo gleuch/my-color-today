@@ -8,9 +8,9 @@ module ColorReportable
 
   def report(d, *args)
     opts = args.extract_options!
-    info = reports.on(d || :overall).get
+    info = reports.on(d || :overall, date: opts[:date]).get
     info.recalculate! if opts[:recalculate]
-    {count: info.views_count, rgb: info.color_rgb, hex: info.color_hex, palette: info.palette}
+    info.to_api
   end
 
 

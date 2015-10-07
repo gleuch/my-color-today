@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150927181053) do
+ActiveRecord::Schema.define(version: 20151007154116) do
 
   create_table "api_tokens", force: :cascade do |t|
     t.integer  "user_id",      limit: 4
@@ -26,19 +26,20 @@ ActiveRecord::Schema.define(version: 20150927181053) do
   add_index "api_tokens", ["token_key"], name: "index_api_tokens_on_token_key", unique: true, using: :btree
 
   create_table "color_reports", force: :cascade do |t|
-    t.string   "uuid",             limit: 255
-    t.integer  "item_id",          limit: 4
-    t.string   "item_type",        limit: 255
-    t.integer  "date_range",       limit: 4,   default: 0
-    t.string   "date_range_value", limit: 255
-    t.string   "query_value",      limit: 255
-    t.integer  "color_red",        limit: 4
-    t.integer  "color_green",      limit: 4
-    t.integer  "color_blue",       limit: 4
-    t.boolean  "palette",                      default: false
-    t.integer  "views_count",      limit: 4,   default: 0
-    t.datetime "created_at",                                   null: false
-    t.datetime "updated_at",                                   null: false
+    t.string   "uuid",               limit: 255
+    t.integer  "item_id",            limit: 4
+    t.string   "item_type",          limit: 255
+    t.integer  "date_range",         limit: 4,   default: 0
+    t.string   "date_range_value",   limit: 255
+    t.string   "query_value",        limit: 255
+    t.integer  "color_red",          limit: 4
+    t.integer  "color_green",        limit: 4
+    t.integer  "color_blue",         limit: 4
+    t.boolean  "palette",                        default: false
+    t.integer  "views_count",        limit: 4,   default: 0
+    t.integer  "unique_views_count", limit: 4,   default: 0
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
   end
 
   add_index "color_reports", ["item_id", "item_type", "date_range"], name: "index_color_reports_on_item_id_and_item_type_and_date_range", using: :btree
