@@ -16,7 +16,7 @@
     agoPrefix = ''
     agoTime = moment(this.props.user.registered_date).fromNow(true)
     agoPrefix = 'over' if agoTime.match /day|month|year/i
-    ago = `<h3>visualizing <span className="hidden-xs">their browsing history</span> for {agoPrefix} {agoTime}</h3>`
+    ago = `<h3>visualizing <span className="hidden-xs">{this.props.user.login}'s browsing history</span> for {agoPrefix} {agoTime}</h3>`
 
     `<header className="channel-heading">
       <h1>
@@ -314,30 +314,37 @@
     e.preventDefault()
 
     visible = this.state.visible
-    date = 'today'
+    fdate = moment(this.state.date).format('ddd-DD-MMM-YYYY').toLowerCase()
+    nicedate = moment(this.state.date).format('ddd, DD MMM YYYY').toLowerCase()
 
     channel = 
       name : ''
       avatar : null
       color : null
-      sites : 0
-      pages : 0
+      sites : null
+      pages : null
+
+    if this.state.report
+      channel.pages = this.state.report.pages_count + ' web page'
+      channel.pages = channel.pages + 's' unless channel.pages == 1
+      channel.sites = this.state.report.sites_count + ' web site'
+      channel.sites = channel.sites + 's' unless channel.sites == 1
 
     switch this.state.viewType
       when 'everyone'
         channel.name = 'Everyone'
-        fname = 'everyone-' + date + '.png'
+        fname = 'everyone-' + fdate + '.png'
 
       when 'user'
         visible = false if this.state.channelInfo.profile_private
 
         channel.name = this.state.channelInfo.name
         channel.avatar = this.state.channelInfo.avatar_small_url
-        fname = this.state.channelInfo.login + '-' + date + '.png'
+        fname = this.state.channelInfo.login + '-' + fdate + '.png'
 
       # when 'site'
       #   channel.name = 'Site'
-      #   fname = 'site-' + date + '.png'
+      #   fname = 'site-' + fdate + '.png'
 
       else
         visible = false # dunno what this is, so exports are not allowed
@@ -347,4 +354,4 @@
       return
 
     screenshot = new window.ColorCampScreenshot
-    screenshot.generate( document.colorCamp.canvasContext(), channel, date ).download fname
+    screenshot.generate( document.colorCamp.canvasContext(), channel, nicedate ).download fname

@@ -36,12 +36,13 @@ class StaticPagesController < ApplicationController
     respond_to do |format|
       format.html { results.call }
       format.json {
+        data = results.call.map(&:to_public_api)
         @page.data = {
           channel:      'all_users',
           channelInfo:  {},
           date:         @colors_date.to_s,
           dateUrl:      @request_url,
-          colorData:    results.call.map(&:to_public_api),
+          colorData:    data,
           report:       ColorReport.everyone.on(:daily, date: @colors_date).get.to_api,
           viewType:     :everyone
         }

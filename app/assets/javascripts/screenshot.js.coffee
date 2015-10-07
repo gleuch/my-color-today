@@ -83,12 +83,21 @@ jQuery.extend true, ColorCampScreenshot.prototype, {
     this.context.drawImage content, 0, 0, this.canvas.width, this.canvas.height
 
   addTextContent : (date, channel)->
-    this.context.font = 'bold ' + (24 * this.zoomFactor) + 'px Arial'
+    extraOffset = 0
+
     this.context.fillStyle = '#1E1E1E'
     this.context.textAlign = 'right'
-    this.context.fillText date, this.canvas.width - this.padding.right, this.canvas.height - this.padding.bottom - (28 * this.zoomFactor)
-    this.context.font =  (24 * this.zoomFactor) + 'px Arial'
-    this.context.fillText '100 web sites  /  100 web pages', this.canvas.width - this.padding.right, this.canvas.height - this.padding.bottom
+
+    if channel.sites && channel.pages
+      extraOffset = 28
+      this.context.fillStyle = '#1E1E1E'
+      this.context.textAlign = 'right'
+      this.context.font =  (24 * this.zoomFactor) + 'px Arial'
+      this.context.fillText channel.pages + '  /  ' + channel.sites, this.canvas.width - this.padding.right, this.canvas.height - this.padding.bottom
+
+    this.context.font = 'bold ' + (24 * this.zoomFactor) + 'px Arial'
+    this.context.fillText date, this.canvas.width - this.padding.right, this.canvas.height - this.padding.bottom - (extraOffset * this.zoomFactor)
+
 
     # this.context.font = (14 * this.zoomFactor) + 'px Arial'
     # this.context.textAlign = 'right'
