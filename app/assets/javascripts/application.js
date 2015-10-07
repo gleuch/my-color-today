@@ -8,9 +8,11 @@
 //= require react_router_ujs
 //= require react-timed-transition-group
 //= require react-svg
+//= require filesaver.min
+//= require canvas-to-blob
 //= require components
 //= require websocket_rails/main
 //= require three.min
 //= rfequire tween.min
 //= require canvas
-
+//= require screenshot

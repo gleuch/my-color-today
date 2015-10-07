@@ -9,6 +9,7 @@
         <span>{img}</span>
         <span>{this.props.user.name.toLowerCase()}</span>
         <span>&nbsp; / &nbsp;</span>
+        <a href="javascript:;" onClick={this.props.screenshot}><em>png</em></a>
         <em>today</em>
       </h1>
     </header>`
@@ -35,7 +36,7 @@
       <h1>
         <span>everyone's color</span>
         <span>&nbsp; / &nbsp;</span>
-        <em>today</em>
+        <a href="javascript:;" onClick={this.props.screenshot}><em>png</em></a>
       </h1>
     </header>`
 
@@ -162,7 +163,7 @@
     # timeline = `<ColorChannelPagination prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
 
     if this.state.viewType == 'user'
-      content = `<ColorChannelUserContent user={this.state.channelInfo} />`
+      content = `<ColorChannelUserContent user={this.state.channelInfo} screenshot={this.onScreenshot} />`
       if this.state.channelInfo.profile_private
         details = ''
         canvas = `<section>
@@ -171,9 +172,9 @@
           </div>
         </section>`
     else if this.state.viewType == 'site'
-      content = `<ColorChannelSiteContent site={this.state.channelInfo} />`
+      content = `<ColorChannelSiteContent site={this.state.channelInfo} screenshot={this.onScreenshot} />`
     else if this.state.viewType == 'everyone'
-      content = `<ColorChannelEveryoneContent />`
+      content = `<ColorChannelEveryoneContent screenshot={this.onScreenshot} />`
 
     `<article className="channel">
       {details}
@@ -243,3 +244,42 @@
         #
       ).bind(this)
     }
+
+  onScreenshot : (e)->
+    e.preventDefault()
+
+    visible = this.state.visible
+    date = 'today'
+
+    channel = 
+      name : ''
+      avatar : null
+      color : null
+      sites : 0
+      pages : 0
+
+    switch this.state.viewType
+      when 'everyone'
+        channel.name = 'Everyone'
+        fname = 'everyone-' + date + '.png'
+
+      when 'user'
+        visible = false if this.state.channelInfo.profile_private
+
+        channel.name = this.state.channelInfo.name
+        channel.avatar = this.state.channelInfo.avatar_small_url
+        fname = this.state.channelInfo.login + '-' + date + '.png'
+
+      # when 'site'
+      #   channel.name = 'Site'
+      #   fname = 'site-' + date + '.png'
+
+      else
+        visible = false # dunno what this is, so exports are not allowed
+
+    unless visible
+      alert 'This channel is not visible or is protected.'
+      return
+
+    screenshot = new window.ColorCampScreenshot
+    screenshot.generate( document.colorCamp.canvasContext(), channel, date ).download fname

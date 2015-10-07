@@ -248,10 +248,16 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.canvas.camera = new THREE.PerspectiveCamera 25, w / h, 1, 86400
     this.canvas.camera.position.set 0, 0, 3600
 
-    this.canvas.renderer = new THREE.WebGLRenderer { canvas: this.canvas.element.get(0) }
-    this.canvas.renderer.setClearColor 0xFFFFFF, 1
+    this.canvas.renderer = new THREE.WebGLRenderer
+      canvas : this.canvas.element.get(0)
+      preserveDrawingBuffer : true
+      clearColor : 0xFFFFFF
+      clearAlpha : 1
+      alpha : true
+      antialias : true
     this.canvas.renderer.setPixelRatio window.devicePixelRatio
     this.canvas.renderer.setSize w, h
+    this.canvas.renderer.physicallyBasedShading = false;
 
     this.canvas.mouse = new THREE.Vector2()
     this.canvas.matrixDimensions = [6,10]#[24,36] #y,x
@@ -363,6 +369,15 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   #
   canvasMoveZ : (e) ->
     return
+
+  #
+  canvasScreenshot : (format)->
+    format = 'image/png' if typeof(format) == 'undefined'
+    this.canvas.renderer.domElement.toDataURL format
+
+  canvasContext : ->
+    this.canvas.renderer.domElement
+
 
 }
 
