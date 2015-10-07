@@ -12,12 +12,19 @@
         <em><i className="color-block" style={style}></i> #{this.props.report.hex}</em>
       </span>`
 
+    ago = ''
+    agoPrefix = ''
+    agoTime = moment(this.props.user.registered_date).fromNow(true)
+    agoPrefix = 'over' if agoTime.match /day|month|year/i
+    ago = `<h3>visualizing <span className="hidden-xs">their browsing history</span> for {agoPrefix} {agoTime}</h3>`
+
     `<header className="channel-heading">
       <h1>
         {img}
         <span>{this.props.user.name.toLowerCase()}</span>
         {color}
       </h1>
+      {ago}
     </header>`
     
 
@@ -49,11 +56,17 @@
         <em><i className="color-block" style={style}></i> #{this.props.report.hex}</em>
       </span>`
 
+    link = if this.props.current_user
+      `<ColorLink to={"/u/" + this.props.current_user.login}>see yours</ColorLink>`
+    else
+      `<ColorLink to="/signup">add yours!</ColorLink>`
+
     `<header className="channel-heading">
       <h1>
         <span>everyone's color</span>
         {color}
       </h1>
+      <h3>a visual display of a collective browsing history. {link}</h3>
     </header>`
 
 

@@ -106,6 +106,7 @@ class User < ActiveRecord::Base
 
     attrs.each{|a| data[a] = self.send(a) if self.respond_to?(a) }
     data.merge({
+      registered_date: self.created_at.to_date,
       avatar_small_url: self.avatar.url(:small),
       avatar_medium_url: self.avatar.url(:medium),
       avatar_large_url: self.avatar.url(:larger),
