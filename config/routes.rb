@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   match '/settings' => 'users#update', via: [:put]
 
   # User profile
-  resources :users, path: '/u', only: [:show], as: :user_profile, constraints: { id: /[^\/]+/ } do
+  resources :users, path: '/u', only: [:show], as: :user_profile, constraints: { id: /[A-Za-z0-9\.]+?/, format: /json/ } do
     get '/:date', action: :show, as: :dated, on: :member
   end
 
@@ -27,7 +27,7 @@ Rails.application.routes.draw do
   match '/logout' => 'user_sessions#destroy', as: :logout, via: [:get, :post]
 
   # Web Sites
-  resources :web_sites, path: '/s', only: [:index, :show], constraints: { id: /[^\/]+/ } do
+  resources :web_sites, path: '/s', only: [:index, :show], constraints: { id: /[A-Za-z0-9\.]+?/, format: /json/} do
     get '/:date', action: :show, as: :dated, on: :member
   end
 

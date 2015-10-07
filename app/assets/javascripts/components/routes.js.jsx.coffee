@@ -18,5 +18,6 @@
     <ColorRoute handler={ColorPrivacyPage} path='terms' />
     <ColorRoute handler={ColorUserSettings} path='settings' />
     <ColorRoute handler={ColorUserChannel} path='u/:id' />
+    <ColorRoute handler={ColorSiteChannel} path='s/:id' />
   </ColorRoute>
 `)

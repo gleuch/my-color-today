@@ -124,6 +124,18 @@
     </section>`
 
 
+@ColorSiteChannel = React.createClass
+  getInitialState : ->
+    current_user : this.props.current_user
+    channel:
+      channel : this.props.params.id
+      viewType : 'site'
+      url : location.href
+
+  render : ->
+    `<ColorChannel {...this.state} />`
+
+
 @ColorUserChannel = React.createClass
   getInitialState : ->
     current_user : this.props.current_user
@@ -232,7 +244,7 @@
       nextUrl : null
     }
 
-    $.ajax url || this.state.url, {
+    $.ajax( (url || this.state.url) + '.json', {
       dataType : 'json'
       method : 'GET'
       success : ((d,s,x)->
@@ -276,7 +288,7 @@
       error : ((x,s,e) ->
         #
       ).bind(this)
-    }
+    })
 
   onScreenshot : (e)->
     e.preventDefault()

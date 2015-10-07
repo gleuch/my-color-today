@@ -23,7 +23,7 @@ class WebSitesController < ApplicationController
   def show
     results = ->{
       @request_url ||= dated_web_site_url(@web_site, @colors_date)
-      @colors ||= @web_site.page_colors.on(@colors_date).page(before: params[:next_id]).per(100)
+      @colors ||= @web_site.colors.on(@colors_date).page(before: params[:next_id]).per(100)
     }
 
     respond_to do |format|
@@ -49,5 +49,11 @@ private
     @web_site = WebSite.find(params[:id]) rescue nil
     raise ActiveRecord::RecordNotFound if @web_site.blank?
   end
+
+  def get_colors_date
+    @colors_date = Date.parse(params[:date]) rescue nil
+    @colors_date ||= @web_site.page_colors.recent.first.created_at.to_date rescue Date.today
+  end
+
 
 end
