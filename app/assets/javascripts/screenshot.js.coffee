@@ -3,19 +3,22 @@
   this.canvas = null
   this.context = null
   this.rendered = false
-  this.zoomFactor = 2
+  this.zoomFactor = 1
   this.retries = 0
   this.padding = 
-    top : 32 * this.zoomFactor
-    bottom : 32 * this.zoomFactor
-    left : 32 * this.zoomFactor
-    right : 32 * this.zoomFactor
+    top : 54 * this.zoomFactor
+    bottom : 54 * this.zoomFactor
+    left : 54 * this.zoomFactor
+    right : 54 * this.zoomFactor
 
   this.framing = 
-    top : 42 * this.zoomFactor
-    bottom : 54 * this.zoomFactor
+    top : 48 * this.zoomFactor
+    bottom : 64 * this.zoomFactor
     left : 0 * this.zoomFactor
     right : 0 * this.zoomFactor
+
+  this.minWidth = 1024
+  this.minHeight = 768
 
 
   return this
@@ -140,10 +143,12 @@ jQuery.extend true, ColorCampScreenshot.prototype, {
     h = pix.y[n] - pix.y[0]
     cut = this.context.getImageData pix.x[0], pix.y[0], w, h
 
-    # Resize canvas with padding, put trimmed area onto canvas
-    this.canvas.width = w + this.padding.left + this.padding.right + this.framing.left + this.framing.right
-    this.canvas.height = h + this.padding.top + this.padding.bottom + this.framing.top + this.framing.bottom
-    this.context.putImageData cut, this.padding.left, this.padding.top
+    # Resize canvas with padding, put trimmed area onto canvas, ensure at least min width and height
+    this.canvas.width = Math.max this.minWidth, w + this.padding.left + this.padding.right + this.framing.left + this.framing.right
+    this.canvas.height = Math.max this.minHeight, h + this.padding.top + this.padding.bottom + this.framing.top + this.framing.bottom
+    mx = (this.canvas.width - w) / 2
+    my = (this.canvas.height - h) / 3.3
+    this.context.putImageData cut, mx, my
 
     # Add background
     this.context.globalCompositeOperation = 'destination-over'

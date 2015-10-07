@@ -97,23 +97,25 @@
 
 @ColorChannelPagination = React.createClass
   render : ->
-    nextLink = if this.props.nextUrl
-      `<a className="paginate older" href={this.props.nextUrl} onClick={this.nextPage}>Older</a>`
-    else
-      `<span className="paginate older">Older</span>`
+    # nextLink = if this.props.nextUrl
+    #   `<a className="paginate older" href={this.props.nextUrl} onClick={this.nextPage}>Older</a>`
+    # else
+    #   `<span className="paginate older">Older</span>`
 
-    prevLink = if this.props.prevUrl
-      `<a className="paginate newer" href={this.props.prevPage} onClick={this.prevPage}>Newer</a>`
-    else
-      `<span className="paginate newer">Newer</span>`
+    # prevLink = if this.props.prevUrl
+    #   `<a className="paginate newer" href={this.props.prevPage} onClick={this.prevPage}>Newer</a>`
+    # else
+    #   `<span className="paginate newer">Newer</span>`
 
-    `<div className="timeline">
-      <div className="timeline-content">
-        {nextLink}
-        <span> </span>
-        {prevLink}
-      </div>
-    </div>`
+    nextLink = ''
+    prevLink = ''
+    options = `<a href="javascript:;" onClick={this.props.screenshot}>png</a>`
+
+    `<aside className="channel-options">
+      {nextLink}
+      {options}
+      {prevLink}
+    </aside>`
 
 
   # --- HELPER METHODS ---
@@ -215,10 +217,10 @@
     content = ''
     canvas = `<ColorCanvas />`
     details = `<ColorChannelDetail {...this.state} />`
-    # timeline = `<ColorChannelPagination prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
+    options = `<ColorChannelPagination screenshot={this.onScreenshot} prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
 
     if this.state.viewType == 'user'
-      content = `<ColorChannelUserContent {...this.state} user={this.state.channelInfo} screenshot={this.onScreenshot} />`
+      content = `<ColorChannelUserContent {...this.state} user={this.state.channelInfo} />`
       if this.state.channelInfo.profile_private
         content = `<ColorChannelUserContent user={this.state.channelInfo} />`
         details = ''
@@ -228,13 +230,14 @@
           </div>
         </section>`
     else if this.state.viewType == 'site'
-      content = `<ColorChannelSiteContent {...this.state} site={this.state.channelInfo} screenshot={this.onScreenshot} />`
+      content = `<ColorChannelSiteContent {...this.state} site={this.state.channelInfo} />`
     else if this.state.viewType == 'everyone'
-      content = `<ColorChannelEveryoneContent {...this.state} screenshot={this.onScreenshot} />`
+      content = `<ColorChannelEveryoneContent {...this.state} />`
 
     `<article className="channel">
       {details}
       {content}
+      {options}
       {canvas}
     </article>`
 

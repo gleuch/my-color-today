@@ -174,7 +174,7 @@ body ::selection {background: rgba($color-mid-black,.24);}
         text-decoration: underline;
         &:hover {
           text-decoration: underline;
-          color: rgba($color-black, 1);
+          color: rgba($color-black, .82);
         }
       }
     }
@@ -201,6 +201,24 @@ body ::selection {background: rgba($color-mid-black,.24);}
       color: $color-black;
       font-size: 1.4rem;
       line-height: 1.0em;
+    }
+  }
+
+  .channel-options {
+    position: fixed;
+    bottom: 24px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: $color-black;
+    font-size: 1.4rem;
+    line-height: 1.0em;
+
+    a {
+      color: $color-black;
+      &:hover {
+        color: rgba($color-black, .82);
+      }
     }
   }
 }
