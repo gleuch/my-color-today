@@ -21,7 +21,7 @@ class StaticPage
 
   def exists?(format=nil)
     return false if self.page.blank?
-    return self.exists_for? || self.exists_for?('.haml')
+    return self.exists_for? || self.exists_for?('.haml') || self.exists_for?('.haml',:html)
   end
 
   def load_json_data(format=nil)

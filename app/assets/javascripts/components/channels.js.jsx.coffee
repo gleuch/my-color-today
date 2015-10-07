@@ -244,7 +244,11 @@
       nextUrl : null
     }
 
-    $.ajax( (url || this.state.url) + '.json', {
+    jsonUrl = url || this.state.url
+    if this.state.channel == 'all_users'
+      jsonUrl = jsonUrl + 'everyone'
+
+    $.ajax( jsonUrl + '.json', {
       dataType : 'json'
       method : 'GET'
       success : ((d,s,x)->
