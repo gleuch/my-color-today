@@ -3,20 +3,17 @@
   this.canvas = null
   this.context = null
   this.rendered = false
-  this.zoomFactor = 1
   this.retries = 0
   this.padding = 
-    top : 54 * this.zoomFactor
-    bottom : 54 * this.zoomFactor
-    left : 54 * this.zoomFactor
-    right : 54 * this.zoomFactor
-
+    top : 64
+    bottom : 72
+    left : 64
+    right : 64
   this.framing = 
-    top : 48 * this.zoomFactor
-    bottom : 64 * this.zoomFactor
-    left : 0 * this.zoomFactor
-    right : 0 * this.zoomFactor
-
+    top : 54
+    bottom : 96
+    left : 0
+    right : 0
   this.minWidth = 1024
   this.minHeight = 768
 
@@ -30,8 +27,8 @@ jQuery.extend true, ColorCampScreenshot.prototype, {
     # Setup the canvas
     this.canvas = document.createElement 'canvas'
     this.context = this.canvas.getContext '2d'
-    this.canvas.width = content.width * this.zoomFactor
-    this.canvas.height = content.height * this.zoomFactor
+    this.canvas.width = content.width
+    this.canvas.height = content.height
 
     # Add background
     this.addImageContent content
@@ -47,36 +44,39 @@ jQuery.extend true, ColorCampScreenshot.prototype, {
   setFormat : (format)->
     this.format = format
 
-  open : ->
+  open : (callback)->
     # Retry if not rendered
     unless this.rendered
       return if this.retries < (15 / .25)
         this.retries++
         setTimeout( (->
-          this.open()
+          this.open callback
         ).bind(this), 250 )
       else
         alert 'Sorry, this image took longer than expected to generate. Please try again.'
+        callback.call() if callback
 
     image = this.canvas.toDataURL()
     win = window.open image, '_blank'
     win.focus()
+    callback.call() if callback
     
-
-  download : (fname)->
+  download : (fname, callback)->
     # Retry if not rendered
     unless this.rendered
       return if this.retries < (15 / .25)
         this.retries++
         setTimeout( (->
-          this.download fname
+          this.download fname, callback
         ).bind(this), 250 )
       else
         alert 'Sorry, this image took longer than expected to generate. Please try again.'
+        callback.call() if callback
 
     # Get blob, then send as attachment
     this.canvas.toBlobHD( ((blob)->
       saveAs(blob, fname)
+      callback.call() if callback
     ).bind(this), this.format )
 
   addImageContent : (content)->
@@ -89,25 +89,24 @@ jQuery.extend true, ColorCampScreenshot.prototype, {
     this.context.textAlign = 'right'
 
     if channel.sites && channel.pages
-      extraOffset = 28
+      extraOffset = 30
       this.context.fillStyle = '#1E1E1E'
       this.context.textAlign = 'right'
-      this.context.font =  (24 * this.zoomFactor) + 'px Arial'
+      this.context.font =  '24px Arial'
       this.context.fillText channel.pages + '  /  ' + channel.sites, this.canvas.width - this.padding.right, this.canvas.height - this.padding.bottom
 
-    this.context.font = 'bold ' + (24 * this.zoomFactor) + 'px Arial'
-    this.context.fillText date, this.canvas.width - this.padding.right, this.canvas.height - this.padding.bottom - (extraOffset * this.zoomFactor)
+    this.context.font = 'bold 24px Arial'
+    this.context.fillText date, this.canvas.width - this.padding.right, this.canvas.height - this.padding.bottom - extraOffset
 
-
-    # this.context.font = (14 * this.zoomFactor) + 'px Arial'
-    # this.context.textAlign = 'right'
-    # this.context.fillStyle = 'rgba(20,20,20,0.48)'
-    # this.context.fillText 'made at https://mycolor.today', this.canvas.width - this.padding.right, this.canvas.height - this.padding.bottom +6
+    this.context.font = '20px Arial'
+    this.context.textAlign = 'right'
+    this.context.fillStyle = 'rgba(20,20,20,0.82)'
+    this.context.fillText 'https://mycolor.today', this.canvas.width - this.padding.right, this.canvas.height - this.padding.bottom + 42
 
     # Add channel name, avatar, and watermark
     leftOffset = 0
     if channel.avatar
-      imgWidth = 64 * this.zoomFactor
+      imgWidth = 64
       leftOffset = imgWidth + 18
       this.context.fillStyle = 'rgba(20,20,20,0.3)'
       this.context.fillRect this.padding.left, this.canvas.height - this.padding.bottom - imgWidth, imgWidth, imgWidth
@@ -122,13 +121,10 @@ jQuery.extend true, ColorCampScreenshot.prototype, {
     else
       this.rendered = true
 
-    this.context.font = 'bold ' + (42 * this.zoomFactor) + 'px Arial'
+    this.context.font = 'bold 42px Arial'
     this.context.fillStyle = '#1E1E1E'
     this.context.textAlign = 'left'
     this.context.fillText channel.name.toLowerCase(), this.padding.left + leftOffset, this.canvas.height - this.padding.bottom - 20
-
-
-
 
   trim : ->
     pix =

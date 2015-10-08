@@ -5,6 +5,8 @@ ColorCampSubscriber = ->
   this.subscribed_channel = null
   this.channel_svg = false
   this.reconnectIntv = null
+  this.zoom2x = false
+  this.frameRate = 28
   this.canvas = {
     offsetZ : null
     minZ : 0
@@ -260,7 +262,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.canvas.renderer.physicallyBasedShading = false;
 
     this.canvas.mouse = new THREE.Vector2()
-    this.canvas.matrixDimensions = [6,10]#[24,36] #y,x
+    this.canvas.matrixDimensions = [6,10]
     this.dataResetMatrix()
     this.dataSetColorBoxSize()
     this.canvasDrawColors()
@@ -295,7 +297,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
   # Custom request animation frame
   requestAnimationFrame : (callback)->
-    targetFrameRate = 1000 / 28;
+    targetFrameRate = 1000 / this.frameRate;
     currTime = Date.now()
     this.lastRequestTime = 0 unless this.lastRequestTime
     timeToCall = Math.max( 0, targetFrameRate - ( currTime - this.lastRequestTime ) )
@@ -320,6 +322,12 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     # Reset canvas size and aspect ration
     w = this.canvas.element.parent().width()
     h = this.canvas.element.parent().height()
+
+    # Zoom the canvas
+    if this.zoom2x
+      w = w * 2
+      h = h * 2
+
     this.canvas.camera.aspect = w / h
     this.canvas.renderer.setSize w, h
 
@@ -331,12 +339,20 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     # Update the projection
     this.canvas.camera.updateProjectionMatrix()
 
+  canvasZoom2x : (v, callback)->
+    this.zoom2x = v
+    $(this.canvas.element).toggleClass 'zoom2x', this.zoom2x
+    this.canvasResize()
+    setTimeout(->
+      callback.call() if callback
+    , (1000 / this.frameRate) * 1.5) # wait for a frame or two before running callback
+
+
   #
   canvasSetOffsets : ->
     # Store offset positions
     this.canvas.offsetZ = Date.parse this.colors[0].created_at
     this.canvas.closestZ = (Date.parse(this.colors[0].created_at) - this.canvas.offsetZ) / 1000 / 60
-    
 
   #
   canvasDrawColors : ->

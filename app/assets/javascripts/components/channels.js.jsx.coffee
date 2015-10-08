@@ -354,5 +354,10 @@
       alert 'This channel is not visible or is protected.'
       return
 
-    screenshot = new window.ColorCampScreenshot
-    screenshot.generate( document.colorCamp.canvasContext(), channel, nicedate ).download fname
+    # Nice hack to scale and zoom the canvas for a higher quality image
+    document.colorCamp.canvasZoom2x(true, ->
+      screenshot = new window.ColorCampScreenshot
+      screenshot.generate( document.colorCamp.canvasContext(), channel, nicedate ).download(fname, ->
+        document.colorCamp.canvasZoom2x(false)
+      )
+    )
