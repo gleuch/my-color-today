@@ -203,11 +203,8 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.canvasDrawColors() if this.canvas.scene
 
     if typeof this.colors[1] != 'undefined'
-      x = this.canvas.camera.position.x
-      y = this.canvas.camera.position.y
-      z = this.canvas.camera.position.z + this.colors[0].z - this.colors[1].z
-
-      new TWEEN.Tween( this.canvas.camera.position ).to( { z: z, x : x, y : y }, 250 ).start();
+      this.canvas.camera.position.z = this.canvas.camera.position.z + this.colors[0].z - this.colors[1].z
+      this.canvas.renderer.render this.canvas.scene, this.canvas.camera
 
   #
   dataLoadColors : (colors)->
@@ -302,7 +299,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.lastRequestTime = 0 unless this.lastRequestTime
     timeToCall = Math.max( 0, targetFrameRate - ( currTime - this.lastRequestTime ) )
     id = window.setTimeout( ->
-      callback( currTime + timeToCall )
+      requestAnimationFrame( callback.bind(null, currTime + timeToCall ) )
     , timeToCall)
     this.lastRequestTime = currTime + timeToCall;
     return id
