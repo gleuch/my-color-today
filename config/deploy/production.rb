@@ -11,11 +11,11 @@ set :deploy_to, '/home/colorcamp/color.camp'
 
 
 # WHENEVER
-# set :whenever_roles, -> { [:db] }
-# set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:production)}" }
+set :whenever_roles, -> { [:db] }
+set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:production)}" }
 
 # SIDEKIQ
-# set :sidekiq_processes, 2
+set :sidekiq_processes, 2
 
 # WEBSOCKET_RAILS STANDALONE SERVER
 set :websocket_rails_server_role, :app

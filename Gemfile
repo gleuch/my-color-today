@@ -38,7 +38,7 @@ gem 'react-router-rails',             '0.13.3.1'
 
 # --- REDIS / SIDEKIQ ---
 gem 'sidekiq',                        '3.5.0'
-gem 'sidekiq-unique-jobs',            '3.0.15'
+gem 'sidekiq-unique-jobs',            '4.0.2'
 gem 'redis',                          '3.2.1'
 gem 'redis-rails',                    '4.0.0'
 
@@ -59,12 +59,12 @@ gem 'rails-timeago',                  '2.12.0'
 gem 'rails-settings-cached',          '0.4.6'
 # gem 'airbrake',                       '4.2.0'
 # gem 'newrelic_rpm',                   '3.9.5.251'
-# gem 'whenever',                       '0.9.4',        require: false
+gem 'whenever',                       '0.9.4',        require: false
 # gem 'split',                          '1.0.0',        require: 'split/dashboard'
 
 
 # --- OAUTH / APIS ---
-gem 'aws-sdk',                        '2.1.26'
+gem 'aws-sdk',                        '2.1.28'
 gem 'rest-client',                    '1.8.0'
 gem 'twitter',                        '5.15.0'
 gem 'fb_graph',                       '2.7.17'

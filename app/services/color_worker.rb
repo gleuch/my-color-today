@@ -5,12 +5,14 @@ class ColorWorker
   sidekiq_options unique: true
 
 
-  def perform(type, id, *args)
+  def perform(type, id=nil, *args)
     case type.to_s
       when 'user_report'
         user_report(id, *args)
       when 'web_page_report'
         web_page_report(id, *args)
+      when 'everyone_report'
+        everyone_report
     end
   end
 
@@ -36,11 +38,9 @@ class ColorWorker
 
 
   # Set the average color for all users
-  def everyone_report(id,*args)
+  def everyone_report(*args)
     opts = args.extract_options!
-    opts[:on] ||= :daily
-    info = ColorReport.everyone.on(opts[:on], date: opts[:date]).get
-    info.recalculate!
+    ColorReport.everyone.on(:daily, date: opts[:date]).get.recalculate!
   end
 
 
