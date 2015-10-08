@@ -29,11 +29,11 @@ ColorCampSubscriber = ->
 jQuery.extend true, ColorCampSubscriber.prototype, {
 
   #
-  initialize : ->
+  initialize : (callback)->
     return unless this.enabled
 
     $(document).ready (->
-      this.canvasInitialize() if this.enabled
+      this.canvasInitialize(callback)
     ).bind(this)
 
   #
@@ -44,9 +44,9 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.canvasUninitialize()
 
   #
-  enable : ->
+  enable : (callback)->
     this.enabled = true
-    this.initialize()
+    this.initialize(callback)
 
   #
   disable : ->
@@ -233,8 +233,8 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   # --- Canvas ---
 
   #
-  canvasInitialize : ->
-    this.canvasUninitialize() # for clarify
+  canvasInitialize : (callback)->
+    this.canvasUninitialize() # for clarity
 
     return unless $('canvas.colorcamp-canvas').size() > 0
     this.canvas.element = $('canvas.colorcamp-canvas').eq(0)
@@ -271,6 +271,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     $(window).on 'resize', this.canvasResize.bind(this)
 
     this.canvasAnimate()
+    callback.call() if callback
 
   #
   canvasUninitialize : ->
@@ -290,9 +291,19 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   #
   canvasAnimate : ->
     this.canvasRender()
-    setTimeout (->
-      requestAnimationFrame( this.canvasAnimate.bind(this) )
-    ).bind(this), 60
+    this.requestAnimationFrame this.canvasAnimate.bind(this)
+
+  # Custom request animation frame
+  requestAnimationFrame : (callback)->
+    targetFrameRate = 1000 / 28;
+    currTime = Date.now()
+    this.lastRequestTime = 0 unless this.lastRequestTime
+    timeToCall = Math.max( 0, targetFrameRate - ( currTime - this.lastRequestTime ) )
+    id = window.setTimeout( ->
+      callback( currTime + timeToCall )
+    , timeToCall)
+    this.lastRequestTime = currTime + timeToCall;
+    return id
 
   #
   canvasRender : ->
@@ -335,6 +346,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
       this.canvas.particles = new THREE.Group()
       this.canvasDrawColor(color,i) for i,color of this.colors
       this.canvas.scene.add this.canvas.particles
+      this.canvasResize() # dunno, but prevents where content might not show
 
   #
   canvasDrawColor : (color,i)->

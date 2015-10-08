@@ -254,6 +254,7 @@
   paginateCanvas : (url)->
     this.setState { url : url }
 
+  # Get the channel info
   getChannelData : (url)->
     this.setState {
       prevUrl : null
@@ -293,9 +294,9 @@
             else
               this.state.viewType + '-' + this.state.channel
 
-            document.colorCamp.enable()
-            document.colorCamp.setChannelName channelName
-            document.colorCamp.dataLoadColors d.colorData
+            document.colorCamp.enable ->
+              document.colorCamp.setChannelName channelName
+              document.colorCamp.dataLoadColors d.colorData
 
             # Listen for new colors via websocket if only if today
             today = (new Date()).toJSON().replace(/^(\d{4}\-\d{2}\-\d{2})(.*)$/, '$1')
