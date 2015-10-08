@@ -347,7 +347,6 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
       callback.call() if callback
     , (1000 / this.frameRate) * 1.5) # wait for a frame or two before running callback
 
-
   #
   canvasSetOffsets : ->
     # Store offset positions

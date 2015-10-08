@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_filter :app_init
+
   helper_method :current_user
 
   rescue_from Timeout::Error, Redis::TimeoutError, with: :rescue_from_timeout
@@ -103,6 +104,60 @@ private
           prev_url: (results.prev_url(request_url || options[:request_url] || request.url) rescue nil)
         }.to_json
       end
+    end
+  end
+
+
+  # ---------------------------------------------------------------------------
+
+  def render_everyone_channel
+    results = -> {
+      @colors_date = Date.parse(params[:date]) rescue nil
+      @colors_date ||= WebSitePageColor.recent.first.created_at.to_date rescue Date.today
+
+      @request_url ||= dated_everyone_url(@colors_date)
+      @colors = WebSitePageColor.on(@colors_date).page(before: params[:next_id]).per(100)
+    }
+
+    respond_to do |format|
+      format.html { render :'static_pages/everyone' }
+      format.json {
+        data = results.call.map(&:to_public_api)
+        render json: {
+          channel:      'all_users',
+          channelInfo:  {},
+          date:         @colors_date.to_s,
+          dateUrl:      @request_url,
+          colorData:    data,
+          report:       ColorReport.everyone.on(:daily, date: @colors_date).get.to_api,
+          viewType:     :everyone
+        }, callback: params[:callback]
+      }
+    end
+  end
+
+  def render_user_channel(user)
+    @user = user
+
+    results = ->{
+      @request_url ||= dated_user_profile_url(@user, @colors_date)
+      @colors ||= @user.page_colors.on(@colors_date).page(before: params[:next_id]).per(100)
+    }
+
+    respond_to do |format|
+      format.html { render :'users/show' }
+      format.json {
+        results.call
+        render json: {
+          channel:        @user.uuid,
+          channelInfo:    @user.to_api,
+          date:           @colors_date.to_s,
+          dateUrl:        @request_url,
+          colorData:      @colors.map(&:to_public_api),
+          report:         @user.report(:daily, date: @colors_date),
+          viewType:       :user
+        }, callback: params[:callback]
+      }
     end
   end
 

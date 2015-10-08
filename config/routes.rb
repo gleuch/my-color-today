@@ -32,7 +32,6 @@ Rails.application.routes.draw do
   end
 
   # Static pages routing, use StaticPage to check if exists as constraint
-  match '/everyone.:format' => 'static_pages#show', via: [:get], page: 'home', as: :everyone
   match '/home/:date' => 'static_pages#show', via: [:get], page: 'home', as: :dated_everyone
   match '/*page' => 'static_pages#show', as: :static_page, constraints: StaticPage.new, via: [:get]
 

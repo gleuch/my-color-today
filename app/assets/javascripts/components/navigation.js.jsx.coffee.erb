@@ -10,15 +10,17 @@
     links = []
 
     # Home
-    links.push `<li key="home"><ColorLink onClick={this.closeMenu} to="/">home</ColorLink></li>`
+
 
     # Logged-in user
     if this.props.current_user
-      links.push `<li key="profile"><ColorLink onClick={this.closeMenu} to={'/u/' + this.props.current_user.login}>your profile</ColorLink></li>`
+      links.push `<li key="everyone"><ColorLink onClick={this.closeMenu} to="/everyone">everyone</ColorLink></li>`
+      links.push `<li key="profile"><ColorLink onClick={this.closeMenu} to="/">your profile</ColorLink></li>`
       links.push `<li key="settings"><ColorLink onClick={this.closeMenu} to="/settings">settings</ColorLink></li>`
 
     # Guest user
     else
+      links.push `<li key="home"><ColorLink onClick={this.closeMenu} to="/">home</ColorLink></li>`
       links.push `<li key="signup"><ColorLink onClick={this.closeMenu} to="/signup">signup</ColorLink></li>`
       links.push `<li key="login"><ColorLink onClick={this.closeMenu} to="/login">login</ColorLink></li>`
 

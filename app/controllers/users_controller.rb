@@ -8,26 +8,7 @@ class UsersController < ApplicationController
 
 
   def show
-    results = ->{
-      @request_url ||= dated_user_profile_url(@user, @colors_date)
-      @colors ||= @user.page_colors.on(@colors_date).page(before: params[:next_id]).per(100)
-    }
-
-    respond_to do |format|
-      format.html { render :show }
-      format.json {
-        results.call
-        render json: {
-          channel:        @user.uuid,
-          channelInfo:    @user.to_api,
-          date:           @colors_date.to_s,
-          dateUrl:        @request_url,
-          colorData:      @colors.map(&:to_public_api),
-          report:         @user.report(:daily, date: @colors_date),
-          viewType:       :user
-        }
-      }
-    end
+    render_user_channel(@user)
   end
 
   def edit

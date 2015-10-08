@@ -57,7 +57,7 @@
       </span>`
 
     link = if this.props.current_user
-      `<ColorLink to={"/u/" + this.props.current_user.login}>see yours</ColorLink>`
+      `<ColorLink to="/">see yours</ColorLink>`
     else
       `<ColorLink to="/signup">add yours!</ColorLink>`
 
@@ -148,19 +148,25 @@
       url : location.href
 
   render : ->
-    `<ColorChannel {...this.state} />`
+    `<ColorChannel {...this.state} dataRequestUrl={'/s/' + this.state.channel.channel} />`
 
 
 @ColorUserChannel = React.createClass
   getInitialState : ->
-    current_user : this.props.current_user
-    channel:
-      channel : this.props.params.id
-      viewType : 'user'
-      url : location.href
+    # Set channel name. If blank and user is logged in, set as their page.
+    channelName = this.props.params.id
+    channelName = this.props.current_user.login if !channelName && this.props.current_user && this.props.current_user.login
+
+    {
+      current_user : this.props.current_user
+      channel:
+        channel : channelName
+        viewType : 'user'
+        url : location.href
+    }
 
   render : ->
-    `<ColorChannel {...this.state} />`
+    `<ColorChannel {...this.state} dataRequestUrl={'/u/' + this.state.channel.channel} />`
 
 
 @ColorEveryoneChannel = React.createClass
@@ -172,22 +178,30 @@
       url : location.href
 
   render : ->
-    `<ColorChannel {...this.state} />`
+    `<ColorChannel {...this.state} dataRequestUrl="/everyone" />`
+
+
+@ColorHomepageChannel = React.createClass
+  render : ->
+    # The homepage acts as as everyone channel for non-logged in users, and the profile screen for logged-in users
+    if this.props.current_user
+      `<ColorUserChannel {...this.props} />`
+    else
+      `<ColorEveryoneChannel {...this.props} />`
 
 
 @ColorChannel = React.createClass
   getInitialState : ->
-    {
-      channel :     this.props.channel.channel
-      channelInfo : this.props.channel.channelInfo
-      date :        this.props.date
-      url :         this.props.channel.url
-      report :      this.props.report
-      nextUrl :     null
-      prevUrl :     null
-      viewType :    this.props.channel.viewType
-      visible :     true
-    }
+    channel :       this.props.channel.channel
+    channelInfo :   this.props.channel.channelInfo
+    date :          this.props.date
+    url :           this.props.channel.url
+    report :        this.props.report
+    nextUrl :       null
+    prevUrl :       null
+    viewType :      this.props.channel.viewType
+    visible :       true
+    current_user :  this.props.current_user
 
   getDefaultProps : ->
     channel : { }
@@ -262,8 +276,8 @@
     }
 
     jsonUrl = url || this.state.url
-    if this.state.channel == 'all_users'
-      jsonUrl = jsonUrl + 'everyone'
+    if this.props.dataRequestUrl
+      jsonUrl = this.props.dataRequestUrl
 
     $.ajax( jsonUrl + '.json', {
       dataType : 'json'

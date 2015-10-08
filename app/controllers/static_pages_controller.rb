@@ -4,7 +4,6 @@ class StaticPagesController < ApplicationController
 
   set_pagination_headers :colors, only: [:show]
 
-
   def show
     @_static_page_options = {}
 
@@ -13,46 +12,32 @@ class StaticPagesController < ApplicationController
         trigger_actions
 
         @body_classes << 'static-page' << "page-#{@page.page.gsub(/\/|\-/m, '_').gsub(/("|')/m, '')}"
-        render @page.file, @_static_page_options
+        render @page.file, @_static_page_options unless performed?
       }
       format.json {
         trigger_actions
         json = JSON.parse(@page.data) rescue nil
-        render json: json || @page.data, callback: params[:callback]
+        render json: json || @page.data, callback: params[:callback] unless performed?
       }
       format.any { render_not_found }
     end
   end
 
   def home
-    results = -> {
-      @colors_date = Date.parse(params[:date]) rescue nil
-      @colors_date ||= WebSitePageColor.recent.first.created_at.to_date rescue Date.today
-
-      @request_url ||= dated_everyone_url(@colors_date)
-      @colors = WebSitePageColor.on(@colors_date).page(before: params[:next_id]).per(100)
-    }
-
-    respond_to do |format|
-      format.html { results.call }
-      format.json {
-        data = results.call.map(&:to_public_api)
-        @page.data = {
-          channel:      'all_users',
-          channelInfo:  {},
-          date:         @colors_date.to_s,
-          dateUrl:      @request_url,
-          colorData:    data,
-          report:       ColorReport.everyone.on(:daily, date: @colors_date).get.to_api,
-          viewType:     :everyone
-        }
-      }
+    if current_user?
+      render_user_channel(current_user)
+    else
+      render_everyone_channel
     end
   end
   alias_method :svg, :home
 
   def load_data
     @page.load_json_data
+  end
+
+  def everyone
+    render_everyone_channel
   end
 
 
