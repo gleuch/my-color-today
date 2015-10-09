@@ -16,6 +16,7 @@
     right : 0
   this.minWidth = 1024
   this.minHeight = 768
+  this.fontName = 'Oscine, Arial'
 
 
   return this
@@ -92,13 +93,13 @@ jQuery.extend true, ColorCampScreenshot.prototype, {
       extraOffset = 30
       this.context.fillStyle = '#1E1E1E'
       this.context.textAlign = 'right'
-      this.context.font =  '24px Arial'
+      this.context.font =  '24px ' + this.fontName
       this.context.fillText channel.pages + '  /  ' + channel.sites, this.canvas.width - this.padding.right, this.canvas.height - this.padding.bottom
 
     this.context.font = 'bold 24px Arial'
     this.context.fillText date, this.canvas.width - this.padding.right, this.canvas.height - this.padding.bottom - extraOffset
 
-    this.context.font = '20px Arial'
+    this.context.font = '20px ' + this.fontName
     this.context.textAlign = 'right'
     this.context.fillStyle = 'rgba(20,20,20,0.82)'
     this.context.fillText 'https://mycolor.today', this.canvas.width - this.padding.right, this.canvas.height - this.padding.bottom + 42
@@ -121,7 +122,7 @@ jQuery.extend true, ColorCampScreenshot.prototype, {
     else
       this.rendered = true
 
-    this.context.font = 'bold 42px Arial'
+    this.context.font = 'bold 42px ' + this.fontName
     this.context.fillStyle = '#1E1E1E'
     this.context.textAlign = 'left'
     this.context.fillText channel.name.toLowerCase(), this.padding.left + leftOffset, this.canvas.height - this.padding.bottom - 20

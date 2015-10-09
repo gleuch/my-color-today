@@ -204,7 +204,6 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
 
     if typeof this.colors[1] != 'undefined'
       this.canvas.camera.position.z = this.canvas.camera.position.z + this.colors[0].z - this.colors[1].z
-      this.canvas.renderer.render this.canvas.scene, this.canvas.camera
 
   #
   dataLoadColors : (colors)->
