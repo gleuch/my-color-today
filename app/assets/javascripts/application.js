@@ -7,6 +7,7 @@
 //= require react_router.min
 //= require react_router_ujs
 //= require react-timed-transition-group
+//= require react-tappable.min
 //= require react-svg
 //= require filesaver.min
 //= require canvas-to-blob

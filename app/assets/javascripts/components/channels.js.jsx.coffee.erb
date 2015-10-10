@@ -103,6 +103,7 @@
     facebookSvg : null
     tipText : null
     dialog : null
+    sharePanelOpen : false
 
   componentDidMount : ->
     window.ColorCampSvgs.add('screenshotSvg', "<%= asset_url 'screenshot.svg' %>", this) unless this.state.screenshotSvg
@@ -127,11 +128,11 @@
     nextLink = ''
     prevLink = ''
     
-    shareOrTip = `<p className="share-tip">
-      <span className="isNotHover">&hellip;</span>
-      <span className="isHover">&hellip;</span>
+    shareOrTip = `<p className="share-tip" onTap={this.toggleSharing} onMouseDown={this.toggleSharing}>
+      <span className="is-not-open">&hellip;</span>
+      <span className="is-open">&hellip;</span>
     </p>`
-    shareOrTip = `<p className="share-tip">{this.state.tipText}</p>` if this.state.tipText
+    shareOrTip = `<p className="share-tip">{this.state.tipText}</p>` if this.state.tipText && window.innerWidth > 768
 
     niceDate = moment(this.props.date).format('DD MMM YYYY');
     if this.props.viewType == 'user'
@@ -143,8 +144,10 @@
     else
       twitterText = ''
 
+    sharePanelClassName = ''
+    sharePanelClassName = 'on-tap-open' if this.state.sharePanelOpen
     options = `
-      <div className="channel-option-actions">
+      <div className={'channel-option-actions ' + sharePanelClassName} ref="sharePanel">
         {shareOrTip}
         <div className="share-open">
           <p>
@@ -152,33 +155,39 @@
             <a href="https://facebook.com/myinternetcolor" target="_blank" data-tip="share on facebook" onMouseOver={this.showTip} onMouseOut={this.hideTip} onClick={this.facebookShare}>{facebookSvg}</a>
           </p>
           <p>
-            <a href="javascript:;" data-tip="download a screenshot" onMouseOver={this.showTip} onMouseOut={this.hideTip} onClick={this.props.screenshot}>{screenshotSvg}</a>
+            <a href="javascript:;" data-tip="download a screenshot" onMouseOver={this.showTip} onMouseOut={this.hideTip} onClick={this.makeScreenshot}>{screenshotSvg}</a>
           </p>
         </div>
       </div>
     `
 
-    `<span>
-      <aside className="channel-options">
-        {nextLink}
-        {options}
-        {prevLink}
-      </aside>
-    </span>`
+    `<aside className="channel-options">
+      {options}
+    </aside>`
 
 
   # --- HELPER METHODS ---
+
+  toggleSharing : (e)->
+    e.preventDefault()
+    this.setState { sharePanelOpen : !this.state.sharePanelOpen }
 
   twitterShare : (e)->
     e.preventDefault()
     el = e.currentTarget
     text = if el then el.getAttribute 'data-text' else ''
     this.shareDialog 'https://twitter.com/share?url={url}&text=' + text + '&related=myinternetcolor,gleuch,internetcolor'
+    this.setState { sharePanelOpen : false }
 
   facebookShare : (e)->
     e.preventDefault()
     absoluteUrl = window.location.protocol + '//' + window.location.host
     this.shareDialog 'https://www.facebook.com/dialog/share?app_id=' + ColorInitialProps.facebook_app_id + '&display=iframe&href={url}&redirect_uri=' + absoluteUrl + '/share/facebook/success'
+    this.setState { sharePanelOpen : false }
+
+  makeScreenshot : (e)->
+    this.props.screenshot(e)
+    this.setState { sharePanelOpen : false }
 
   shareDialog : (dialogUrl)->
     if this.props.canonicalUrl

@@ -228,6 +228,7 @@ body ::selection {background: rgba($color-mid-black,.24);}
     bottom: 24px;
     left: 0;
     right: 0;
+    z-index: 20;
     width: auto;
     margin: 0 auto;
     text-align: center;
@@ -255,39 +256,50 @@ body ::selection {background: rgba($color-mid-black,.24);}
     }
 
     .channel-option-actions {
-      position: relative;
+      display: inline-block;
+      width: auto;
+      min-width: 32px;
+      margin: 0 auto;
 
       .share-tip {
         font-size: 1.4rem;
         height: 20px;
+        padding: 0;
+        margin: 0;
         @include animation( fadeIn .2s ease-out 0s 1 );
 
-        .isHover { display: none; }
-        .isNotHover { display: inline-block; }
+        .is-open { display: none; }
+        .is-not-open { display: inline-block; }
       }
 
       .share-open {
         display: none;
         position: absolute;
         bottom: 100%;
-        width: auto;
-        margin: 0 auto;
-        left: 0;
-        right: 0;
+
+        @media (min-width: 767px) {
+          & {
+            width: 100px;
+            margin: 0 -50px;
+            left: 50%;
+            right: 50%;
+          }
+        }
+
+        .social-icon   {
+          display: inline-block;
+          padding: 2px 8px;
+        }
       }
 
-      &:hover {
+      &.on-tap-open, &:hover {
         .share-tip {
-          .isHover { display: inline-block; }
-          .isNotHover { display: none; }
+          .is-open { display: inline-block; }
+          .is-not-open { display: none; }
         }
 
         .share-open {
           display: block;
-          .social-icon   {
-            display: inline-block;
-            padding: 2px 8px;
-          }
         }
       }
     }
@@ -427,4 +439,158 @@ body ::selection {background: rgba($color-mid-black,.24);}
   &.screen-leave-active {
     opacity: 0.01;
   }
+}
+
+/* Mobile dimensions */
+@media (max-width: 768px) {
+  #header {
+    h1 {
+      top: 15px;
+      bottom: auto;
+      left: 15px;
+      right: 15px;
+      text-align: left;
+      font-size: 1.6rem;
+    }
+
+    #header-links {
+      top: 0;
+      bottom: 0;
+      left: 100%;
+      right: auto;
+      width: 100%;
+      z-index: 20;
+      padding: 10px 15px;
+      background: rgba($color-white, 0);
+      @include transition(left .2s ease-in-out, background-color .2s ease-out);
+
+      a.toggle-menu {
+        left: -32px;
+        top: 14px;
+        @include transition(left .2s ease-in-out);
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      ul {
+        padding: 22% 0 0 0;
+
+        li {
+          text-align: center;
+          padding: 2px 0;
+          a {
+            display: block;
+            font-size: 2.0rem;
+            padding: 8px 0;
+          }
+        }
+      }
+
+      &.opened {
+        right: auto;
+        left: 0;
+        background: rgba($color-white, .95);
+
+        a.toggle-menu {
+          left: 15px;
+        }
+      }
+    }
+  }
+
+  .colorcamp-canvas-area {
+    position: fixed;
+    top: 8.2em;
+  }
+
+
+  .channel {
+    .channel-heading {
+      top: 54px;
+      left: 15px;
+      right: 15px;
+    }
+    .channel-details {
+      left: 15px;
+      right: 15px;
+    }
+    .channel-options {
+      left: 15px;
+      right: auto;
+      text-align: left;
+
+
+      .channel-option-actions  {
+        min-width: 24px;
+
+        .share-open {
+          padding-bottom: 4px;
+          margin-bottom: 6px;
+          border-bottom: 1px solid rgba($color-black,.12);
+
+          .social-icon {
+            padding: 0;
+          }
+        }
+
+        p {
+          padding: 0;
+          margin: 0;
+
+          a {
+            display: block;
+            padding: 2px 2px;
+            margin: 6px 0;
+          }
+        }
+      }
+    }
+  }
+
+
+  .static-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    padding: 64px 15px 32px 15px;
+    overflow: scroll;
+
+    .static-page-content {
+      width: 60%;
+
+      section {
+        padding: 10px 0 10px 0;
+
+        h1 {
+          position: relative;
+          width: auto;
+          margin: 0;
+          padding: 0 0 12px 0;
+          text-align: left;
+          font-size: 2.8rem;
+        }
+      }
+    }
+    .static-page-gutter {
+      width: 36%;
+
+      section {
+        padding: 10px 0 10px 15px;
+
+        h3 {
+          font-size: 1.4rem;
+        }
+
+        p, ul {
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+
 }

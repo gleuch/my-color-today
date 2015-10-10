@@ -41,12 +41,26 @@
 ul.buttons {
   margin: 0;
   padding: 12px 0 24px 0;
+  font-size: inherit;
+
+  @media (max-width: 768px) {
+    & {
+      padding: 6px 0 12px 0;
+    }
+  }
 
   li {
     padding: 5px 12px;
     margin: 0 auto;
     list-style: none;
     max-width: 260px;
+    font-size: inherit;
+
+    @media (max-width: 768px) {
+      & {
+        padding: 5px 0;
+      }
+    }
 
     a.btn {
       padding: 10px 6px;
@@ -56,6 +70,7 @@ ul.buttons {
       border-radius: 0;
       text-align: center;
       font-weight: 600;
+      font-size: inherit;
       outline: none;
       box-shadow: none;
       color: $color-white;
