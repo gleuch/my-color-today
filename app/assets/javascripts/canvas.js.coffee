@@ -1,4 +1,5 @@
 ColorCampSubscriber = ->
+  this.canvasInitialized = false
   this.enabled = true
   this.dispatcher = null
   this.channelName = 'all_users'
@@ -67,8 +68,9 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   # --- Websocket ---
 
   #
-  websocketInitialize : ->
+  websocketInitialize : (callback)->
     this.dispatcher = new WebSocketRails(this.url)
+    this.websocketCallback = callback
 
     this.dispatcher.bind 'connection_closed', (->
       clearTimeout this.reconnectIntv
@@ -86,6 +88,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   #
   websocketUninitialize : ->
     try
+      this.websocketCallback = null
       this.websocketChannelUnsubscribe()
       if this.dispatcher.channels
         this.dispatcher.unsubscribe(k) for k,n of this.dispatcher.channels
@@ -99,7 +102,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   websocketChannelSubscribe : ->
     this.websocketChannelUnsubscribe()
     this.subscribed_channel = this.dispatcher.subscribe this.channelName
-    this.subscribed_channel.bind 'new_color', this.dataAddNewColor.bind(this)
+    this.subscribed_channel.bind('new_color', this.websocketCallback) if this.websocketCallback
 
   #
   websocketChannelUnsubscribe : ->
@@ -202,8 +205,8 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.dataPrependColors [color]
     this.canvasDrawColors() if this.canvas.scene
 
-    if typeof this.colors[1] != 'undefined'
-      this.canvas.camera.position.z = this.canvas.camera.position.z + this.colors[0].z - this.colors[1].z
+    # if typeof this.colors[1] != 'undefined'
+    #   this.canvas.camera.position.z = this.canvas.camera.position.z + this.colors[0].z - this.colors[1].z
 
   #
   dataLoadColors : (colors)->
@@ -213,7 +216,6 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
       ).bind(this)
       this.canvasSetOffsets()
       this.dataAssignCoords()
-
       this.canvasDrawColors() if this.canvas.scene
 
   #
@@ -225,50 +227,51 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
   dataPrependColors : (colors) ->
     Array.prototype.unshift.apply(this.colors, colors)
     this.dataAssignCoords()
-    this.canvas.step_index += colors.length
 
 
   # --- Canvas ---
 
   #
   canvasInitialize : (callback)->
-    this.canvasUninitialize() # for clarity
+    unless this.canvasInitialized
 
-    return unless $('canvas.colorcamp-canvas').size() > 0
-    this.canvas.element = $('canvas.colorcamp-canvas').eq(0)
+      return unless $('canvas.colorcamp-canvas').size() > 0
+      this.canvas.element = $('canvas.colorcamp-canvas').eq(0)
 
-    w = this.canvas.element.parent().width()
-    h = this.canvas.element.parent().height()
+      w = this.canvas.element.parent().width()
+      h = this.canvas.element.parent().height()
 
-    this.canvas.scene = new THREE.Scene()
-    # this.canvas.scene.fog = new THREE.Fog 0xffffff, 1, 10000
+      this.canvas.scene = new THREE.Scene()
+      # this.canvas.scene.fog = new THREE.Fog 0xffffff, 1, 10000
 
-    this.canvas.camera = new THREE.PerspectiveCamera 25, w / h, 1, 86400
-    this.canvas.camera.position.set 0, 0, 3600
+      this.canvas.camera = new THREE.PerspectiveCamera 25, w / h, 1, 86400
+      this.canvas.camera.position.set 0, 0, 3600
 
-    this.canvas.renderer = new THREE.WebGLRenderer
-      canvas : this.canvas.element.get(0)
-      preserveDrawingBuffer : true
-      clearColor : 0xFFFFFF
-      clearAlpha : 1
-      alpha : true
-      antialias : true
-    this.canvas.renderer.setPixelRatio window.devicePixelRatio
-    this.canvas.renderer.setSize w, h
-    this.canvas.renderer.physicallyBasedShading = false;
+      this.canvas.renderer = new THREE.WebGLRenderer
+        canvas : this.canvas.element.get(0)
+        preserveDrawingBuffer : true
+        clearColor : 0xFFFFFF
+        clearAlpha : 1
+        alpha : true
+        antialias : true
+      this.canvas.renderer.setPixelRatio window.devicePixelRatio
+      this.canvas.renderer.setSize w, h
+      this.canvas.renderer.physicallyBasedShading = false;
 
-    this.canvas.mouse = new THREE.Vector2()
-    this.canvas.matrixDimensions = [6,10]
-    this.dataResetMatrix()
-    this.dataSetColorBoxSize()
-    this.canvasDrawColors()
+      this.canvas.mouse = new THREE.Vector2()
+      this.canvas.matrixDimensions = [6,10]
+      this.dataResetMatrix()
+      this.dataSetColorBoxSize()
+      this.canvasDrawColors()
 
-    $(document)
-      .on 'mousemove', this.canvasEventMousemove.bind(this)
-      # .on 'keydown', this.canvasEventKeypress.bind(this)
-    $(window).on 'resize', this.canvasResize.bind(this)
+      $(document)
+        .on 'mousemove', this.canvasEventMousemove.bind(this)
+        # .on 'keydown', this.canvasEventKeypress.bind(this)
+      $(window).on 'resize', this.canvasResize.bind(this)
 
-    this.canvasAnimate()
+      this.canvasAnimate()
+      this.canvasInitialized = true
+
     callback.call() if callback
 
   #
@@ -284,6 +287,7 @@ jQuery.extend true, ColorCampSubscriber.prototype, {
     this.canvas.scene = null
     this.colors = []
     this.colorsMatrix = []
+    this.canvasInitialized = false
 
 
   #

@@ -147,7 +147,11 @@ private
     self.page.reload # ensure we get updated record
 
     # Ping all_users websocket with new color
-    WebsocketRails[:all_users].trigger(:new_color, self.to_public_api)
+    WebsocketRails[:all_users].trigger(:new_color, {
+      channel: :everyone,
+      report: ColorReport.everyone.on(:today, date: @colors_date).get.to_api, 
+      color: self.to_public_api
+    })
 
     # Ping user websocket wth new color and update user's daily color report
     if self.user.present?
@@ -155,7 +159,11 @@ private
       ColorWorker.perform_in(30.seconds, :user_report, self.user.id, on: :today, date: Date.today)
 
       # Send through websocket unless user profile is private
-      WebsocketRails["user-#{self.user.uuid}"].trigger(:new_color, self.to_public_api) unless self.user.profile_private
+      WebsocketRails["user-#{self.user.uuid}"].trigger(:new_color, {
+        channel: self.user.login,
+        report: self.user.report(:today, date: Date.today), 
+        color: self.to_public_api
+      }) unless self.user.profile_private
     end
 
     # If this color is only color, then average will be same as self

@@ -394,7 +394,7 @@
             # Listen for new colors via websocket if only if today
             today = (new Date()).toJSON().replace(/^(\d{4}\-\d{2}\-\d{2})(.*)$/, '$1')
             if today == d.date
-              document.colorCamp.websocketInitialize()
+              document.colorCamp.websocketInitialize this.websocketUpdate
             else
               document.colorCamp.websocketUninitialize()
 
@@ -403,6 +403,11 @@
         #
       ).bind(this)
     })
+
+  websocketUpdate : (data)->
+    if data
+      document.colorCamp.dataAddNewColor(data.color) if data.color
+      this.setState { report: data.report } if data && data.report
 
   onScreenshot : (e)->
     e.preventDefault()
