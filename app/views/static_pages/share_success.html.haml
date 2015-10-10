@@ -1,0 +1,10 @@
+- @page_meta_robots = 'noindex,follow'
+
+:coffee
+  try
+    window.close()
+    setTimeout -> 
+      window.location.href = '#{root_url}'
+    , 3000
+  catch e
+    alert 'b'

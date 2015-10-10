@@ -1,3 +1,9 @@
+@include keyframes(fadeIn) {
+  from  {opacity: 0;}
+  to    {opacity: 1;}
+}
+
+
 html, html * {font-weight: 500;
   -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; font-smoothing: antialiased;
@@ -81,10 +87,19 @@ body ::selection {background: rgba($color-mid-black,.24);}
       left: -42px;
       top: 0;
       color: $color-black;
-      &:hover {}
       svg {
         width: 24px;
         height: 24px;
+        path, circle {
+          fill: $color-black;
+        }
+      }
+      &:hover {
+        svg {
+          path, circle {
+            fill: rgba($color-black, .82);
+          }
+        }
       }
     }
 
@@ -213,15 +228,67 @@ body ::selection {background: rgba($color-mid-black,.24);}
     bottom: 24px;
     left: 0;
     right: 0;
+    width: auto;
+    margin: 0 auto;
     text-align: center;
     color: $color-black;
     font-size: 1.4rem;
     line-height: 1.0em;
 
     a {
-      color: $color-black;
+      color: rgba($color-black, .24);
+      svg {
+        width: 20px;
+        height: 20px;
+        path, circle {
+          fill: rgba($color-black, .24);
+        }
+      }
       &:hover {
-        color: rgba($color-black, .82);
+        color: rgba($color-black, .48);
+        svg {
+          path, circle {
+            fill: rgba($color-black, .48);
+          }
+        }
+      }
+    }
+
+    .channel-option-actions {
+      position: relative;
+
+      .share-tip {
+        font-size: 1.4rem;
+        height: 20px;
+        @include animation( fadeIn .2s ease-out 0s 1 );
+
+        .isHover { display: none; }
+        .isNotHover { display: inline-block; }
+      }
+
+      .share-open {
+        display: none;
+        position: absolute;
+        bottom: 100%;
+        width: auto;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+      }
+
+      &:hover {
+        .share-tip {
+          .isHover { display: inline-block; }
+          .isNotHover { display: none; }
+        }
+
+        .share-open {
+          display: block;
+          .social-icon   {
+            display: inline-block;
+            padding: 2px 8px;
+          }
+        }
       }
     }
   }

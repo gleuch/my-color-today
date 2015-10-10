@@ -1,2 +1,7 @@
+- @canonical_url = user_profile_url(@user)
+- @page_title = t('user.profile.title', name: @user.name)
+- @page_share_title = t('user.profile.title', name: @user.name)
+- @page_share_description = t('user.profile.description', name: @user.name.possessive)
+
 :coffee
   @ColorInitialProps.channel = #{ {viewType: :user, url: user_profile_url(@user), channel: @user.uuid}.to_json }

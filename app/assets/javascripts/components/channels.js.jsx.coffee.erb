@@ -96,6 +96,19 @@
 
 
 @ColorChannelPagination = React.createClass
+  getInitialState : ->
+    visible : false
+    screenshotSvg : null
+    twitterSvg : null
+    facebookSvg : null
+    tipText : null
+    dialog : null
+
+  componentDidMount : ->
+    window.ColorCampSvgs.add('screenshotSvg', "<%= asset_url 'screenshot.svg' %>", this) unless this.state.screenshotSvg
+    window.ColorCampSvgs.add('twitterSvg', "<%= asset_url 'twitter.svg' %>", this) unless this.state.twitterSvg
+    window.ColorCampSvgs.add('facebookSvg', "<%= asset_url 'facebook.svg' %>", this) unless this.state.facebookSvg
+
   render : ->
     # nextLink = if this.props.nextUrl
     #   `<a className="paginate older" href={this.props.nextUrl} onClick={this.nextPage}>Older</a>`
@@ -107,18 +120,85 @@
     # else
     #   `<span className="paginate newer">Newer</span>`
 
+    screenshotSvg = if this.state.screenshotSvg then `<span dangerouslySetInnerHTML={{__html : this.state.screenshotSvg }} />` else ''
+    twitterSvg = if this.state.twitterSvg then `<span className="social-icon social-twitter" dangerouslySetInnerHTML={{__html : this.state.twitterSvg }} />` else ''
+    facebookSvg = if this.state.facebookSvg then `<span className="social-icon social-facebook" dangerouslySetInnerHTML={{__html : this.state.facebookSvg }} />` else ''
+
     nextLink = ''
     prevLink = ''
-    options = `<a href="javascript:;" onClick={this.props.screenshot}>png</a>`
+    
+    shareOrTip = `<p className="share-tip">
+      <span className="isNotHover">&hellip;</span>
+      <span className="isHover">&hellip;</span>
+    </p>`
+    shareOrTip = `<p className="share-tip">{this.state.tipText}</p>` if this.state.tipText
 
-    `<aside className="channel-options">
-      {nextLink}
-      {options}
-      {prevLink}
-    </aside>`
+    niceDate = moment(this.props.date).format('DD MMM YYYY');
+    if this.props.viewType == 'user'
+      twitterText = 'A visual display of the browsing history of @' + this.props.channelInfo.login + ' on ' + niceDate + '.'
+    else if this.props.viewType == 'everyone'
+      twitterText = 'A visual browsing history of @myinternetcolor users on ' + niceDate + '.'
+    else if this.props.viewType == 'site'
+      twitterText = 'A visual display of the browsing history of ' + this.props.channelInfo.name + ' on ' + niceDate + '.'
+    else
+      twitterText = ''
+
+    options = `
+      <div className="channel-option-actions">
+        {shareOrTip}
+        <div className="share-open">
+          <p>
+            <a href="https://twitter.com/myinternetcolor" target="_blank" data-text={twitterText} data-tip="share on twitter" onMouseOver={this.showTip} onMouseOut={this.hideTip} onClick={this.twitterShare}>{twitterSvg}</a>
+            <a href="https://facebook.com/myinternetcolor" target="_blank" data-tip="share on facebook" onMouseOver={this.showTip} onMouseOut={this.hideTip} onClick={this.facebookShare}>{facebookSvg}</a>
+          </p>
+          <p>
+            <a href="javascript:;" data-tip="download a screenshot" onMouseOver={this.showTip} onMouseOut={this.hideTip} onClick={this.props.screenshot}>{screenshotSvg}</a>
+          </p>
+        </div>
+      </div>
+    `
+
+    `<span>
+      <aside className="channel-options">
+        {nextLink}
+        {options}
+        {prevLink}
+      </aside>
+    </span>`
 
 
   # --- HELPER METHODS ---
+
+  twitterShare : (e)->
+    e.preventDefault()
+    el = e.currentTarget
+    text = if el then el.getAttribute 'data-text' else ''
+    this.shareDialog 'https://twitter.com/share?url={url}&text=' + text + '&related=myinternetcolor,gleuch,internetcolor'
+
+  facebookShare : (e)->
+    e.preventDefault()
+    absoluteUrl = window.location.protocol + '//' + window.location.host
+    this.shareDialog 'https://www.facebook.com/dialog/share?app_id=<%= Setting.facebook_app_id %>&display=iframe&href={url}&redirect_uri=' + absoluteUrl + '/share/facebook/success'
+
+  shareDialog : (dialogUrl)->
+    if this.props.canonicalUrl
+      url = this.props.canonicalUrl
+      url = window.location.protocol + '//' + window.location.host + this.props.canonicalUrl unless url.match(/^http/)
+    else
+      url = window.location.href
+  
+    dialogUrl = dialogUrl.replace(/\{url\}/g, url)
+    w = window.open dialogUrl, 'mycolorshare', 'width=550,height=400,left=' + ((window.screen.width - 550) / 2) + ',top=' + ((window.screen.height - 400) / 2) + ',menubar=no,location=no,resizable=no,scrollbars=no,status=no'
+    w.focus()
+
+  showTip : (e)->
+    el = e.currentTarget
+    if el
+      tip = el.getAttribute('data-tip')
+      this.setState { tipText : tip }
+    
+  hideTip : (e)->
+    this.setState { tipText : null }
 
   prevPage : (e)->
     e.preventDefault()
@@ -148,7 +228,7 @@
       url : location.href
 
   render : ->
-    `<ColorChannel {...this.state} dataRequestUrl={'/s/' + this.state.channel.channel} />`
+    `<ColorChannel {...this.state} canonicalUrl={'/s/' + this.state.channel.channel} />`
 
 
 @ColorUserChannel = React.createClass
@@ -166,7 +246,7 @@
     }
 
   render : ->
-    `<ColorChannel {...this.state} dataRequestUrl={'/u/' + this.state.channel.channel} />`
+    `<ColorChannel {...this.state} canonicalUrl={'/u/' + this.state.channel.channel} />`
 
 
 @ColorEveryoneChannel = React.createClass
@@ -178,7 +258,7 @@
       url : location.href
 
   render : ->
-    `<ColorChannel {...this.state} dataRequestUrl="/everyone" />`
+    `<ColorChannel {...this.state} canonicalUrl="/everyone" />`
 
 
 @ColorHomepageChannel = React.createClass
@@ -231,7 +311,7 @@
     content = ''
     canvas = `<ColorCanvas />`
     details = `<ColorChannelDetail {...this.state} />`
-    options = `<ColorChannelPagination screenshot={this.onScreenshot} prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
+    options = `<ColorChannelPagination {...this.state} screenshot={this.onScreenshot} canonicalUrl={this.props.canonicalUrl} prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
 
     if this.state.viewType == 'user'
       content = `<ColorChannelUserContent {...this.state} user={this.state.channelInfo} />`
@@ -276,9 +356,8 @@
     }
 
     jsonUrl = url || this.state.url
-    if this.props.dataRequestUrl
-      jsonUrl = this.props.dataRequestUrl
-
+    jsonUrl = this.props.canonicalUrl if this.props.canonicalUrl
+    jsonUrl = window.location.protocol + '//' + window.location.host + this.props.canonicalUrl unless jsonUrl.match(/^http/)
     $.ajax( jsonUrl + '.json', {
       dataType : 'json'
       method : 'GET'

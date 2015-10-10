@@ -56,7 +56,7 @@ gem 'rails-timeago',                  '2.12.0'
 
 
 # --- MONITORING / PERFORMANCE ---
-gem 'rails-settings-cached',          '0.4.6'
+gem 'rails-settings-cached',          '0.4.4'
 # gem 'airbrake',                       '4.2.0'
 # gem 'newrelic_rpm',                   '3.9.5.251'
 gem 'whenever',                       '0.9.4',        require: false

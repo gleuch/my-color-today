@@ -2,7 +2,33 @@ en:
   name:   'What Color Is Your Internet?'
   title:  'What Color Is Your Internet?'
 
+  twitter_name: 'myinternetcolor'
+  instagram_name: 'mycolortoday'
+
+  me:
+    name: 'What Color Is Your Internet?'
+
+  meta:
+    name: 'What Color Is Your Internet?'
+    generator:  'What Color Is Your Internet?'
+    author: 'Greg Leuch'
+    copyright: '(C) 2015 Greg Leuch, unless otherwise marked.'
+    description: 'A visual exploration of your browser history.'
+    keywords: ''
+
 
   static_pages:
     home:
       description:    'Visualize your Internet browsing history.'
+
+  user:
+    profile:
+      title:        '%{name} on What Color Is Your Internet?'
+      description:  'A visual exploration of %{name} browsing history.'
+
+  everyone:
+    title:        'Everyone on What Color Is Your Internet?'
+    description:  "A visual exploration of everyone's browsing history."
+
+  and: 'and'
+  or:  'or'

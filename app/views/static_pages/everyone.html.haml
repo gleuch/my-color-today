@@ -1,2 +1,7 @@
+- @canonical_url = static_page_url(:everyone)
+- @page_title = t('everyone.title')
+- @page_share_title = t('everyone.title')
+- @page_share_description = t('everyone.description')
+
 :coffee
   @ColorInitialProps.channel = #{ {viewType: :everyone, url: root_url, channel: 'all_users'}.to_json }

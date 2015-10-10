@@ -31,6 +31,9 @@ Rails.application.routes.draw do
     get '/:date', action: :show, as: :dated, on: :member
   end
 
+  # Share success
+  match '/share/:id/success' => 'static_pages#show', via: [:get], page: 'share_success', as: :share_success
+
   # Static pages routing, use StaticPage to check if exists as constraint
   match '/home/:date' => 'static_pages#show', via: [:get], page: 'home', as: :dated_everyone
   match '/*page' => 'static_pages#show', as: :static_page, constraints: StaticPage.new, via: [:get]
@@ -51,7 +54,7 @@ ColorCamp::Application.routes.named_routes.url_helpers_module.module_eval do
     github_url:             'https://github.com/gleuch',
     instagram_url:          'http://instagram.com/gleuch',
     linkedin_url:           'http://www.linkedin.com/in/gleuch',
-    google_plus_url:        'https://plus.google.com/100780866870324876908',
+    # google_plus_url:        'https://plus.google.com/100780866870324876908',
     email_url:              'mailto:contact@gleu.ch',
 
   }.each do |name,url|
