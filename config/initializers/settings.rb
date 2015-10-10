@@ -1,7 +1,7 @@
 begin
 
   # Settings is not expiring cache correctly. o_o
-  Settings.destroy_all
+  Setting.destroy_all
 
   # Explicity define
   Setting.admin_facebook_ids = [

@@ -12,7 +12,7 @@ class ColorReport < ActiveRecord::Base
   enum date_range: {
     # overall:    0,
     daily:      1,  # last 24 hours
-    # today:      2,  # since midnight
+    today:      2,  # since midnight
     # yesterday:  3,  # yesterday (00:00-23:59)
     # range:      4,  # time range
     # date:       5,
