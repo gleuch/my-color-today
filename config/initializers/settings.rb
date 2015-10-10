@@ -1,8 +1,5 @@
 begin
 
-  # Settings is not expiring cache correctly. o_o
-  Setting.destroy_all
-
   # Explicity define
   Setting.admin_facebook_ids = [
     7002294,    # greg leuch

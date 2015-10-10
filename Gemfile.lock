@@ -6,6 +6,13 @@ GIT
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
 
+GIT
+  remote: git://github.com/huacnlee/rails-settings-cached.git
+  revision: 4d05e6b586f1ea12a20ff956b4ce474ae83a4b8b
+  specs:
+    rails-settings-cached (0.4.6)
+      rails (>= 4.2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -290,8 +297,6 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
-    rails-settings-cached (0.4.4)
-      rails (>= 4.2.0)
     rails-timeago (2.12.0)
       actionpack (>= 3.1)
       activesupport (>= 3.1)
@@ -502,7 +507,7 @@ DEPENDENCIES
   paperclip-compression (= 0.3.11)
   quiet_assets (= 1.1.0)
   rails (= 4.2.4)
-  rails-settings-cached (= 0.4.4)
+  rails-settings-cached!
   rails-timeago (= 2.12.0)
   react-rails (= 1.3.1)
   react-router-rails (= 0.13.3.1)
