@@ -178,7 +178,7 @@
   facebookShare : (e)->
     e.preventDefault()
     absoluteUrl = window.location.protocol + '//' + window.location.host
-    this.shareDialog 'https://www.facebook.com/dialog/share?app_id=<%= "#{Setting.facebook_app_id}" %>&display=iframe&href={url}&redirect_uri=' + absoluteUrl + '/share/facebook/success'
+    this.shareDialog 'https://www.facebook.com/dialog/share?app_id=<%= "#{Rails.configuration.facebook_app_id}" %>&display=iframe&href={url}&redirect_uri=' + absoluteUrl + '/share/facebook/success'
 
   shareDialog : (dialogUrl)->
     if this.props.canonicalUrl
