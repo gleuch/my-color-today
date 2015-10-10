@@ -72,7 +72,7 @@ class WebSitePage < ActiveRecord::Base
   end
 
   def daily_color_avg
-    reports.on(:daily).get
+    reports.on(:today).get
   end
 
 

@@ -22,7 +22,7 @@ class ColorWorker
     return if user.blank?
 
     opts = args.extract_options!
-    opts[:on] ||= :daily
+    opts[:on] ||= :today
     info = user.report(opts[:on], date: opts[:date], recalculate: true)
   end
 
@@ -40,7 +40,7 @@ class ColorWorker
   # Set the average color for all users
   def everyone_report(*args)
     opts = args.extract_options!
-    ColorReport.everyone.on(:daily, date: opts[:date]).get.recalculate!
+    ColorReport.everyone.on(:today, date: opts[:date]).get.recalculate!
   end
 
 

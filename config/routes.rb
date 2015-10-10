@@ -47,15 +47,10 @@ ColorCamp::Application.routes.named_routes.url_helpers_module.module_eval do
 
   {
     # Social Media URLs
-    facebook_url:           'https://facebook.com/gleuchweb',
-    facebook_profile_url:   'https://facebook.com/gleuch',
-    twitter_url:            'https://twitter.com/gleuch',
-    twitter_favorites_url:  'https://twitter.com/gleuch/favorites',
-    github_url:             'https://github.com/gleuch',
-    instagram_url:          'http://instagram.com/gleuch',
-    linkedin_url:           'http://www.linkedin.com/in/gleuch',
-    # google_plus_url:        'https://plus.google.com/100780866870324876908',
-    email_url:              'mailto:contact@gleu.ch',
+    facebook_url:           'https://facebook.com/myinternetcolor',
+    twitter_url:            'https://twitter.com/myinternetcolor',
+    instagram_url:          'http://instagram.com/mycolortoday',
+    email_url:              'mailto:hello@mycolor.today',
 
   }.each do |name,url|
     define_method(name){ url }

@@ -129,7 +129,7 @@ private
           date:         @colors_date.to_s,
           dateUrl:      @request_url,
           colorData:    data,
-          report:       ColorReport.everyone.on(:daily, date: @colors_date).get.to_api,
+          report:       ColorReport.everyone.on(:today, date: @colors_date).get.to_api,
           viewType:     :everyone
         }, callback: params[:callback]
       }
@@ -154,7 +154,7 @@ private
           date:           @colors_date.to_s,
           dateUrl:        @request_url,
           colorData:      @colors.map(&:to_public_api),
-          report:         @user.report(:daily, date: @colors_date),
+          report:         @user.report(:today, date: @colors_date),
           viewType:       :user
         }, callback: params[:callback]
       }
