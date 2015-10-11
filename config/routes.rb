@@ -47,7 +47,7 @@ ColorCamp::Application.routes.named_routes.url_helpers_module.module_eval do
 
   {
     # Social Media URLs
-    facebook_url:           'https://facebook.com/myinternetcolor',
+    facebook_url:           'https://facebook.com/mycolortoday',
     twitter_url:            'https://twitter.com/mycolortoday',
     instagram_url:          'http://instagram.com/mycolortoday',
     email_url:              'hello@mycolor.today',

@@ -151,8 +151,8 @@
         {shareOrTip}
         <div className="share-open">
           <p>
-            <a href="https://twitter.com/myinternetcolor" target="_blank" data-text={twitterText} data-tip="share on twitter" onMouseOver={this.showTip} onMouseOut={this.hideTip} onClick={this.twitterShare}>{twitterSvg}</a>
-            <a href="https://facebook.com/myinternetcolor" target="_blank" data-tip="share on facebook" onMouseOver={this.showTip} onMouseOut={this.hideTip} onClick={this.facebookShare}>{facebookSvg}</a>
+            <a href={ColorInitialProps.links.social.twitter} target="_blank" data-text={twitterText} data-tip="share on twitter" onMouseOver={this.showTip} onMouseOut={this.hideTip} onClick={this.twitterShare}>{twitterSvg}</a>
+            <a href={ColorInitialProps.links.social.facebook} target="_blank" data-tip="share on facebook" onMouseOver={this.showTip} onMouseOut={this.hideTip} onClick={this.facebookShare}>{facebookSvg}</a>
           </p>
           <p>
             <a href="javascript:;" data-tip="download a screenshot" onMouseOver={this.showTip} onMouseOut={this.hideTip} onClick={this.makeScreenshot}>{screenshotSvg}</a>
