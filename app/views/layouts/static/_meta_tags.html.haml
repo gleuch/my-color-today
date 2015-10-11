@@ -10,7 +10,7 @@
   - elsif @author.present? && @author.avatar_file_name.present?
     - images << @author.avatar.url(:large)
 - else
-  - images << image_url('share/logo.png')
+  - images << image_url('share/share.png')
 
 
 - # Basic SEO
@@ -27,7 +27,7 @@
 %link{rel: :Start, href: root_url}
 
 %meta{name: :copyright, content: t('meta.copyright', year: Date.today.year)}
-%meta{name: :author, content: t('meta.author', url: root_url)}
+- # %meta{name: :author, content: t('meta.author', url: root_url)}
 %meta{name: :owner, content: t('me.name')}
 %meta{name: :robots, content: page_meta_robots}
 %meta{name: :googlebot, content: page_meta_robots}

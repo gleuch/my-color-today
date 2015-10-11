@@ -27,8 +27,8 @@ en:
       title:          '%{name} on MyColor.Today'
       description:    'A visual exploration of %{name} browsing history.'
       share:
-        title:        '%{name} browsing history visualized on MyColor.Today'
-        description:  'A visual exploration of %{name} browsing history.'
+        title:        '%{name} browsing history visualized'
+        description:  'A visual exploration of %{name} browsing history on MyColor.Today.'
     new:
       title:      'Signup/Login for MyColor.Today'
     edit:
@@ -38,8 +38,8 @@ en:
     title:        'Everyone on MyColor.Today'
     description:  "A visual exploration of everyone's browsing history."
     share:
-      title:       'Visualize your internet browsing history on MyColor.Today'
-      description: "A visual exploration of everyone's browsing history."
+      title:       'Visualize your internet browsing history'
+      description: "A visual exploration of the browsing history of all users of MyColor.Today."
 
   about:
     title:        'About MyColor.Today'
