@@ -26,7 +26,7 @@
   %body
     = yield
 
-    = react_router 'ColorRoutes', 'HistoryLocation'
+    = react_router 'ColorRoutes', 'HistoryLocation' unless @disable_react
 
     %script{type: 'text/javascript'}
       = extension_send_message.html_safe

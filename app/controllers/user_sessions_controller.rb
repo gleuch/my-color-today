@@ -11,7 +11,11 @@ class UserSessionsController < ApplicationController
   def destroy
     @user_session = UserSession.find
     @user_session.destroy
-    redirect_to root_url
+    respond_to do |format|
+      format.html {
+        render :destroy
+      }
+    end
   end
 
 

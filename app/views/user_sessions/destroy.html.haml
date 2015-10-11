@@ -3,9 +3,8 @@
 
 :coffee
   try
-    window.close()
     setTimeout -> 
       window.location.href = '#{root_url}'
-    , 500
+    , 100
   catch e
     #
