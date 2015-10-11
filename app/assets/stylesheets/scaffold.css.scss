@@ -8,11 +8,13 @@ html, html * {font-weight: 500;
   -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; font-smoothing: antialiased;
 }
+html {font-size: 62.5%;}
+html, body {padding: 0; margin: 0;}
 body, h1, h2, h3, h4, h5, h6, td, dt, dd, li, p {font-family: $webfont-sans;}
 h1, h2, h3, h4, h5, h6, strong, b, th, dt {font-weight: 600; color: $color-mid-black; padding: 0; margin: 0;}
 a, span {font-weight: inherit;}
 p, div, li, td, dd {color: $color-text-grey;}
-a {color: darken($color-logo, 5%); @include transition(color .2s ease-out);
+a {color: darken($color-logo, 5%); text-decoration: none; @include transition(color .2s ease-out);
   &:focus, &:hover {color: $color-mid-black; text-decoration: none;}
 }
 
@@ -444,6 +446,15 @@ body ::selection {background: rgba($color-mid-black,.24);}
 /* Mobile dimensions */
 @media (max-width: 768px) {
   #header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 25;
+    min-height: 16px;
+    padding: 15px 15px 20px 15px;
+    @include linear-gradient(top, rgba(255,255,255,.92) 0%, rgba(255,255,255,.92) 80%, rgba(255,255,255,0) 100%, $fallback: transparent);
+
     h1 {
       top: 15px;
       bottom: auto;
@@ -451,6 +462,7 @@ body ::selection {background: rgba($color-mid-black,.24);}
       right: 15px;
       text-align: left;
       font-size: 1.6rem;
+      z-index: 26;
     }
 
     #header-links {
@@ -459,7 +471,7 @@ body ::selection {background: rgba($color-mid-black,.24);}
       left: 100%;
       right: auto;
       width: 100%;
-      z-index: 20;
+      z-index: 27;
       padding: 10px 15px;
       background: rgba($color-white, 0);
       @include transition(left .2s ease-in-out, background-color .2s ease-out);
@@ -552,13 +564,12 @@ body ::selection {background: rgba($color-mid-black,.24);}
 
 
   .static-page {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    padding: 64px 15px 32px 15px;
-    overflow: scroll;
+    position: relative;
+    top: auto;
+    left: auto;
+    bottom: auto;
+    right: auto;
+    padding: 64px 15px 64px 15px;
 
     .static-page-content {
       width: 60%;

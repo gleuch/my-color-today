@@ -75,6 +75,7 @@ ul.buttons {
       box-shadow: none;
       color: $color-white;
       background-color: rgba($color-black, .28);
+      text-decoration: none;
       @include transition(opacity .2s ease-out);
 
       &:focus, &:hover {

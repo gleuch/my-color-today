@@ -18,11 +18,11 @@
       @ColorInitialProps.current_user = #{ (current_user ? current_user.to_api(:current_user) : nil).to_json }
       @ColorInitialProps.signin_providers = #{ signin_providers.to_json }
 
-    %script{src: '//use.typekit.net/hba1asi.js'}
-    %script try{Typekit.load();}catch(e){}
+    %script{src: 'https://use.typekit.net/hba1asi.js'}
+    %script try{Typekit.load({ async: true });}catch(e){}
 
 
-  %body{class: @body_classes}
+  %body
     = yield
 
     = react_router 'ColorRoutes', 'HistoryLocation'
