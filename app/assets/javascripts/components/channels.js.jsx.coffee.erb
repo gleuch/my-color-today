@@ -318,12 +318,14 @@
       return `<span></span>`
 
     content = ''
+    title = 'What Color Is Your Internet?'
     canvas = `<ColorCanvas />`
     details = `<ColorChannelDetail {...this.state} />`
     options = `<ColorChannelPagination {...this.state} screenshot={this.onScreenshot} canonicalUrl={this.props.canonicalUrl} prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`
 
     if this.state.viewType == 'user'
       content = `<ColorChannelUserContent {...this.state} user={this.state.channelInfo} />`
+      title = this.state.channelInfo.name + ' on ' + title
       if this.state.channelInfo.profile_private
         content = `<ColorChannelUserContent user={this.state.channelInfo} />`
         details = ''
@@ -333,16 +335,20 @@
           </div>
         </section>`
     else if this.state.viewType == 'site'
+      title = this.state.channelInfo.name + ' on ' + title
       content = `<ColorChannelSiteContent {...this.state} site={this.state.channelInfo} />`
     else if this.state.viewType == 'everyone'
+      title = 'Everyone on ' + title
       content = `<ColorChannelEveryoneContent {...this.state} />`
 
-    `<article className="channel">
-      {details}
-      {content}
-      {options}
-      {canvas}
-    </article>`
+    `<DocumentTitle title={title}>
+      <article className="channel">
+        {details}
+        {content}
+        {options}
+        {canvas}
+      </article>
+    </DocumentTitle>`
 
 
   # --- HELPER METHODS ---

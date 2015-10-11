@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: git://github.com/huacnlee/rails-settings-cached.git
-  revision: 4d05e6b586f1ea12a20ff956b4ce474ae83a4b8b
+  revision: 0faecfcf4d6aa550bbcb4b1dcafc0d157eb237b9
   specs:
     rails-settings-cached (0.4.6)
       rails (>= 4.2.0)
@@ -61,9 +61,6 @@ GEM
       activesupport (>= 3.2)
       request_store (~> 1.0)
       scrypt (>= 1.2, < 3.0)
-    autoprefixer-rails (6.0.3)
-      execjs
-      json
     aws-sdk (2.1.28)
       aws-sdk-resources (= 2.1.28)
     aws-sdk-core (2.1.28)
@@ -75,9 +72,6 @@ GEM
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
     bcrypt (3.1.10)
-    bootstrap-sass (3.3.5.1)
-      autoprefixer-rails (>= 5.0.0.1)
-      sass (>= 3.3.0)
     bourbon (4.2.5)
       sass (~> 3.4)
       thor (~> 0.19)
@@ -478,7 +472,6 @@ DEPENDENCIES
   authlogic (= 3.4.6)
   aws-sdk (= 2.1.28)
   bcrypt (= 3.1.10)
-  bootstrap-sass (= 3.3.5.1)
   bourbon (= 4.2.5)
   browser (= 1.0.1)
   bullet (= 4.14.4)

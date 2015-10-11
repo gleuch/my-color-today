@@ -23,6 +23,8 @@
     #
 
   render : ->
+    title = "Signup/Login"
+
     if this.props.current_user
       content = `<div>
         <p>You are currently logged in as {this.props.current_user.name}. <ColorLink to={'/u/' + this.props.current_user.login}>Click here to view your profile</ColorLink></p>
@@ -49,4 +51,6 @@
         </section>
       </span>`
 
-    `<ColorStaticPageDisplay content={content} pageName="signup-login" />`
+    `<DocumentTitle title={title}>
+      <ColorStaticPageDisplay content={content} pageName="signup-login" />
+    </DocumentTitle>`

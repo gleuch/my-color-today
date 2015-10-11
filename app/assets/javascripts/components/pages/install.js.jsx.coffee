@@ -12,4 +12,8 @@
       </section>
     </span>`
 
-    `<ColorStaticPageDisplay content={content} pageName="about" />`
+    title = 'Install'
+
+    `<DocumentTitle title={title}>
+      <ColorStaticPageDisplay content={content} pageName="install" />
+    </DocumentTitle>`

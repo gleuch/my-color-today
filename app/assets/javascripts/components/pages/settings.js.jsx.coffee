@@ -26,6 +26,7 @@
       savingText = `<span>Updating...</span>`
       disabled = true
 
+    title = "Settings"
     content = `<section>
       <h1>your settings</h1>
       <p>sdfsfs</p>
@@ -58,7 +59,9 @@
       </form>
     </section>`
 
-    `<ColorStaticPageDisplay content={content} pageName="user-settings" />`
+    `<DocumentTitle title={title}>
+      <ColorStaticPageDisplay content={content} pageName="user-settings" />
+    </DocumentTitle>`
 
   # --- HELPER METHODS ---
 

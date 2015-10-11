@@ -1,4 +1,7 @@
 @ColorNotFoundPage = React.createClass
   render : ->
     html = 'Page not found. Sorry :('
-    `<ColorStaticPageDisplay content={html} pageName="not-found" />`
+    title = "Page Not Found"
+    `<DocumentTitle title={title}>
+      <ColorStaticPageDisplay content={html} pageName="not-found" />
+    </DocumentTitle>`

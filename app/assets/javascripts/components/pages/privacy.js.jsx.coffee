@@ -25,4 +25,8 @@
       </section>
     </span>`
 
-    `<ColorStaticPageDisplay content={content} pageName="signup-login" />`
+    title = "Privacy & Terms"
+
+    `<DocumentTitle title={title}>
+      <ColorStaticPageDisplay content={content} pageName="signup-login" />
+    </DocumentTitle>`

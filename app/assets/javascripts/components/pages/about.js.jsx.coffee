@@ -20,4 +20,8 @@
       </section>
     </span>`
 
-    `<ColorStaticPageDisplay content={content} rightGutter={rightGutter} pageName="about" />`
+    title = "About"
+
+    `<DocumentTitle title={title}>
+      <ColorStaticPageDisplay content={content} rightGutter={rightGutter} pageName="about" />
+    </DocumentTitle>`

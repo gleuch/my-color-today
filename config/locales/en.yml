@@ -39,5 +39,8 @@ en:
   login:
     title:        'Signup/Login for What Color is Your Internet?'
 
+  privacy:
+    title:        'Privacy & Terms for What Color is Your Internet?'
+
   and: 'and'
   or:  'or'
