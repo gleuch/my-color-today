@@ -1,5 +1,7 @@
 @ColorInstallPage = React.createClass
   render : ->
+    title = 'Install ' + ColorInitialProps.default_title
+
     content = `<span>
       <section>
         <h1>install</h1>
@@ -11,8 +13,6 @@
         </ul>
       </section>
     </span>`
-
-    title = 'Install'
 
     `<DocumentTitle title={title}>
       <ColorStaticPageDisplay content={content} pageName="install" />

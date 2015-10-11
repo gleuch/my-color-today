@@ -20,13 +20,14 @@
     unless this.state.current_user
       return `<span></span>`
 
+    title = 'Settings for ' + ColorInitialProps.default_title
+
     disabled = !this.valid()
     savingText = ''
     if this.state.saving
       savingText = `<span>Updating...</span>`
       disabled = true
 
-    title = "Settings"
     content = `<section>
       <h1>your settings</h1>
       <p>sdfsfs</p>

@@ -30,8 +30,21 @@
     name = this.context.router.getCurrentPath()
     key = name.replace(/^\//, '').replace(/\//, '-') || 'root'
 
+    getTheBook = ''
+    getTheBook = `
+      <aside className="get-the-book">
+        <div>
+          <p>
+            Buy the book now!
+            <br/>
+            <a href={ColorInitialProps.links.books.lulu} target="_blank" className="book-link lulu">Lulu</a> or <a href={ColorInitialProps.links.books.amazon} target="_blank" className="book-link amazon">Amazon</a>
+          </p>
+        </div>
+      </aside>` unless this.props.current_user || key.match(/^about|signup|login$/)
+
     `<div className="container">
       <ColorHeader {...this.state} />
+      {getTheBook}
       <div id="wrapper">
         <div id="container">
           <div id="content" className="container-fluid">

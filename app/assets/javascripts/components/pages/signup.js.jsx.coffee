@@ -23,7 +23,7 @@
     #
 
   render : ->
-    title = "Signup/Login"
+    title = 'Signup/Login for ' + ColorInitialProps.default_title
 
     if this.props.current_user
       content = `<div>

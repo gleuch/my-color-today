@@ -48,9 +48,12 @@ ColorCamp::Application.routes.named_routes.url_helpers_module.module_eval do
   {
     # Social Media URLs
     facebook_url:           'https://facebook.com/myinternetcolor',
-    twitter_url:            'https://twitter.com/myinternetcolor',
+    twitter_url:            'https://twitter.com/mycolortoday',
     instagram_url:          'http://instagram.com/mycolortoday',
-    email_url:              'mailto:hello@mycolor.today',
+    email_url:              'hello@mycolor.today',
+    amazon_book_url:        'https://amazon.com',
+    lulu_book_url:          'https://lulu.com',
+    link_book_url:          'http://www.linkartcenter.eu/'
 
   }.each do |name,url|
     define_method(name){ url }

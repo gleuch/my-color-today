@@ -87,9 +87,9 @@
 - # --- Twitter ---
 %meta{name: 'twitter:site', content: t(:twitter_name)}
 %meta{name: 'twitter:creator', content: t(:twitter_name)}
-- unless page_share_title.blank?
-  %meta{name: 'twitter:card', content: 'summary_large_image'}
-  %meta{name: 'twitter:title', content: page_share_title}
+%meta{name: 'twitter:card', content: twitter_share_card_type}
+%meta{name: 'twitter:title', content: page_share_title}
+%meta{name: 'twitter:description', content: page_share_description}
 - images.first(1).each do |img|
   %meta{name: 'twitter:image:src', content: img}
 

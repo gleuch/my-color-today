@@ -3,7 +3,7 @@ en:
     'MyColor.Today'
   title:  *name
 
-  twitter_name: 'myinternetcolor'
+  twitter_name: 'MyColorToday'
   instagram_name: 'mycolortoday'
 
   me:
@@ -15,21 +15,31 @@ en:
     author: 'Greg Leuch'
     copyright: '(C) 2015 Greg Leuch, unless otherwise marked.'
     description: 'A visual exploration of your browser history.'
-    keywords: ''
+    keywords: 'internet, color, data visualization, greg leuch, art, browser extensions, dataviz, browsing history'
 
 
   static_pages:
     home:
       description:    'Visualize your Internet browsing history.'
 
-  user:
-    profile:
-      title:        '%{name} on MyColor.Today'
-      description:  'A visual exploration of %{name} browsing history.'
+  users:
+    show:
+      title:          '%{name} on MyColor.Today'
+      description:    'A visual exploration of %{name} browsing history.'
+      share:
+        title:        '%{name} browsing history visualized on MyColor.Today'
+        description:  'A visual exploration of %{name} browsing history.'
+    new:
+      title:      'Signup/Login for MyColor.Today'
+    edit:
+      title:      'Settings for MyColor.Today'
 
   everyone:
     title:        'Everyone on MyColor.Today'
     description:  "A visual exploration of everyone's browsing history."
+    share:
+      title:       'Visualize your internet browsing history on MyColor.Today'
+      description: "A visual exploration of everyone's browsing history."
 
   about:
     title:        'About MyColor.Today'

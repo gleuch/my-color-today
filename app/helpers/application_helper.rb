@@ -32,6 +32,10 @@ module ApplicationHelper
     @page_share_description
   end
 
+  def twitter_share_card_type
+    @twitter_share_card_type || 'summary'
+  end
+
   def page_category
     ''
   end
