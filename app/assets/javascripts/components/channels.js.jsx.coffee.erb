@@ -318,7 +318,7 @@
       return `<span></span>`
 
     content = ''
-    title = 'What Color Is Your Internet?'
+    title = ColorInitialProps.default_title
     canvas = `<ColorCanvas />`
     details = `<ColorChannelDetail {...this.state} />`
     options = `<ColorChannelPagination {...this.state} screenshot={this.onScreenshot} canonicalUrl={this.props.canonicalUrl} prevUrl={this.state.prevUrl} nextUrl={this.state.nextUrl} paginateCanvas={this.paginateCanvas} />`

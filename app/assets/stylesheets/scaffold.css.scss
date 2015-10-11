@@ -4,7 +4,9 @@
 }
 
 
-html, html * {font-weight: 500;
+html, html * {
+  font-weight: 500;
+  box-sizing: border-box;
   -webkit-text-rendering: optimizeLegibility; -moz-text-rendering: optimizeLegibility; -ms-text-rendering: optimizeLegibility; -o-text-rendering: optimizeLegibility; text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased; -moz-font-smoothing: antialiased; -ms-font-smoothing: antialiased; -o-font-smoothing: antialiased; font-smoothing: antialiased;
 }
@@ -78,17 +80,20 @@ body ::selection {background: rgba($color-mid-black,.24);}
   
   #header-links {
     position: fixed;
-    top: 24px;
-    right: -95px;
-    width: 95px;
+    top: 0;
+    right: -127px;
+    width: 127px;
+    padding: 24px 0 24px 32px;
     z-index: 12;
     @include transition(right .2s ease-in-out);
+    @include linear-gradient(right, rgba(255,255,255,.92) 0%, rgba(255,255,255,.92) 92%, rgba(255,255,255,0) 100%, $fallback: transparent);
 
     a.toggle-menu {
       position: absolute;
       left: -42px;
-      top: 0;
+      top: 24px;
       color: $color-black;
+      @include transition(left .2s ease-in-out);
       svg {
         width: 24px;
         height: 24px;
@@ -114,7 +119,7 @@ body ::selection {background: rgba($color-mid-black,.24);}
 
       li {
         margin: 0;
-        padding: .1em 0;
+        padding: .5em 0;
         text-align: left;
         a {
           color: rgba($color-black,.72);
@@ -134,6 +139,9 @@ body ::selection {background: rgba($color-mid-black,.24);}
 
     &.opened {
       right: 0;
+      a.toggle-menu {
+        left: -11px;
+      }
       ul {
         opacity: 1;
       }
@@ -382,6 +390,10 @@ body ::selection {background: rgba($color-mid-black,.24);}
           }
         }
       }
+
+      ul {
+        font-size: 1.8rem;
+      }
     }
   }
   .static-page-gutter {
@@ -416,6 +428,10 @@ body ::selection {background: rgba($color-mid-black,.24);}
             color: $color-black;
           }
         }
+      }
+
+      ul {
+        font-size: 1.4rem;
       }
     }
   }
@@ -452,8 +468,8 @@ body ::selection {background: rgba($color-mid-black,.24);}
     right: 0;
     z-index: 25;
     min-height: 16px;
-    padding: 15px 15px 20px 15px;
-    @include linear-gradient(top, rgba(255,255,255,.92) 0%, rgba(255,255,255,.92) 80%, rgba(255,255,255,0) 100%, $fallback: transparent);
+    padding: 15px 15px 25px 15px;
+    @include linear-gradient(top, rgba(255,255,255,.92) 0%, rgba(255,255,255,.92) 85%, rgba(255,255,255,0) 100%, $fallback: transparent);
 
     h1 {
       top: 15px;
@@ -572,7 +588,7 @@ body ::selection {background: rgba($color-mid-black,.24);}
     padding: 64px 15px 64px 15px;
 
     .static-page-content {
-      width: 60%;
+      width: 100%;
 
       section {
         padding: 10px 0 10px 0;
@@ -587,6 +603,13 @@ body ::selection {background: rgba($color-mid-black,.24);}
         }
       }
     }
+    
+    &.has-gutter {
+      .static-page-content {
+        width: 60%;
+      }
+    }
+    
     .static-page-gutter {
       width: 36%;
 

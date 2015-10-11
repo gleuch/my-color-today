@@ -40,7 +40,7 @@
 
     # Return HTML
     `<header id="header">
-      <h1><ColorLink to="/">what color is your internet?</ColorLink></h1>
+      <h1><ColorLink to="/">{ColorInitialProps.default_title.toLowerCase()}</ColorLink></h1>
       <nav id="header-links" className={visibleClassName}>
         <a href="javascript:;" className="toggle-menu" onClick={this.toggleVisibility}>{menuSvg}</a>
         <ul>{links}</ul>

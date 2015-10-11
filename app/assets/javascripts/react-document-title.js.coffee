@@ -5,10 +5,10 @@
     title : React.PropTypes.string.isRequired
 
   componentDidMount : ->
-    document.title = this.props.title || ''
+    document.title = this.props.title || ColorInitialProps.default_title
 
   componentDidChange : ->
-    document.title = this.props.title || ''
+    document.title = this.props.title || ColorInitialProps.default_title
 
   render: ->
     if this.props.children
