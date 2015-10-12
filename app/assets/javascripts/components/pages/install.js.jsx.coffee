@@ -3,7 +3,6 @@
     title = 'Install ' + ColorInitialProps.default_title
 
     signupOrOther = `<p>all it takes to make your own browsing history visualization is downloading the extension and signing up for an account using an existing social media login.</p>`
-    console.log this.props.current_user
     signupOrOther = `<p>you are already signed in as <u>{this.props.current_user.login}</u>, so all you need to do is download the extension and get started!</p>` if this.props.current_user
 
     content = `<span>
