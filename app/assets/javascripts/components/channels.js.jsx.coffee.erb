@@ -292,11 +292,14 @@
     visible :       true
     current_user :  this.props.current_user
     realtime :      false
+    renderingScreenshot : false
+    screenshotSvg : null
 
   getDefaultProps : ->
     channel : { }
 
   componentDidMount : ->
+    window.ColorCampSvgs.add('screenshotSvg', "<%= asset_url 'screenshot.svg' %>", this) unless this.state.screenshotSvg
     if this.state.url
       this.getChannelData()
 
@@ -344,6 +347,13 @@
 
     realtime = if this.state.realtime then `<aside className="channel-realtime"><span className="hidden-xs">updating in </span>real-time</aside>` else null
 
+    if this.state.renderingScreenshot
+      screenshotSvg = if this.state.screenshotSvg then `<span dangerouslySetInnerHTML={{__html : this.state.screenshotSvg }} />` else null
+      renderingScreenshot = `<aside className="channel-rendering-screenshot">
+        {screenshotSvg}
+        <h1>generating screenshot<br /><small>please wait&hellip;</small></h1>
+      </aside>`
+
     `<DocumentTitle title={title}>
       <article className="channel">
         {details}
@@ -351,6 +361,7 @@
         {options}
         {canvas}
         {realtime}
+        {renderingScreenshot}
       </article>
     </DocumentTitle>`
 
@@ -474,10 +485,16 @@
       alert 'This channel is not visible or is protected.'
       return
 
+    this.setState { renderingScreenshot : true }
+    fnDone = (->
+      this.setState { renderingScreenshot : false }
+    ).bind(this)
+
     # Nice hack to scale and zoom the canvas for a higher quality image
     document.colorCamp.canvasZoom2x(true, ->
       screenshot = new window.ColorCampScreenshot
       screenshot.generate( document.colorCamp.canvasContext(), channel, nicedate ).download(fname, ->
         document.colorCamp.canvasZoom2x(false)
+        fnDone()
       )
     )

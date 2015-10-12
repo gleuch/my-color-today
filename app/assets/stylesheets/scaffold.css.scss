@@ -3,6 +3,13 @@
   to    {opacity: 1;}
 }
 
+@include keyframes(blinkonce) {
+  39.9%  {opacity: 1;}
+  40%  {opacity: 0;}
+  59.9%  {opacity: 0;}
+  60%  {opacity: 1;}
+}
+
 @include keyframes(blinktwice) {
   90.0%  {opacity: 1;}
   90.1%  {opacity: 0;}
@@ -344,6 +351,46 @@ body ::selection {background: rgba($color-mid-black,.24);}
             display: block;
           }
         }
+      }
+    }
+  }
+
+  .channel-rendering-screenshot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba($color-white,.96);
+    z-index: 100;
+
+    svg {
+      position: absolute;
+      bottom: 60%;
+      left: 15px;
+      right: 15px;
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px auto;
+      @include animation(blinkonce 2s 0.25s linear 1);
+
+      path, circle {
+        fill: rgba($color-black, .64);
+      }
+    }
+
+    h1 {
+      position: absolute;
+      top: 40%;
+      left: 15px;
+      right: 15px;
+      text-align: center;
+      font-size: 3.2rem;
+      color: $color-black;
+
+      small {
+        font-size: 2.4rem;
+        color: rgba($color-black,.72);
       }
     }
   }
