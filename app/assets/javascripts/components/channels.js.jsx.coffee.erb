@@ -138,7 +138,7 @@
     if this.props.viewType == 'user'
       twitterText = 'A visual display of the browsing history of @' + this.props.channelInfo.login + ' on ' + niceDate + '.'
     else if this.props.viewType == 'everyone'
-      twitterText = 'A visual browsing history of @myinternetcolor users on ' + niceDate + '.'
+      twitterText = 'A visual browsing history of @' + ColorInitialProps.twitter_name + ' users on ' + niceDate + '.'
     else if this.props.viewType == 'site'
       twitterText = 'A visual display of the browsing history of ' + this.props.channelInfo.name + ' on ' + niceDate + '.'
     else
@@ -176,7 +176,7 @@
     e.preventDefault()
     el = e.currentTarget
     text = if el then el.getAttribute 'data-text' else ''
-    this.shareDialog 'https://twitter.com/share?url={url}&text=' + text + '&related=myinternetcolor,gleuch,internetcolor'
+    this.shareDialog 'https://twitter.com/share?url={url}&text=' + text + '&related=' + ColorInitialProps.twitter_name + ',gleuch,internetcolor'
     this.setState { sharePanelOpen : false }
 
   facebookShare : (e)->
