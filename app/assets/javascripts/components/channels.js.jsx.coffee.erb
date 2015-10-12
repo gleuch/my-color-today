@@ -98,6 +98,7 @@
 @ColorChannelPagination = React.createClass
   getInitialState : ->
     visible : false
+    shareSvg : null
     screenshotSvg : null
     twitterSvg : null
     facebookSvg : null
@@ -106,6 +107,7 @@
     sharePanelOpen : false
 
   componentDidMount : ->
+    window.ColorCampSvgs.add('shareSvg', "<%= asset_url 'share.svg' %>", this) unless this.state.shareSvg
     window.ColorCampSvgs.add('screenshotSvg', "<%= asset_url 'screenshot.svg' %>", this) unless this.state.screenshotSvg
     window.ColorCampSvgs.add('twitterSvg', "<%= asset_url 'twitter.svg' %>", this) unless this.state.twitterSvg
     window.ColorCampSvgs.add('facebookSvg', "<%= asset_url 'facebook.svg' %>", this) unless this.state.facebookSvg
@@ -121,6 +123,7 @@
     # else
     #   `<span className="paginate newer">Newer</span>`
 
+    shareSvg = if this.state.shareSvg then `<span dangerouslySetInnerHTML={{__html : this.state.shareSvg }} />` else ''
     screenshotSvg = if this.state.screenshotSvg then `<span dangerouslySetInnerHTML={{__html : this.state.screenshotSvg }} />` else ''
     twitterSvg = if this.state.twitterSvg then `<span className="social-icon social-twitter" dangerouslySetInnerHTML={{__html : this.state.twitterSvg }} />` else ''
     facebookSvg = if this.state.facebookSvg then `<span className="social-icon social-facebook" dangerouslySetInnerHTML={{__html : this.state.facebookSvg }} />` else ''
@@ -128,10 +131,7 @@
     nextLink = ''
     prevLink = ''
     
-    shareOrTip = `<p className="share-tip" onTap={this.toggleSharing} onMouseDown={this.toggleSharing}>
-      <span className="is-not-open">&hellip;</span>
-      <span className="is-open">&hellip;</span>
-    </p>`
+    shareOrTip = `<p className="share-tip" onClick={this.toggleSharing}>{shareSvg}</p>`
     shareOrTip = `<p className="share-tip">{this.state.tipText}</p>` if this.state.tipText && window.innerWidth > 768
 
     niceDate = moment(this.props.date).format('DD MMM YYYY');
@@ -291,6 +291,7 @@
     viewType :      this.props.channel.viewType
     visible :       true
     current_user :  this.props.current_user
+    realtime :      false
 
   getDefaultProps : ->
     channel : { }
@@ -341,12 +342,15 @@
       title = 'Everyone on ' + title
       content = `<ColorChannelEveryoneContent {...this.state} />`
 
+    realtime = if this.state.realtime then `<aside className="channel-realtime"><span className="hidden-xs">updating in </span>real-time</aside>` else null
+
     `<DocumentTitle title={title}>
       <article className="channel">
         {details}
         {content}
         {options}
         {canvas}
+        {realtime}
       </article>
     </DocumentTitle>`
 
@@ -375,6 +379,7 @@
     jsonUrl = window.location.protocol + '//' + window.location.host + this.props.canonicalUrl unless jsonUrl.match(/^http/)
     $.ajax( jsonUrl + '.json', {
       dataType : 'json'
+      cache : false
       method : 'GET'
       success : ((d,s,x)->
         if d && !d.errors
@@ -409,8 +414,10 @@
             # Listen for new colors via websocket if only if today
             today = (new Date()).toJSON().replace(/^(\d{4}\-\d{2}\-\d{2})(.*)$/, '$1')
             if today == d.date
+              this.setState { realtime : true }
               document.colorCamp.websocketInitialize this.websocketUpdate
             else
+              this.setState { realtime : false }
               document.colorCamp.websocketUninitialize()
 
       ).bind(this)

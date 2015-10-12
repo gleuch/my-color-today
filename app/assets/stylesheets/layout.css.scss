@@ -37,6 +37,10 @@
 //  }
 //}
 
+@media (max-width: 768px) {
+  .hidden-xs {display: none;}
+}
+
 
 ul.buttons {
   margin: 0;

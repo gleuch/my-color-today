@@ -3,6 +3,18 @@
   to    {opacity: 1;}
 }
 
+@include keyframes(blinktwice) {
+  90.0%  {opacity: 1;}
+  90.1%  {opacity: 0;}
+  92.9%  {opacity: 0;}
+  93.0%  {opacity: 1;}
+  95.0%  {opacity: 1;}
+  95.1%  {opacity: 0;}
+  97.9%  {opacity: 0;}
+  98.0%  {opacity: 1;}
+}
+
+
 
 html, html * {
   font-weight: 500;
@@ -21,10 +33,6 @@ a {color: darken($color-logo, 5%); text-decoration: none; @include transition(co
 }
 
 body ::selection {background: rgba($color-mid-black,.24);}
-
-
-// --- LAYOUT ---
-#wrapper {position: relative; z-index: 1;}
 
 
 // --- CANVAS ---
@@ -136,15 +144,15 @@ body ::selection {background: rgba($color-mid-black,.24);}
         }
       }
     }
+  }
 
-    &.opened {
-      right: 0;
-      a.toggle-menu {
-        left: -11px;
-      }
-      ul {
-        opacity: 1;
-      }
+  &.opened #header-links {
+    right: 0;
+    a.toggle-menu {
+      left: -11px;
+    }
+    ul {
+      opacity: 1;
     }
   }
 }
@@ -233,6 +241,23 @@ body ::selection {background: rgba($color-mid-black,.24);}
     }
   }
 
+  .channel-realtime {
+    position: fixed;
+    bottom: 18px;
+    left: 24px;
+    z-index: 12;
+    font-size: 1.0rem;
+    line-height: 1.0em;
+    color: rgba($color-black,.54);
+    &:before {
+      content: '\2022';
+      font-weight: bold;
+      padding: 0 3px 0 0;
+      font-size: 1.33em;
+      @include animation(blinktwice 5s linear 0s infinite);
+    }
+  }
+
   .channel-options {
     position: fixed;
     bottom: 24px;
@@ -246,7 +271,7 @@ body ::selection {background: rgba($color-mid-black,.24);}
     font-size: 1.4rem;
     line-height: 1.0em;
 
-    a {
+    a, span {
       color: rgba($color-black, .24);
       svg {
         width: 20px;
@@ -255,12 +280,12 @@ body ::selection {background: rgba($color-mid-black,.24);}
           fill: rgba($color-black, .24);
         }
       }
-      &:hover {
-        color: rgba($color-black, .48);
-        svg {
-          path, circle {
-            fill: rgba($color-black, .48);
-          }
+    }
+    a:hover {
+      color: rgba($color-black, .48);
+      svg {
+        path, circle {
+          fill: rgba($color-black, .48);
         }
       }
     }
@@ -272,13 +297,13 @@ body ::selection {background: rgba($color-mid-black,.24);}
       margin: 0 auto;
 
       .share-tip {
+        display: inline-block;
         font-size: 1.4rem;
+        line-height: 1.0em;
         height: 20px;
         padding: 0;
         margin: 0;
-
-        .is-open { display: none; }
-        .is-not-open { display: inline-block; }
+        vertical-align: middle;
       }
 
       .share-open {
@@ -301,14 +326,23 @@ body ::selection {background: rgba($color-mid-black,.24);}
         }
       }
 
-      &.on-tap-open, &:hover {
-        .share-tip {
-          .is-open { display: inline-block; }
-          .is-not-open { display: none; }
+      @media (min-width: 769px) {
+        &:hover {
+          .share-tip {
+            svg path {
+              fill: rgba($color-black, .48);
+            }
+          }
+          .share-open {
+            display: block;
+          }
         }
-
-        .share-open {
-          display: block;
+      }
+      @media (max-width: 768px) {
+        &.on-tap-open {
+          .share-open {
+            display: block;
+          }
         }
       }
     }
@@ -334,11 +368,15 @@ body ::selection {background: rgba($color-mid-black,.24);}
   right: 0;
   z-index: 10;
   padding: 0;
-  margin: 0 auto;
+  margin: 0;
   padding: 64px 32px;
-  max-width: 1126px;
   background-color: rgba($color-white, .96);
   overflow: scroll;
+
+  .static-page-container {
+    max-width: 1126px;
+    margin: 0 auto;
+  }
 
   .static-page-content {
     float: left;
@@ -560,12 +598,12 @@ body ::selection {background: rgba($color-mid-black,.24);}
 
       a.toggle-menu {
         left: -32px;
-        top: 14px;
+        top: 16px;
         @include transition(left .2s ease-in-out);
 
         svg {
-          width: 16px;
-          height: 16px;
+          width: 18px;
+          height: 18px;
         }
       }
 
@@ -582,8 +620,12 @@ body ::selection {background: rgba($color-mid-black,.24);}
           }
         }
       }
+    }
 
-      &.opened {
+    &.opened {
+      z-index: 30;
+
+      #header-links {
         right: auto;
         left: 0;
         background: rgba($color-white, .95);
@@ -611,6 +653,18 @@ body ::selection {background: rgba($color-mid-black,.24);}
       left: 15px;
       right: 15px;
     }
+
+    .channel-realtime {
+      position: fixed;
+      bottom: auto;
+      left: auto;
+      top: 19px;
+      right: 48px;
+      z-index: 26;
+      font-size: 0.8rem;
+      opacity: .72;
+    }
+
     .channel-options {
       left: 15px;
       right: auto;

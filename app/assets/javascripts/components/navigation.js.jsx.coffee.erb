@@ -39,9 +39,9 @@
       menuSvg = `<span dangerouslySetInnerHTML={{__html : this.state.menuSvg }} />`
 
     # Return HTML
-    `<header id="header">
+    `<header id="header" className={visibleClassName}>
       <h1><ColorLink to="/">{ColorInitialProps.default_title.toLowerCase()}</ColorLink></h1>
-      <nav id="header-links" className={visibleClassName}>
+      <nav id="header-links">
         <a href="javascript:;" className="toggle-menu" onClick={this.toggleVisibility}>{menuSvg}</a>
         <ul>{links}</ul>
       </nav>
