@@ -96,7 +96,7 @@ class ColorReport < ActiveRecord::Base
       when 'daily'
         v = v.where("#{WebSitePageColor.table_name}.created_at > ?", Time.now-1.day)
       when 'today'
-        v = v.where("#{WebSitePageColor.table_name}.created_at >= ", Date.today.to_time)
+        v = v.where("#{WebSitePageColor.table_name}.created_at >= ?", Date.today.to_time)
       when 'yesterday'
         v = v.where("#{WebSitePageColor.table_name}.created_at >= ? AND #{WebSitePageColor.table_name}.created_at < ?", Date.today.to_time - 1.day, Date.today.to_time)
       when 'range'
