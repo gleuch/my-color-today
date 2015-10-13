@@ -5,7 +5,7 @@ class ColorWorker
   sidekiq_options unique: true
 
 
-  def perform(type, id=nil, *args)
+  def perform(type, id, *args)
     case type.to_s
       when 'user_report'
         user_report(id, *args)

@@ -96,13 +96,14 @@ class ColorReport < ActiveRecord::Base
       when 'daily'
         v = v.where("#{WebSitePageColor.table_name}.created_at > ?", Time.now-1.day)
       when 'today'
-        v = v.where("DATE(#{WebSitePageColor.table_name}.created_at) = ?", Date.today)
+        v = v.where("#{WebSitePageColor.table_name}.created_at >= ", Date.today.to_time)
       when 'yesterday'
-        v = v.where("DATE(#{WebSitePageColor.table_name}.created_at) = ?", Date.today - 1.day)
+        v = v.where("#{WebSitePageColor.table_name}.created_at >= ? AND #{WebSitePageColor.table_name}.created_at < ?", Date.today.to_time - 1.day, Date.today.to_time)
       when 'range'
         v = v.where("#{WebSitePageColor.table_name}.created_at >= ? AND #{WebSitePageColor.table_name}.created_at <= ?", self.date_range_value[0], self.date_range_value[1]) if self.date_range_value.length > 1
       when 'date'
-        v = v.where("DATE(#{WebSitePageColor.table_name}.created_at) = ?", self.date_range_value[0]) if self.date_range_value.length > 0
+        d = self.date_range_value[0].to_date.to_time
+        v = v.where("#{WebSitePageColor.table_name}.created_at >= ? AND #{WebSitePageColor.table_name}.created_at < ?", d, d + 1.day) if self.date_range_value.length > 0
     end
 
     case self.item_type.to_s
