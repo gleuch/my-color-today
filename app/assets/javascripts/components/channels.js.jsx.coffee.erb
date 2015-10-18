@@ -12,11 +12,14 @@
         <em><i className="color-block" style={style}></i> #{this.props.report.hex}</em>
       </span>`
 
-    ago = ''
-    agoPrefix = ''
-    agoTime = moment(this.props.user.registered_date).fromNow(true)
-    agoPrefix = 'over' if agoTime.match /day|month|year/i
-    ago = `<h3>visualizing <span className="hidden-xs">{this.props.user.login}'s browsing history</span> for {agoPrefix} {agoTime}</h3>`
+    if (new Date().getTime()) - Date.parse( this.props.user.registered_date) > 86400000
+      agoTime = moment(this.props.user.registered_date).fromNow(true)
+      agoPrefix = 'for'
+      agoPrefix = agoPrefix + ' over' if agoTime.match /day|month|year/i
+    else
+      agoPrefix = 'since'
+      agoTime = 'today'
+    ago = `<h3>visualizing <span className="hidden-xs">{this.props.user.login.possessiveify()} browsing history</span> {agoPrefix} {agoTime}</h3>`
 
     `<header className="channel-heading">
       <h1>
@@ -77,10 +80,10 @@
 
     report = `<p>&nbsp;</p>`
     if this.props.report
-      pages = this.props.report.pages_count + ' web page'
-      pages = pages + 's' unless pages == 1
-      sites = this.props.report.sites_count + ' web site'
-      sites = sites + 's' unless sites == 1
+      pages = this.props.report.pages_count.delimited() + ' web page'
+      pages = pages + 's' unless this.props.report.pages_count == 1
+      sites = this.props.report.sites_count.delimited() + ' web site'
+      sites = sites + 's' unless this.props.report.sites_count == 1
 
       report = `<p>
         <span>{pages}</span>

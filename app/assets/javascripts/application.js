@@ -10,6 +10,7 @@
 //= require react-svg
 //= require filesaver.min
 //= require canvas-to-blob
+//= require helpers
 //= require components
 //= require websocket_rails/main
 //= require three.min
