@@ -1,0 +1,11 @@
+- @disable_react = true
+- @page_meta_robots = 'noindex,follow'
+
+:coffee
+  try
+    i = #{session[:extension_message].present? ? 2000 : 500}
+    setTimeout -> 
+      window.location.href = '#{after_sign_in_url}'
+    , i
+  catch e
+    #

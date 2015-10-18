@@ -101,9 +101,9 @@
         if d && d.user
           $(window).trigger 'colorcamp:current_user:change', {current_user : d.user}
         else
-          alert('some error')
+          alert('some error that i just really don\'t know. thanks!')
       ).bind(this), 
       error :  ((x,s,e)->
-        alert('errorz')
+        alert('errorz. sorries.')
       ).bind(this)
     }

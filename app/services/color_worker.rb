@@ -2,7 +2,7 @@ class ColorWorker
 
   include Sidekiq::Worker
 
-  sidekiq_options unique: :until_executed
+  sidekiq_options unique: :until_executing
 
 
   def perform(type, id, *args)

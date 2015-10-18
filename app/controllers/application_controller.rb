@@ -71,12 +71,11 @@ private
       referrer = session[:referrer]
       session[:referrer] = nil
       return referrer
-    # elsif current_user? && current_user.admin?
-    #   return admin_dashboard_index_url
     else
       return root_url
     end
   end
+  helper_method :after_sign_in_url
 
   def authenticate_user!
     unless current_user

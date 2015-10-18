@@ -4,38 +4,50 @@ class UserAuthenticationsController < ApplicationController
  
  
   def create
-    omniauth = request.env['omniauth.auth']
-    @auth = UserAuthentication.find_from_omniauth_data(omniauth)
+    results = ->{
+      omniauth = request.env['omniauth.auth']
+      @auth = UserAuthentication.find_from_omniauth_data(omniauth)
 
-    session[:extension_message] = {'action' => 'reload-auth'}
 
-    if current_user
-      if @auth
+      session[:referrer] = static_page_url(:install)
+
+      session[:extension_message] ||= {}
+      session[:extension_message][:action] = 'reload-auth'
+      session[:extension_message][:closeWindow] = true
+
+      if current_user
+        if @auth
+          @auth.update_from_omniauth_data(authentication_params)
+        else
+          current_user.authentications.create(provider: omniauth['provider'], uid: omniauth['uid'])
+        end
+        flash[:notice] = t('.success.new_auth')
+        @user = current_user
+
+      elsif @auth
         @auth.update_from_omniauth_data(authentication_params)
+        UserSession.create(@auth.user, true)
+        flash[:notice] = t('.success.update_auth')
+        @user = @auth.user
+
       else
-        current_user.authentications.create(provider: omniauth['provider'], uid: omniauth['uid'])
+        @new_auth = UserAuthentication.create_from_omniauth_data(authentication_params, current_user)
+        UserSession.create(@new_auth.user, true)
+        @user = @new_auth.user
+        flash[:notice] = t('.success.new_user')
       end
-      flash[:notice] = t('.success.new_auth')
-      @user = current_user
 
-    elsif @auth
-      @auth.update_from_omniauth_data(authentication_params)
-      UserSession.create(@auth.user, true)
-      flash[:notice] = t('.success.update_auth')
-      @user = @auth.user
+      if session[:auth_api_app].present?
+        ApiToken.where(token_key: session.delete(:auth_api_app)).first.update(user: @user)
+      end
+    }
 
-    else
-      @new_auth = UserAuthentication.create_from_omniauth_data(authentication_params, current_user)
-      UserSession.create(@new_auth.user, true)
-      @user = @new_auth.user
-      flash[:notice] = t('.success.new_user')
+    respond_to do |format|
+      format.html {
+        results.call
+        render :create
+      }
     end
-
-    if session[:auth_api_app].present?
-      ApiToken.where(token_key: session.delete(:auth_api_app)).first.update(user: @user)
-    end
-
-    redirect_to after_sign_in_url
   end
 
   def failure

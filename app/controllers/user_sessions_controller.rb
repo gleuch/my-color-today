@@ -34,7 +34,11 @@ private
       end
 
       session[:auth_api_app] = token
-      session[:extension_message]['closeWindow'] = true
+
+      if @api_token.user.present?
+        session[:extension_message] ||= {}
+        session[:extension_message]['closeWindow'] = true
+      end
     end
   rescue
     nil

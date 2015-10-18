@@ -29,15 +29,15 @@ gem 'uglifier',                       '2.7.2'
 gem 'coffee-rails',                   '4.1.0'
 gem 'jquery-rails',                   '4.0.5'
 gem 'jquery-ui-rails',                '5.0.5'
-gem 'bourbon',                        '4.2.5'
-gem 'react-rails',                    '1.3.1'
+gem 'bourbon',                        '4.2.6'
+gem 'react-rails',                    '1.3.2'
 gem 'react-router-rails',             '0.13.3.1'
 gem 'non-stupid-digest-assets',       '1.0.5'
 
 
 
 # --- REDIS / SIDEKIQ ---
-gem 'sidekiq',                        '3.5.0'
+gem 'sidekiq',                        '3.5.1'
 gem 'sidekiq-unique-jobs',            '4.0.7'
 gem 'redis',                          '3.2.1'
 gem 'redis-rails',                    '4.0.0'
@@ -64,7 +64,7 @@ gem 'whenever',                       '0.9.4',        require: false
 
 
 # --- OAUTH / APIS ---
-gem 'aws-sdk',                        '2.1.28'
+gem 'aws-sdk',                        '2.1.30'
 gem 'rest-client',                    '1.8.0'
 gem 'twitter',                        '5.15.0'
 gem 'fb_graph',                       '2.7.17'

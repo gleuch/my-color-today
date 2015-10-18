@@ -67,6 +67,7 @@ class User < ActiveRecord::Base
       u.name = auth[:name] || auth[:username]
       u.is_oauth_signup = true
       u.password = u.password_confirmation = "".random(32)
+      u.build_api_token
       u.save!
     end
 

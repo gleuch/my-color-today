@@ -403,8 +403,8 @@
             channel : d.channel,
             channelInfo : d.channelInfo
             date : d.date
-            prevUrl : p.prev_url
-            nextUrl : p.next_url
+            prevUrl : (p && p.prev_url || null)
+            nextUrl : (p && p.next_url || null)
             viewType : d.viewType
             report : d.report
           }

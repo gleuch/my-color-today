@@ -8,7 +8,6 @@ module Api
     # Get user info from token
     def index
       # This should possibly get the latest user's token if has user and user has many tokens.
-      
       respond_to do |format|
         format.json { render json: {success: true, authentication: @api_token.to_api}, callback: params[:callback] }
       end
@@ -23,6 +22,8 @@ module Api
           token.reset_token_and_key(true) if token.present?
         end
 
+        # Attempt to set to the current user, even if current token key is bad
+        token ||= current_user.api_token if current_user?
         token ||= ApiToken.create
 
         if token && !token.new_record?
