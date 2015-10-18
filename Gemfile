@@ -32,6 +32,8 @@ gem 'jquery-ui-rails',                '5.0.5'
 gem 'bourbon',                        '4.2.5'
 gem 'react-rails',                    '1.3.1'
 gem 'react-router-rails',             '0.13.3.1'
+gem 'non-stupid-digest-assets',       '1.0.5'
+
 
 
 # --- REDIS / SIDEKIQ ---

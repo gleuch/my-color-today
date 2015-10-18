@@ -1,3 +1,6 @@
+<img src="https://mycolor.today/assets/share/share.png" width="100%" alt="" title="MyColor.Today"/>
+
+
 # MyColor.Today
 
 mycolor.today visualizes your Internet browsing history by capturing the average pixel color of each web page you access. the result, visualized on a daily basis, presents a different idea on what browsing means to the everyday viewer.
