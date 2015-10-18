@@ -10,14 +10,14 @@ When seen both singularly and collectively as part of a broader history of brows
 Available at https://mycolor.today.
 
 
-### Credits
+## Credits
 
 Developed in conjunction with the book "What Color Is My Internet?", part of the "In My Computer" book series by [Link Center for the Arts of the Information Age](http://www.linkartcenter.eu).
 
-** Purchase the color book on [Lulu](https://lulu.com) or [Amazon](https://amazon.com)! **
+*** Purchase the color book on [Lulu](https://lulu.com) or [Amazon](https://amazon.com)! ***
 
 
-### Copyright & License
+## Copyright & License
 
 Copyright 2015 Greg Leuch. https://gleu.ch/
 

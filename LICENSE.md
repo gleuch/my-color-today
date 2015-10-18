@@ -1,6 +1,6 @@
-# MyColor.Today License
+# License
 
-## The MIT License (MIT)
+### The MIT License (MIT)
 
 Copyright (c) 2015 [Greg Leuch](https://gleu.ch)
 
