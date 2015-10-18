@@ -19,16 +19,26 @@
     content = `<span>
       <section>
         <h1>about</h1>
-        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
-        <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+        <h3>mycolor.today visualizes your Internet browsing history by capturing the average pixel color of each web page you access. the result, visualized on a daily basis, presents a different idea on what browsing means to the everyday viewer.</h3>
+        <p>Everday we stare at computer screens as we type out emails, write code, upload photos, and push around pixels. Billions of pages of information splashed with text and images are accessed daily, composed of pixels emanating from a screen connected to a computer connected to the Internet. Together, these pixels visually speak to the viewer of the relationship between content and code.</p>
+        <p>When seen both singularly and collectively as part of a broader history of browsing, patterns emerge that create a portrait of the activity of that Internet surfer. The day-to-day browsing captures, in color, a reflection of the surfer created of themselves. To wit, the surfer creates a digital selfie representation based on their browsing of others' selfies.</p>
+      </section>
+      <hr />
+      <section>
+        <h1>history</h1>
+        <p>This is not my first exploration of Internet color. In 2013, as part of a residency at <a href="http://eyebeam.org" target="_blank">Eyebeam</a>, I created <a href="http://whatcolor.istheinter.net/?">WhatColor.IsTheInter.net/?</a> &ndash; an algorithm that scraped, screenshot, and analyzed the color of over 1.2 million web pages. The conclusive result was an average color of #C2C2C3 (TODO).</p>
+        <p>"What Color Is My Internet?" was the next exploration of analyzing the color of the Internet. As part of the "In My Computer" book series from <a href="{ColorInitialProps.links.books.link}" target="_blank">LINK Center for the Arts of the Information Age</a>, I took a different view of what "in" means in relation to my computer. Today, the computer primarily acts as an access point and display terminal for the Internet information requested by the user. In this view, it is not the files or content in my computer, but what I am able to see that makes the computer so relevant.</p>
+        <p>I started looking in on my Internet browsing history by building a browser tool that resides in my computer. Ninety days of my browsing history were collected and analyzed for the book, tracking 26,254 web pages visits across 1,426 web sites. The result is a daily snapshot (or selfie) of the sites and average colors I viewed in my computer.</p>
+        <p>While the book was an exploration of my browsing history, it is also applicable to the other 2.9 billion global Internet users. The same core tools I built to visualize my history for the book can allow others to visualize their browsing histories. I created <ColorLink to="/">mycolor.today</ColorLink> for everyone view and create their own these daily snapshots.</p>
+      </section>
+      <hr />
+      <section>
+        <p>Follow mycolor.today on <a href={ColorInitialProps.links.social.twitter}>{twitterSvg}</a> <a href={ColorInitialProps.links.social.instagram}>{instagramSvg}</a> <a href={ColorInitialProps.links.social.facebook}>{facebookSvg}</a></p>
       </section>
       <section>
-        <p>
-          Follow us on:
-          <a href={ColorInitialProps.links.social.twitter}>{twitterSvg}</a>
-          <a href={ColorInitialProps.links.social.instagram}>{instagramSvg}</a>
-          <a href={ColorInitialProps.links.social.facebook}>{facebookSvg}</a>
-        </p>
+        <p><em>Support provided by <a href={ColorInitialProps.links.books.link}>LINK Center for the Arts of the Information Age</a> &amp; <a href="http://eyebeam.org" target="_blank">Eyebeam</a>. Props to <a href="http://fromjia.com" target="_blank">Jiashan Wu</a>, <a href="http://evan-roth.com">Evan Roth</a>, <a href="http://domenicoquaranta.com/" target="_blank">Domenico Quaranta</a>, and the <a href="http://fffff.at" target="_blank">F.A.T. Lab</a> crew.</em></p>
+        <p><br/>a project by <a href="https://gleu.ch">Greg Leuch</a>. <a href="https://twitter.com/gleuch" target="_blank">{twitterSvg}</a> <a href="https://instagram.com/gleuch" target="_blank">{instagramSvg}</a><br/>copyright 2015, all rights reserved. <br/>source code provided under license: &nbsp; <a href="https://github.com/gleuch/my-color-today" target="_blank">web app</a> &nbsp; <a href="https://github.com/gleuch/my-color-today-extensions" target="_blank">browser extensions</a></p>
+        <p><br/><small><ColorLink to="/privacy">privacy policy &amp; terms</ColorLink></small></p>
       </section>
     </span>`
 

@@ -36,7 +36,7 @@ gem 'react-router-rails',             '0.13.3.1'
 
 # --- REDIS / SIDEKIQ ---
 gem 'sidekiq',                        '3.5.0'
-gem 'sidekiq-unique-jobs',            '4.0.2'
+gem 'sidekiq-unique-jobs',            '4.0.7'
 gem 'redis',                          '3.2.1'
 gem 'redis-rails',                    '4.0.0'
 

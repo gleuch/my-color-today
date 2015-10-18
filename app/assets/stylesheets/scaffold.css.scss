@@ -446,6 +446,15 @@ body ::selection {background: rgba($color-mid-black,.24);}
         line-height: 1.0em;
       }
 
+      h3 {
+        margin: 0;
+        padding: 0 0 8px 0;
+        font-size: 2.4rem;
+        line-height: 1.5625em;
+        color: $color-black;
+        font-weight: 500;
+      }
+
       p {
         margin: 0;
         padding: 0 0 8px 0;
@@ -456,9 +465,29 @@ body ::selection {background: rgba($color-mid-black,.24);}
         a {
           color: $color-black;
           text-decoration: underline;
+          svg {
+            path, circle, rect {
+              fill: $color-black;
+              @include transition(fill .2s ease-in-out);
+            }
+          }
+
           &:hover {
             color: rgba($color-black,.82);
+            
+            svg {
+              path, circle, rect {
+                fill: rgba($color-black,.82);
+              }
+            }
           }
+        }
+
+        svg {
+          width: auto;
+          height: 1.0em;
+          margin: 0 2px;
+          vertical-align: text-bottom;
         }
 
         &.disclaimer {
@@ -480,6 +509,16 @@ body ::selection {background: rgba($color-mid-black,.24);}
         font-size: 1.8rem;
       }
     }
+
+    hr {
+      height: 1px;
+      padding: 0;
+      margin: 15px 0 25px 37%;
+      border: none;
+      background-color: rgba($color-black,.12);
+      overflow: hidden;
+    }
+
   }
   .static-page-gutter {
     float: right;
