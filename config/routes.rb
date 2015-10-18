@@ -51,8 +51,8 @@ ColorCamp::Application.routes.named_routes.url_helpers_module.module_eval do
     twitter_url:            'https://twitter.com/mycolortoday',
     instagram_url:          'http://instagram.com/mycolortoday',
     email_url:              'hello@mycolor.today',
-    amazon_book_url:        'https://amazon.com',
-    lulu_book_url:          'https://lulu.com',
+    amazon_book_url:        'javascript:alert("The book will be available soon on Amazon. Check back in a few days.")',
+    lulu_book_url:          'javascript:alert("The book will be available soon on Lulu. Check back in a few days.")',
     link_book_url:          'http://www.linkartcenter.eu/'
 
   }.each do |name,url|
