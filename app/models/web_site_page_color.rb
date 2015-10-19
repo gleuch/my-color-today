@@ -146,8 +146,8 @@ private
   def queue_average_color_worker
     self.page.reload # ensure we get updated record
 
-    # Ping all_users websocket with new color
-    WebsocketRails[:all_users].trigger(:new_color, {
+    # Ping everyone websocket with new color
+    WebsocketRails[:everyone].trigger(:new_color, {
       channel: :everyone,
       report: ColorReport.everyone.on(:today, date: @colors_date).get.to_api, 
       color: self.to_public_api

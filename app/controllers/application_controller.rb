@@ -123,7 +123,7 @@ private
       format.json {
         data = results.call.map(&:to_public_api)
         render json: {
-          channel:      'all_users',
+          channel:      'everyone',
           channelInfo:  {},
           date:         @colors_date.to_s,
           dateUrl:      @request_url,

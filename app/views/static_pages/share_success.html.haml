@@ -2,10 +2,13 @@
 - @page_meta_robots = 'noindex,follow'
 
 :coffee
+  ga 'send', 'event', 'Share', '#{params[:id].to_s.capitalize}', 'Success'
+
   try
     window.close()
-    setTimeout -> 
-      window.location.href = '#{root_url}'
-    , 500
   catch e
     #
+
+  setTimeout ->
+    window.location.href = '#{root_url}'
+  , 500

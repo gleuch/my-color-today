@@ -177,6 +177,7 @@
 
   twitterShare : (e)->
     e.preventDefault()
+    TrackEvent.track('Share', 'Twitter', 'Intent')()
     el = e.currentTarget
     text = if el then el.getAttribute 'data-text' else ''
     this.shareDialog 'https://twitter.com/share?url={url}&text=' + text + '&related=' + ColorInitialProps.twitter_name + ',gleuch,internetcolor'
@@ -184,11 +185,13 @@
 
   facebookShare : (e)->
     e.preventDefault()
+    TrackEvent.track('Share', 'Facebook', 'Intent')()
     absoluteUrl = window.location.protocol + '//' + window.location.host
     this.shareDialog 'https://www.facebook.com/dialog/share?app_id=' + ColorInitialProps.facebook_app_id + '&display=iframe&href={url}&redirect_uri=' + absoluteUrl + '/share/facebook/success'
     this.setState { sharePanelOpen : false }
 
   makeScreenshot : (e)->
+    TrackEvent.track('Screenshot', this.props.channel)()
     this.props.screenshot(e)
     this.setState { sharePanelOpen : false }
 
@@ -265,7 +268,7 @@
   getInitialState : ->
     current_user : this.props.current_user
     channel:
-      channel : 'all_users'
+      channel : 'everyone'
       viewType : 'everyone'
       url : location.href
 
@@ -494,10 +497,14 @@
     ).bind(this)
 
     # Nice hack to scale and zoom the canvas for a higher quality image
-    document.colorCamp.canvasZoom2x(true, ->
-      screenshot = new window.ColorCampScreenshot
-      screenshot.generate( document.colorCamp.canvasContext(), channel, nicedate ).download(fname, ->
-        document.colorCamp.canvasZoom2x(false)
-        fnDone()
+    try
+      document.colorCamp.canvasZoom2x(true, ->
+        screenshot = new window.ColorCampScreenshot
+        screenshot.generate( document.colorCamp.canvasContext(), channel, nicedate ).download(fname, ->
+          document.colorCamp.canvasZoom2x(false)
+          fnDone()
+        )
       )
-    )
+    catch e
+      alert 'Sorry, please try taking your screenshot again.'
+      fnDone()

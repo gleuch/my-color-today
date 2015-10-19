@@ -12,13 +12,17 @@
         {signupOrOther}
         <ul className="buttons">
           <li key="chrome">
-            <a className="btn btn-default btn-lg btn-google" target="_blank" href="https://chrome.google.com/webstore/detail/nkghbibhhebkddaeebapfkooljjfhnca">get for google chrome</a>
+            <a onClick={this.installChromeExtension} className="btn btn-default btn-lg btn-google" target="_blank" href="https://chrome.google.com/webstore/detail/nkghbibhhebkddaeebapfkooljjfhnca">get for google chrome</a>
           </li>
         </ul>
-        <p className="disclaimer">* safari, firefox, and internet explorer extensions coming soon. if you are interested in contributing to mycolor.today, <a href={'mailto:' + ColorInitialProps.links.email}>let us know</a>!</p>
+        <p className="disclaimer">* safari, firefox, and internet explorer extensions coming soon. if you are interested in contributing to mycolor.today, <a href={'mailto:' + ColorInitialProps.links.email} onClick={TrackEvent.link('Install:Footer')}>let us know</a>!</p>
       </section>
     </span>`
 
     `<DocumentTitle title={title}>
       <ColorStaticPageDisplay content={content} pageName="install" />
     </DocumentTitle>`
+
+
+  installChromeExtension : (e)->
+    TrackEvent.track('Extensions', 'Chrome', 'Install')

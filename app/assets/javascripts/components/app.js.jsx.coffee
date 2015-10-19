@@ -37,7 +37,7 @@
           <p>
             Buy the book now!
             <br/>
-            <a href={ColorInitialProps.links.books.lulu} target="_blank" className="book-link lulu">Lulu</a> or <a href={ColorInitialProps.links.books.amazon} target="_blank" className="book-link amazon">Amazon</a>
+            <a href={ColorInitialProps.links.books.lulu} target="_blank" className="book-link lulu" onClick={TrackEvent.track('PurchaseBook','Lulu','Layout:CornerBanner')}>Lulu</a> or <a href={ColorInitialProps.links.books.amazon} target="_blank" className="book-link amazon" onClick={TrackEvent.track('PurchaseBook','Amazon','Layout:CornerBanner')}>Amazon</a>
           </p>
         </div>
       </aside>` unless this.props.current_user || key.match(/^about|signup|login$/)
@@ -49,6 +49,7 @@
         <div id="container">
           <div id="content" className="container-fluid">
             <TimeoutTransitionGroup enterTimeout={500} leaveTimeout={500} transitionName="screen">
+              <TrackPageView page={this.context.router.getCurrentPath()} />
               <ColorRouteHandler key={key} {...this.state} />
             </TimeoutTransitionGroup>
             <div className="clearfix"></div>
