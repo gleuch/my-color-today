@@ -38,6 +38,9 @@ Rails.application.routes.draw do
   match '/home/:date' => 'static_pages#show', via: [:get], page: 'home', as: :dated_everyone
   match '/*page' => 'static_pages#show', as: :static_page, constraints: StaticPage.new, via: [:get]
 
+  # Specialized shortcodes
+  match '/*code' => 'static_pages#short_code', as: :short_code, constraints: ShortCode.new, via: [:get]
+
   root to: 'static_pages#show', page: 'home'
 
 end
@@ -53,7 +56,9 @@ ColorCamp::Application.routes.named_routes.url_helpers_module.module_eval do
     email_url:              'hello@mycolor.today',
     amazon_book_url:        'javascript:alert("The book will be available soon on Amazon. Check back in a few days.")',
     lulu_book_url:          'javascript:alert("The book will be available soon on Lulu. Check back in a few days.")',
-    link_book_url:          'http://www.linkartcenter.eu/'
+    # amazon_book_url:        '/amazonbook', # short code referral tracking
+    # lulu_book_url:          '/lulubook', # short code referral tracking
+    link_book_url:          'http://www.linkartcenter.eu/',
 
   }.each do |name,url|
     define_method(name){ url }

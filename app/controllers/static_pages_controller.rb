@@ -1,6 +1,7 @@
 class StaticPagesController < ApplicationController
 
   before_filter :load_resource, only: [:show]
+  before_filter :load_short_code, only: [:short_code]
 
   set_pagination_headers :colors, only: [:show]
 
@@ -40,12 +41,30 @@ class StaticPagesController < ApplicationController
     render_everyone_channel
   end
 
+  def short_code
+    respond_to do |format|
+      format.html {
+        @code.track!(session: session.id, user: current_user && current_user.uuid, referrer: request.referer)
+        redirect_to @code.url
+      }
+      format.json {
+        render json: @code.to_api, callback: params[:callback] unless performed?
+      }
+      format.any { render_not_found }
+    end
+  end
+
 
 protected
 
   def load_resource
     @page = StaticPage.new(params)
     raise ActiveRecord::RecordNotFound unless @page.exists?
+  end
+
+  def load_short_code
+    @code = ShortCode.new(params)
+    raise ActiveRecord::RecordNotFound unless @code.exists?
   end
 
   def trigger_actions
