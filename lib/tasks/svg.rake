@@ -230,12 +230,12 @@ def svgMakeBoxes(strdate)
   SVG
 
   svgfpath = File.join(Rails.root, 'output', 'boxes', 'svg', "#{strdate}.svg")
-  epsfpath = File.join(Rails.root, 'output', 'boxes', 'eps', "#{strdate}.eps")
+  # epsfpath = File.join(Rails.root, 'output', 'boxes', 'eps', "#{strdate}.eps")
   FileUtils.mkdir_p( File.dirname(svgfpath) )# rescue nil
-  FileUtils.mkdir_p( File.dirname(epsfpath) )# rescue nil
+  # FileUtils.mkdir_p( File.dirname(epsfpath) )# rescue nil
   File.open(svgfpath, 'w') {|f| f.write(svg) }
-  File.unlink(epsfpath) rescue nil
-  `convert #{svgfpath} #{epsfpath}`
+  # File.unlink(epsfpath) rescue nil
+  # `convert #{svgfpath} #{epsfpath}`
 end
 
 
