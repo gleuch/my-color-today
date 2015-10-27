@@ -4,8 +4,8 @@ class ShortCode
 
   # LIST OF SHORT CODES AND REDIRECT URLS
   CODES = {
-    'amazonbook' => {url: 'https://amazon.com', title: 'Amazon Book Referral Link'},
-    'lulubook' => {url: 'https://lulu.com', title: 'Lulu Book Referral Link'}
+    'lulubook' =>   {url: 'https://www.lulu.com/shop/greg-leuch/what-color-is-my-internet/paperback/product-22415462.html', title: 'Lulu Book Referral Link'},
+    'luluebook' =>  {url: 'https://www.lulu.com/shop/greg-leuch/what-color-is-my-internet/ebook/product-22414921.html', title: 'Lulu eBook Referral Link'}
   }
 
 

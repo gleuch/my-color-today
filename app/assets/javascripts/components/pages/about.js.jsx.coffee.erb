@@ -46,12 +46,12 @@
     rightGutter = `<span>
       <section>
         <h3>get the book</h3>
-        <p>you can purchase a physical or digital editon of the book “What Color Is My Internet?” by Greg Leuch on <a href={ColorInitialProps.links.books.lulu} target="_blank" onClick={TrackEvent.track('PurchaseBook','Lulu','About:Gutter/Text')}>Lulu</a> or <a href={ColorInitialProps.links.books.amazon} target="_blank" onClick={TrackEvent.track('PurchaseBook','Lulu','About/Gutter/Text')}>Amazon</a>.</p>
+        <p>you can purchase a physical or digital editon of the book “What Color Is My Internet?” by Greg Leuch on Lulu on <a href={ColorInitialProps.links.books.lulu} target="_blank" onClick={TrackEvent.track('PurchaseBook','Lulu','About:Gutter/Text')}>paperback</a> or as an <a href={ColorInitialProps.links.books.lulu_ebook} target="_blank" onClick={TrackEvent.track('PurchaseBook','LuluEbook','About:Gutter/Text')}>eBook (PDF)</a>.</p>
         <ul className="buttons">
-          <li><a href={ColorInitialProps.links.books.lulu} target="_blank" className="btn btn-default btn-lulu" onClick={TrackEvent.track('PurchaseBook','Lulu','About:Gutter/Button')}>buy on lulu</a></li>
-          <li><a href={ColorInitialProps.links.books.amazon} target="_blank" className="btn btn-default btn-amazon" onClick={TrackEvent.track('PurchaseBook','Amazon','About:Gutter/Button')}>buy on amazon</a></li>
+          <li><a href={ColorInitialProps.links.books.lulu} target="_blank" className="btn btn-default btn-amazon" onClick={TrackEvent.track('PurchaseBook','Lulu','About:Gutter/Button')}>buy book - €35</a></li>
+          <li><a href={ColorInitialProps.links.books.lulu_ebook} target="_blank" className="btn btn-default btn-amazon" onClick={TrackEvent.track('PurchaseBook','LuluEbook','About:Gutter/Button')}>buy eBook (PDF) - €3</a></li>
         </ul>
-        <p>PDF versions are available for free on the <a href={ColorInitialProps.links.books.link} target="_blank" onClick={TrackEvent.link('About:Gutter/Text')}>LINK Center for the Arts of the Information Age</a> website.</p>
+        <p>a PDF preview is available for free on the <a href={ColorInitialProps.links.books.link} target="_blank" onClick={TrackEvent.link('About:Gutter/Text')}>LINK Center for the Arts of the Information Age</a> website.</p>
       </section>
     </span>`
 

@@ -55,10 +55,10 @@ ColorCamp::Application.routes.named_routes.url_helpers_module.module_eval do
     instagram_url:          'http://instagram.com/mycolortoday',
     email_url:              'hello@mycolor.today',
     amazon_book_url:        'javascript:alert("The book will be available soon on Amazon. Check back in a few days.")',
-    lulu_book_url:          'javascript:alert("The book will be available soon on Lulu. Check back in a few days.")',
     # amazon_book_url:        '/amazonbook', # short code referral tracking
-    # lulu_book_url:          '/lulubook', # short code referral tracking
-    link_book_url:          'http://www.linkartcenter.eu/',
+    lulu_book_url:          '/lulubook', # short code referral tracking
+    lulu_ebook_url:         '/luluebook', # short code referral tracking
+    link_book_url:          'http://linkeditions.tumblr.com/gregleuch',
 
   }.each do |name,url|
     define_method(name){ url }

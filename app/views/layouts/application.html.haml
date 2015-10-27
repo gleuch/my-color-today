@@ -15,7 +15,7 @@
     :coffee
       @ColorInitialProps ||= {}
       @ColorInitialProps.default_title = '#{t(:title)}'
-      @ColorInitialProps.links = #{ { email: email_url, social: { instagram: instagram_url, twitter: twitter_url, facebook: facebook_url }, books: { amazon: amazon_book_url, lulu: lulu_book_url, link: link_book_url } }.to_json }
+      @ColorInitialProps.links = #{ { email: email_url, social: { instagram: instagram_url, twitter: twitter_url, facebook: facebook_url }, books: { amazon: amazon_book_url, lulu: lulu_book_url, lulu_ebook: lulu_ebook_url, link: link_book_url } }.to_json }
       @ColorInitialProps.facebook_app_id = #{Setting.facebook_app_id}
       @ColorInitialProps.twitter_name = '#{t(:twitter_name)}'
       @ColorInitialProps.instagram_name = '#{t(:twitter_name)}'

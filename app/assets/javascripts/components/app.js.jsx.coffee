@@ -37,7 +37,7 @@
           <p>
             Buy the book now!
             <br/>
-            <a href={ColorInitialProps.links.books.lulu} target="_blank" className="book-link lulu" onClick={TrackEvent.track('PurchaseBook','Lulu','Layout:CornerBanner')}>Lulu</a> or <a href={ColorInitialProps.links.books.amazon} target="_blank" className="book-link amazon" onClick={TrackEvent.track('PurchaseBook','Amazon','Layout:CornerBanner')}>Amazon</a>
+            <a href={ColorInitialProps.links.books.lulu} target="_blank" className="book-link lulu" onClick={TrackEvent.track('PurchaseBook','Lulu','Layout:CornerBanner')}>Paperback</a> or <a href={ColorInitialProps.links.books.lulu_ebook} target="_blank" className="book-link lulu" onClick={TrackEvent.track('PurchaseBook','LuluEbook','Layout:CornerBanner')}>PDF</a>
           </p>
         </div>
       </aside>` unless this.props.current_user || key.match(/^about|signup|login$/)

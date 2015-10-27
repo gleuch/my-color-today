@@ -588,8 +588,6 @@ body ::selection {background: rgba($color-mid-black,.24);}
 }
 
 .get-the-book {
-  display: none; // NOT LAUNCHED YET!
-
   position: absolute;
   top: 0px;
   left: 0px;
@@ -608,7 +606,7 @@ body ::selection {background: rgba($color-mid-black,.24);}
     padding: 4px 42px;
     margin: 0;
     white-space: nowrap;
-    background: rgba($color-black,.04);
+    background: rgba($social-amazon,.9);
     font-weight: 600;
     font-size: 1.4rem;
     color: rgba($color-black,.64);
@@ -617,7 +615,7 @@ body ::selection {background: rgba($color-mid-black,.24);}
 
     &:hover {
       color: $color-black;
-      background: rgba($color-black,.08);
+      // background: rgba($color-black,.08);
     }
 
     a.book-link {
@@ -635,7 +633,7 @@ body ::selection {background: rgba($color-mid-black,.24);}
       }
 
       &.lulu {
-        color: $social-lulu;
+        color: $color-black;
         background-color: rgba($social-lulu,0);
         &:hover {
           color: $color-white;
