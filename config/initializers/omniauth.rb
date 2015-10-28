@@ -11,7 +11,7 @@ if secrets.present?
 
     # Facebook
     provider :facebook, secrets['facebook']['token'], secrets['facebook']['secret'], 
-      scope: 'email,publish_stream', 
+      scope: 'email,public_profile,user_friends', 
       display: 'popup'
 
     # Google
